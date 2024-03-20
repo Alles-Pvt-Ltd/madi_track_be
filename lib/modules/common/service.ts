@@ -25,20 +25,20 @@ export function failureResponse(message: string, DATA: any, res: Response) {
     });
 }
 
-// //
-// export function insufficientParameters(res: Response,req:any) {
-//     res.status(response_status_codes.bad_request).json({
-//         status: false,
-//         message: 'Insufficient parameters',
-//         data: req
-//     });
-// }
-
 //
-export function sqlError(err: any, res: Response) {
+export function insufficientParameters(res: Response) {
+    res.status(response_status_codes.bad_request).json({
+        STATUS: 'FAILURE',
+        MESSAGE: 'Insufficient parameters',
+        DATA: {}
+    });
+}
+
+
+export function mongoError(err: any, res: Response) {
     res.status(response_status_codes.success).json({
         status: false,
-        message: 'mysql error',
+        message: 'mongo error',
         data: err
     });
 }
@@ -66,6 +66,14 @@ export function notFound (req:Request, res: Response) {
     res.status(response_status_codes.not_found).json({
        status: false,
        message: "not found",
+       data: req
+   });
+}
+
+export function DatanotFound (message: string,req:Request, res: Response) {
+    res.status(response_status_codes.not_found).json({
+       status: false,
+       message: message,
        data: req
    });
 }

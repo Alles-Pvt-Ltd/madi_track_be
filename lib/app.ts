@@ -7,7 +7,7 @@ import { AppRoutes } from "./routes/appRoutes";
 
 class App {
   public app: express.Application; //why we use this
-  public mongoUrl: string = 'mongodb+srv://alles_gs:Alles@123SSA>@cluster0.6iz8wzi.mongodb.net/?retryWrites=true&w=majority';
+  public mongoUrl: string = 'mongodb+srv://kandasamykowtham125:4SVO4fNy08UI7JKm@cluster0.q50tq77.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
   constructor() {
     this.app = express();
@@ -29,7 +29,9 @@ class App {
       if(err){
         console.log("Error: Could not connect mongodb => ",err)
       }
-      console.log("Mongodb connected")
+      else{
+        console.log("Mongodb connected")
+      }     
      });
   }
 }

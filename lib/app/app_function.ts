@@ -43,7 +43,7 @@ export class AppFucntion{
 
     public static createJwtToken (userCode:string,userRole:string) {
         return jwt.sign({id:userCode,userRole}, 'HJOGHJOAHF', {
-            // expiresIn: "2h", //token will expaire after 2 hours
+            expiresIn: "2h" //token will expire after 2 hours
         });
     };
 
