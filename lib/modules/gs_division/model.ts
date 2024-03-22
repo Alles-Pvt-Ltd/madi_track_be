@@ -1,6 +1,16 @@
 import { ModificationNote } from "../common/model";
 import mongoose from "mongoose";
 
+export interface IMember{
+    _id?: string | mongoose.Types.ObjectId;
+    name: string;
+    gender: string;
+    role: string;
+    dob: Date;
+    nic_no: string;
+    occupation: string;
+}
+
 export interface IUsers {
     _id?: string | mongoose.Types.ObjectId;
     name: string;
@@ -9,17 +19,10 @@ export interface IUsers {
         name: string,
         address: string,
         phone: string,
-        member: [
-            {
-            _id?: string | mongoose.Types.ObjectId,
-            name: string,
-            gender: string,
-            role: string,
-            dob: Date,
-            nic_no: string,
-            occupation: string
-            }
-        ][],
+        member: IMember[],
+        location: {
+            type: object,
+        },
         history?: {
             event: string,
             date: string,

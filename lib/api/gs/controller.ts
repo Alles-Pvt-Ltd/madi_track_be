@@ -1,24 +1,30 @@
 import { Request, Response } from 'express';
-import { insufficientParameters, mongoError, successResponse, failureResponse, notFound, DatanotFound, forbidden } from '../../modules/common/service';
+import { insufficientParameters, mongoError,validationError, successResponse, failureResponse, notFound, DatanotFound, forbidden } from '../../modules/common/service';
 import { IUser } from '../../modules/gs/model';
-import { IUsers } from '../../modules/gs_division/model';
+import { IUsers, IMember } from '../../modules/gs_division/model';
 import UserService from '../../modules/gs/service';
 import FamilyService from '../../modules/gs_division/service';
 import { StringConstant } from '../../config/constant';
-import e = require('express');
 import { AppFucntion } from '../../app/app_function';
 import GsDivision from '../../modules/gs_division/schema';
+import { validationResult } from "express-validator";
 
 export class UserController {
 
-    private user_service: UserService = new UserService();
-    private family_service: FamilyService = new FamilyService();
-    private string_constant:StringConstant = new StringConstant();
+    private userService: UserService = new UserService();
+    private familyService: FamilyService = new FamilyService();
+    private stringConstant:StringConstant = new StringConstant();
 
-    public userRegistration(req: Request, res: Response) {
+    public async userRegistration(req: Request, res: Response) {
+        const validation = await validationResult(req).array(); //here we validate user request before create post
+
+        // if we have validation error
+        if (validation[0]) {
+            return validationError(validation[0].msg, req.body, res);
+        }
         // this check whether all the filds were send through the request or not
-        if (req.body.name && req.body.email &&
-            req.body.password && req.body.gs_division_id) {
+        // if (req.body.name && req.body.email &&
+        //     req.body.password && req.body.gs_division_id) {
             const user_params: IUser = {
                 name: req.body.name,
                 email: req.body.email,
@@ -30,7 +36,7 @@ export class UserController {
                     modification_note: 'New user created'
                 }]
             };
-            this.user_service.createUser(user_params, (err: any, user_data: IUser) => {
+            this.userService.createUser(user_params, (err: any, user_data: IUser) => {
                 if (err) {
                     if (err.code === 11000 && err.keyPattern && err.keyValue.email)
                     {
@@ -51,43 +57,54 @@ export class UserController {
                     return successResponse('create user successfull', responseData, res);
                 }
             });
-        } else {
-            // error response if some fields are missing in request body
-            insufficientParameters(res);
-        }
+        // } else {
+        //     // error response if some fields are missing in request body
+        //     insufficientParameters("Some input fields are missing",res);
+        // }
     }
 
     public async login(req:Request, res:Response){
-        const {email,password} = req.body;
-        this.user_service.filterUser({email}, (err:any,sys_da:any) => {
-                  if (err) {
-                    return mongoError("", res);
-                  } else {
-                    if (!sys_da) {
-                      return notFound(sys_da, res);
-                    }
-                    const comparePassword = AppFucntion.passwordVerify(password,sys_da.password)
-                    if(!comparePassword)
-                    {
-                        return forbidden(this.string_constant.passwordMissMatch, sys_da, res);
-                    }
+        const validation = await validationResult(req).array(); //here we validate user request before create post
 
-                    const token = AppFucntion.createJwtToken(sys_da._id,sys_da.name)
-                    
-                    if(token)
-                    {
-                        const responseData = {
-                            _id: sys_da._id,
-                            name: sys_da.name,
-                            email: sys_da.email,
-                            gs_division_id: sys_da.gs_division_id,
-                            modification_notes: sys_da.modification_notes
-                        }
-                        return successResponse("login successfull", responseData, res);
-                    }
-                    
-                }
-        })
+        // if we have validation error
+        if (validation[0]) {
+            return validationError(validation[0].msg, req.body, res);
+        }
+        
+        const {email,password} = req.body;
+        // if(validateField)
+        // {
+            this.userService.filterUser({email}, (err:any,sys_da:any) => {
+                if (err) {
+                  return mongoError("", res);
+                } else {
+                  if (!sys_da) {
+                    return notFound(sys_da, res);
+                  }
+                  const comparePassword = AppFucntion.passwordVerify(password,sys_da.password)
+                  if(!comparePassword)
+                  {
+                      return forbidden(this.stringConstant.passwordMissMatch, null, res);
+                  }
+
+                  const token = AppFucntion.createJwtToken(sys_da._id,sys_da.name)
+                  
+                  if(token)
+                  {
+                      const responseData = {
+                          _id: sys_da._id,
+                          name: sys_da.name,
+                          email: sys_da.email,
+                          gs_division_id: sys_da.gs_division_id,
+                          modification_notes: sys_da.modification_notes
+                      }
+                      return successResponse("login successfull", responseData, res);
+                  }
+                  
+              }
+            })
+        // }
+       
     }
 
     public async addFamily(req: Request, res: Response) {
@@ -108,7 +125,7 @@ export class UserController {
     public get_family(req: Request, res: Response) {
         if (req.params.divisionId) {
             const user_filter = { _id: req.params.divisionId};
-            this.family_service.filterUser(user_filter, (err: any, division_data: IUsers) => {
+            this.familyService.filterUser(user_filter, (err: any, division_data: IUsers) => {
                 if (err) {
                     mongoError(err, res);
                 }
@@ -130,7 +147,41 @@ export class UserController {
                 }
             });
         } else {
-            insufficientParameters(res);
+            insufficientParameters("id field is missing",res);
+        }
+    }
+
+    // Search family by name
+    public searchFamily(req:Request, res:Response){
+        if (req.params.divisionId) {
+            const user_filter = { _id: req.params.divisionId};
+            this.familyService.filterUser(user_filter, (err: any, division_data: IUsers) => {
+                if (err) {
+                    mongoError(err, res);
+                }
+                else if (!division_data) {
+                    // No division found with the given ID
+                    return DatanotFound('Division Not Found',req,res);
+                } else if (!division_data.family || division_data.family.length === 0) {
+                    // Division found but no families or no matching family found
+                    return DatanotFound('Family not found in the division',req,res);
+                }
+                else 
+                {
+                    if(req.query.name)
+                    {
+                        const foundFamily = division_data.family.find((family: any) => family.name.toLowerCase() == req.query.name);
+                        if (!foundFamily) {
+                            return res.status(404).json({ message: 'Family not found' });
+                        } else {
+                            return successResponse('get family successfull', foundFamily, res);
+                        }
+                    }
+                    
+                }
+            });
+        } else {
+            insufficientParameters("id field missing",res);
         }
     }
 
@@ -172,7 +223,7 @@ export class UserController {
         const { divisionId, familyId } = req.params;
         if (divisionId) {
             const user_filter = { _id: divisionId};
-            this.family_service.filterUser(user_filter, (err: any, division_data: IUsers) => {
+            this.familyService.filterUser(user_filter, (err: any, division_data: IUsers) => {
                 if (err) {
                     mongoError(err, res);
                 }
@@ -207,7 +258,7 @@ export class UserController {
             })
         } 
         else {
-            insufficientParameters(res);
+            insufficientParameters("id field missing",res);
         }
     }
 
@@ -268,81 +319,41 @@ export class UserController {
         }
     }
 
-    // public async updateMember(req:Request, res:Response) {
-    //     const { gsDivisionId, familyId, memberId} = req.params;
-    //         const updatedMemberData = req.body;
+    public async updateMember(req:Request, res:Response) {
+        const { gsDivisionId, familyId, memberId} = req.params;
 
-    //         const gsDivision = await GsDivision.findById(gsDivisionId);
-    //         if (!gsDivision) {
-    //             return DatanotFound('GS Division not found',req,res);
-    //         }
+            const gsDivision = await GsDivision.findById(gsDivisionId);
+            if (!gsDivision) {
+                return DatanotFound('GS Division not found',req,res);
+            }
 
-    //         const foundFamily = gsDivision.family.find((family: any) => family._id == req.params.familyId);
-    //         if (!foundFamily) {
-    //             return DatanotFound('Family not found',req,res);
-    //         }
-    //         const memberIndex = foundFamily.member.findIndex((member: any) => member._id == memberId);              
-    //             if (memberIndex === -1) {
-    //                 return res.status(404).json({ error: 'Member not found in the family' });
-    //             }
-    //             const updatedMember = foundFamily.member[memberIndex];
-    //             if (updatedMemberData.name) updatedMember.name = updatedMemberData.name;
-    //             if (updatedMemberData.gender) updatedMember.gender = updatedMemberData.gender;
-    //             if (updatedMemberData.role) updatedMember.role = updatedMemberData.role;
-    //             if (updatedMemberData.dob) updatedMember.dob = updatedMemberData.dob;
-    //             if (updatedMemberData.nic_no) updatedMember.nic_no = updatedMemberData.nic_no;
-    //             if (updatedMemberData.occupation) updatedMember.occupation = updatedMemberData.occupation;
-
-    //             gsDivision.save();
-    //             return successResponse('Family details updated successfully',updatedMember,res)
-    // }
-    
-    // public update_Family(req: Request, res: Response) {
-    //     if (req.params.id) {
-    //         const user_filter = { _id: req.params.id };
-    //         this.family_service.filterUser(user_filter, (err: any, user_data: IUsers) => {
-    //             if (err) {
-    //                 mongoError(err, res);
-    //             }
-    //             else if{
-    //                 const user_params: IUsers = {
-    //                     _id: req.params.id,
-    //                     'user_data.family.name': req.body.name ? req.body.name : 'user_data.family.name',
-    //                     'user_data.family.address': req.body.address ? req.body.address : 'user_data.family.address',
-    //                     'user_data.family.phone': req.body.phone ? req.body.phone : 'user_data.family.phone',
-    //                     is_deleted: req.body.is_deleted ? req.body.is_deleted : user_data.is_deleted,
-    //                     modification_notes: user_data.modification_notes
-    //                 };
-    //                 this.user_service.updateUser(user_params, (err: any) => {
-    //                     if (err) {
-    //                         mongoError(err, res);
-    //                     } else {
-    //                         successResponse('update user successfull', null, res);
-    //                     }
-    //                 });
-    //             }
-    //             else {
-    //                 failureResponse('invalid user', null, res);
-    //             }
-    //         });
-    //     } else {
-    //         insufficientParameters(res);
-    //     }
-    // }
-
-    // public delete_user(req: Request, res: Response) {
-    //     if (req.params.id) {
-    //         this.user_service.deleteUser(req.params.id, (err: any, delete_details) => {
-    //             if (err) {
-    //                 mongoError(err, res);
-    //             } else if (delete_details.deletedCount !== 0) {
-    //                 successResponse('delete user successfull', null, res);
-    //             } else {
-    //                 failureResponse('invalid user', null, res);
-    //             }
-    //         });
-    //     } else {
-    //         insufficientParameters(res);
-    //     }
-    // }
+            const foundFamily = gsDivision.family.find((family: any) => family._id == req.params.familyId);
+            if (!foundFamily) {
+                return DatanotFound('Family not found',req,res);
+            }
+            const memberIndex = foundFamily.member.findIndex((member: any) => member._id == memberId);              
+                if (memberIndex === -1) {
+                    return DatanotFound('Member not found in the family',req,res);
+                }
+                const updatedMember = foundFamily.member[memberIndex];
+                const member_params: any = {
+                                        // _id: req.params.id,
+                                        'name': req.body.name ? req.body.name : updatedMember.name,
+                                        'gender': req.body.gender ? req.body.gender : updatedMember.gender,
+                                        'dob': req.body.dob ? req.body.dob : updatedMember.dob,
+                                        'role': req.body.role ? req.body.role : updatedMember.role,
+                                        'nic_no': req.body.nic_no ? req.body.nic_no : updatedMember.nic_no,
+                                        'occupation': req.body.occupation ? req.body.occupation : updatedMember.occupation,
+                                    };
+                foundFamily.member.splice(memberIndex, 1,member_params);
+                gsDivision.save((err,division) => {
+                    if(err)
+                    {
+                        return failureResponse('Failed to update a member',foundFamily.member,res)
+                    }
+                    const members = foundFamily.member;
+                    return successResponse('Member Updated Successfully',members,res)
+                });
+            }
+ 
 }
