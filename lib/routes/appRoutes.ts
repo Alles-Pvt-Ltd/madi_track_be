@@ -2,17 +2,19 @@ import { UserRoutes } from "../api/gs/routes";
 import { DivisionRoutes } from "../api/gs_division/routes";
 import  AppConstant from "../config/constant";
 import { Application, Request, Response } from 'express';
+import { Verify } from "../app/verify_token";
 
 export class AppRoutes {
     //its from ..api/user
     private userRoutes: UserRoutes = new UserRoutes();
     private divisionRoutes: DivisionRoutes = new DivisionRoutes();
+    private verify : Verify = new Verify();
     
     private appConstant: AppConstant = new AppConstant()
     // add every root here
     constructor(app: Application) {
         
-
+        
         this.userRoutes.route(app,this.appConstant.baseURL+'/gs');
         this.divisionRoutes.route(app,this.appConstant.baseURL+'/gs_Division');
         

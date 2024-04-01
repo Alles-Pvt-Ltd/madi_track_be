@@ -4,6 +4,34 @@ import { IUsers } from './model';
 
 const Schema = mongoose.Schema;
 
+const memberSchema = new Schema({
+    name: {
+        type: String,
+        required:  true
+    },
+    gender: {
+        type: String, 
+        enum: ['male', 'female', 'other'], 
+        required: true 
+    },
+    role: {
+        type: String,
+        required:  true
+    },
+    dob: {
+        type: Date,
+        required: true
+    },
+    nic_no: {
+        type: String,
+        required: true
+    },
+    occupation: {
+        type: String,
+        required: true
+    }
+})
+
 const schema = new Schema({
     name: {
         type: String,
@@ -22,35 +50,10 @@ const schema = new Schema({
             type: String,
             required: true
         },
-        member: [
-            {
-                name: {
-                    type: String,
-                    required:  true
-                },
-                gender: {
-                    type: String, 
-                    enum: ['male', 'female', 'other'], 
-                    required: true 
-                },
-                role: {
-                    type: String,
-                    required:  true
-                },
-                dob: {
-                    type: Date,
-                    required: true
-                },
-                nic_no: {
-                    type: String,
-                    required: true
-                },
-                occupation: {
-                    type: String,
-                    required: true
-                }
-            }
-        ],
+        member: [memberSchema],
+        location: {
+            type: Object
+        },
         history: [
            {event: String}, 
            {date: Date},
