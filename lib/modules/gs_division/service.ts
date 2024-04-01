@@ -22,8 +22,8 @@ export default class UserService {
         users.deleteOne(query, callback);
     }
 
-    public filterUsers(query: any, callback: any) {
-        users.find(query, callback);
+    public filterDivisions(query: any, callback: any) {
+        users.find({}, callback);
     }
 
 }

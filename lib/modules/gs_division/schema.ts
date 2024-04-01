@@ -63,7 +63,7 @@ const schema = new Schema({
     gs_id: {
         type: Schema.Types.ObjectId,
         ref: 'gs',
-        required: true
+        // required: true
     },
     is_deleted: {
         type: Boolean,

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { insufficientParameters, mongoError, successResponse, failureResponse } from '../../modules/common/service';
+import { insufficientParameters, mongoError, successResponse, failureResponse, notFound } from '../../modules/common/service';
 import { IUsers } from '../../modules/gs_division/model';
 import UserService from '../../modules/gs_division/service';
-import e = require('express');
+// import DivisionModel from '../../modules/gs_division/schema';
 
 export class UserController {
 
@@ -27,6 +27,27 @@ export class UserController {
                 }
             }); 
     }
+
+    public async getAllDivisions(req:Request, res:Response) {
+            this.user_service.filterDivisions({}, (err: any, division_data: any) => {
+                if(err)
+                {
+                    return failureResponse("GS Divisions Not Found",null,res)
+                }
+                else
+                {
+                    const responseDatas = []
+                    division_data.forEach(item => {
+                        const extractedItem = {
+                            _id: item._id,
+                            name: item.name
+                        }
+                        responseDatas.push(extractedItem)
+                    })
+                    successResponse('successfully get all divisions', responseDatas, res);
+                }   
+            });
+        }
 
     // public get_user(req: Request, res: Response) {
     //     if (req.params.id) {

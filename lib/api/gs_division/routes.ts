@@ -11,9 +11,9 @@ export class DivisionRoutes {
             this.user_controller.addDivision(req, res);
         });
 
-        // app.get('/api/gs_division/:id', (req: Request, res: Response) => {
-        //     this.user_controller.get_user(req, res);
-        // });
+        app.get(url+'/allDivisions', (req: Request, res: Response) => {
+            this.user_controller.getAllDivisions(req, res);
+        });
 
         // app.put('/api/gs_division/:id', (req: Request, res: Response) => {
         //     this.user_controller.update_user(req, res);

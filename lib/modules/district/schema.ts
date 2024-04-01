@@ -5,15 +5,15 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema({
     name: {
-        type: {
-            first_name: String,
-            middle_name: String,
-            last_name: String
-        }
+        type: String,
+        required: true
     },
-    email: String,
-    phone_number: String,
-    gender: String,
+    ds_divisions: [{
+        name: {
+            type: String,
+            required: true
+        }
+    }],
     is_deleted: {
         type: Boolean,
         default: false
@@ -21,4 +21,4 @@ const schema = new Schema({
     modification_notes: [ModificationNote]
 });
 
-export default mongoose.model('users', schema);
+export default mongoose.model('district', schema);
