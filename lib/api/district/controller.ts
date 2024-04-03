@@ -4,6 +4,7 @@ import { IDistrict } from '../../modules/district/model';
 import UserService from '../../modules/district/service';
 import District from '../../modules/district/schema'
 import mongoose from 'mongoose';
+import { json } from 'body-parser';
 
 export class UserController {
 
@@ -66,6 +67,46 @@ export class UserController {
       }
        
     }
+
+    public async getAllDsDivisions(req:Request, res:Response) {
+      const {districtId}  = req.params;
+
+      this.userService.filterDsDivisions({_id: districtId}, (err: any, DSdivision_data: any) => {
+          if(err)
+          {
+              return failureResponse("DS Divisions Not Found",null,res)
+          }
+          else
+          {
+              successResponse('successfully get all DS divisions', DSdivision_data, res);
+          }   
+      });
+  }
+
+  public getAllDistricts(req:Request, res:Response) {
+    this.userService.filterDistricts({}, (err: any, district_data: any) => {
+        if(err)
+        {
+            return failureResponse("Districts Not Found",null,res)
+        }
+        else
+        {
+          const responseData = {
+            name: district_data.name,
+            
+          }
+          const responseDatas = []
+          district_data.forEach(item => {
+                        const extractedItem = {
+                            name: item.name,
+                            ds_divisions: item.ds_divisions
+                        }
+                        responseDatas.push(extractedItem)
+                    }) 
+          return successResponse('successfully get all Districts', responseDatas, res);
+        }   
+    });
+}
 
     // public get_user(req: Request, res: Response) {
     //     if (req.params.id) {

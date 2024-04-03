@@ -22,4 +22,11 @@ export default class UserService {
         users.deleteOne(query, callback);
     }
 
+    public filterDsDivisions(query: any, callback: any) {
+        users.find(query, callback);
+    }
+
+    public filterDistricts(query: any, callback: any) {
+        users.find({}, callback);
+    }
 }

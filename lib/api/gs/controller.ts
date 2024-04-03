@@ -204,7 +204,7 @@ export class UserController {
             const datas = await gsDivision.save();
             return successResponse('Family details updated successfully',datas,res)
         } catch (error) {
-            return forbidden('Internal Server Error',req,res);
+            return failureResponse('Internal Server Error',error,res);
         }
     }
 
