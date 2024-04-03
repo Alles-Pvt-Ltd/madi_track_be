@@ -12,6 +12,14 @@ const schema = new Schema({
         name: {
             type: String,
             required: true
+        },
+        gs_divisions_id: [{
+            type: Schema.Types.ObjectId,
+            ref: "gs_divisions"
+        }],
+        is_deleted: {
+            type: Boolean,
+            default: false
         }
     }],
     is_deleted: {
