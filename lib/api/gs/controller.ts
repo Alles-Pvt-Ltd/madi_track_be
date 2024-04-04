@@ -7,6 +7,7 @@ import FamilyService from '../../modules/gs_division/service';
 import { StringConstant } from '../../config/constant';
 import { AppFucntion } from '../../app/app_function';
 import GsDivision from '../../modules/gs_division/schema';
+import Gs from '../../modules/gs/schema';
 import { validationResult } from "express-validator";
 
 export class UserController {
@@ -357,5 +358,37 @@ export class UserController {
                     return successResponse('Member Updated Successfully',members,res)
                 });
             }
+
+    public async updateGsProfile(req:Request, res:Response) {
+        const { gsId } = req.params;
+        const { name, email} = req.body;
+        try{
+            const gs = await Gs.findById(gsId);
+            if (!gs) {
+                return DatanotFound('GS not found',req,res);
+            }
+            else{
+                if(name)
+                    gs.name = name
+                if(email)
+                    gs.email = email
+                const data = await gs.save();
+                if(!data)
+                {
+                    return failureResponse("Data Not Updated",null,res)
+                }
+                const responseData = {
+                    _id: gs._id,
+                    name: gs.name,
+                    email: gs.email
+                }
+                return successResponse("GS Profile Updated Successfully",responseData,res)
+            }
+        }
+        catch(err) {
+            return failureResponse('Error Updating GS Profile', err.message,res)
+        }
+                   
+    }
  
 }

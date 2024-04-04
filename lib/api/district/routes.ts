@@ -21,8 +21,14 @@ export class DistrictRoutes {
             this.user_controller.getAllDsDivisions(req, res);
         });
 
+        //Get All GS Divisions
         app.get(url+'', (req: Request, res: Response) => {
             this.user_controller.getAllDistricts(req, res);
+        });
+
+        // Get all GS divisions by Ds Division id
+        app.get(url+'/:districtId/:ds_divisions_id', (req: Request, res: Response) => {
+            this.user_controller.getAllGsDivisionsByDsDivisionId(req, res);
         });
 
         // app.put('/api/gs_division/:id', (req: Request, res: Response) => {

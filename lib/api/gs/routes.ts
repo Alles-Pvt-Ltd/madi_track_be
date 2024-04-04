@@ -60,5 +60,10 @@ export class UserRoutes {
         app.get(url+'/:divisionId', (req: Request, res: Response) => {
             this.userController.searchFamily(req, res);
         });
+
+        //Update GS Profile
+        app.patch(url+'/:gsId', (req: Request, res: Response) => {
+            this.userController.updateGsProfile(req, res);
+        });
     }
 }

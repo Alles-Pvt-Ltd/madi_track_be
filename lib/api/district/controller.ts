@@ -1,10 +1,9 @@
-import { Request, Response } from 'express';
-import { insufficientParameters, mongoError, successResponse, failureResponse, notFound } from '../../modules/common/service';
+import { Request, Response, response } from 'express';
+import { insufficientParameters, mongoError, successResponse, failureResponse, notFound, DatanotFound } from '../../modules/common/service';
 import { IDistrict } from '../../modules/district/model';
 import UserService from '../../modules/district/service';
 import District from '../../modules/district/schema'
 import mongoose from 'mongoose';
-import { json } from 'body-parser';
 
 export class UserController {
 
@@ -83,31 +82,72 @@ export class UserController {
       });
   }
 
-  public getAllDistricts(req:Request, res:Response) {
-    this.userService.filterDistricts({}, (err: any, district_data: any) => {
-        if(err)
-        {
-            return failureResponse("Districts Not Found",null,res)
-        }
-        else
-        {
-          const responseData = {
-            name: district_data.name,
-            
+    public getAllDistricts(req:Request, res:Response) {
+      this.userService.filterDistricts({}, (err: any, district_data: any) => {
+          if(err)
+          {
+              return failureResponse("Districts Not Found",null,res)
           }
-          const responseDatas = []
-          district_data.forEach(item => {
-                        const extractedItem = {
-                            name: item.name,
-                            ds_divisions: item.ds_divisions
-                        }
-                        responseDatas.push(extractedItem)
-                    }) 
-          return successResponse('successfully get all Districts', responseDatas, res);
-        }   
-    });
-}
+          else
+          {
+            const responseData = {
+              name: district_data.name,
+              
+            }
+            const responseDatas = []
+            district_data.forEach(item => {
+                          const extractedItem = {
+                              name: item.name,
+                              ds_divisions: item.ds_divisions
+                          }
+                          responseDatas.push(extractedItem)
+                      }) 
+            return successResponse('successfully get all Districts', responseDatas, res);
+          }   
+      });
+  }
 
+  public async getAllGsDivisionsByDsDivisionId(req:Request, res:Response) {
+    const {districtId,ds_divisions_id}  = req.params;
+            try {
+              const result = await District.aggregate([
+                {
+                  $match: {
+                    _id: new mongoose.Types.ObjectId(districtId)
+                  }
+                },
+                { $unwind: "$ds_divisions" },
+                {
+                  $match: {
+                    "ds_divisions._id": new mongoose.Types.ObjectId(ds_divisions_id)
+                  }
+                },
+                {
+                  $lookup: {
+                    from: "gs_divisions",
+                    localField: "ds_divisions.gs_divisions_id",
+                    foreignField: "_id",
+                    as: "gs_divisions"
+                  }
+                },
+                {
+                  $unwind: "$gs_divisions"
+                },
+                {
+                  $project: {
+                    "gs_divisions_id": "$gs_divisions._id",
+                    "gs_divisions_name": "$gs_divisions.name",
+                    "family": "$gs_divisions.family"
+                  }
+                }
+                 ])
+                 return successResponse("Gs Divisions get Successfully",result,res);
+            }
+            catch(err){
+              return failureResponse("Error Getting Divisions",err,res)
+            }
+  }
+    
     // public get_user(req: Request, res: Response) {
     //     if (req.params.id) {
     //         const user_filter = { _id: req.params.id };
