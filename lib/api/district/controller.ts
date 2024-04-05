@@ -1,0 +1,226 @@
+import { Request, Response, response } from 'express';
+import { insufficientParameters, mongoError, successResponse, failureResponse, notFound, DatanotFound } from '../../modules/common/service';
+import { IDistrict } from '../../modules/district/model';
+import UserService from '../../modules/district/service';
+import District from '../../modules/district/schema'
+import mongoose from 'mongoose';
+
+export class UserController {
+
+    private userService: UserService = new UserService();
+
+    public addDistrict(req: Request, res: Response) {
+            const {name,ds_divisions} = req.body
+            const user_params: IDistrict = {
+                name,
+                ds_divisions,
+                modification_notes: [{
+                    modified_on: new Date(Date.now()),
+                    modified_by: null,
+                    modification_note: 'New District created'
+                }]
+
+            };
+            this.userService.createUser(user_params, (err: any, user_data: IDistrict) => {
+                if (err) {
+                    mongoError(err, res);
+                } else {
+                    successResponse('create District successfull', user_data, res);
+                }
+            }); 
+    }
+
+    public async getAllGsDivisions(req:Request, res:Response) {
+      const {districtId}  = req.params;
+      try {
+        const result = await District.aggregate([
+            {
+                $match: {
+                  _id: new mongoose.Types.ObjectId(districtId)
+                }
+              },
+              {
+                $lookup: {
+                  from: "gs_divisions",
+                  localField: "ds_divisions.gs_divisions_id",
+                  foreignField: "_id",
+                  as: "gs_divisions"
+                }
+              },
+              {
+                $unwind: "$gs_divisions"
+              },
+              {
+                $project: {
+                  "gs_divisions_id": "$gs_divisions._id",
+                  "gs_divisions_name": "$gs_divisions.name",
+                  "gs_id": "$gs_divisions.gs_id",
+                  "family": "$gs_divisions.family"
+                }
+              }
+           ])
+           return successResponse("Gs Divisions get Successfully",result,res);
+      }
+      catch(err){
+        return failureResponse("Error Getting Divisions",err,res)
+      }
+       
+    }
+
+    public async getAllDsDivisions(req:Request, res:Response) {
+      const {districtId}  = req.params;
+
+      this.userService.filterDsDivisions({_id: districtId}, (err: any, DSdivision_data: any) => {
+          if(err)
+          {
+              return failureResponse("DS Divisions Not Found",null,res)
+          }
+          else
+          {
+              successResponse('successfully get all DS divisions', DSdivision_data, res);
+          }   
+      });
+  }
+
+    public getAllDistricts(req:Request, res:Response) {
+      this.userService.filterDistricts({}, (err: any, district_data: any) => {
+          if(err)
+          {
+              return failureResponse("Districts Not Found",null,res)
+          }
+          else
+          {
+            const responseData = {
+              name: district_data.name,
+              
+            }
+            const responseDatas = []
+            district_data.forEach(item => {
+                          const extractedItem = {
+                              name: item.name,
+                              ds_divisions: item.ds_divisions
+                          }
+                          responseDatas.push(extractedItem)
+                      }) 
+            return successResponse('successfully get all Districts', responseDatas, res);
+          }   
+      });
+  }
+
+  public async getAllGsDivisionsByDsDivisionId(req:Request, res:Response) {
+    const {districtId,ds_divisions_id}  = req.params;
+            try {
+              const result = await District.aggregate([
+                {
+                  $match: {
+                    _id: new mongoose.Types.ObjectId(districtId)
+                  }
+                },
+                { $unwind: "$ds_divisions" },
+                {
+                  $match: {
+                    "ds_divisions._id": new mongoose.Types.ObjectId(ds_divisions_id)
+                  }
+                },
+                {
+                  $lookup: {
+                    from: "gs_divisions",
+                    localField: "ds_divisions.gs_divisions_id",
+                    foreignField: "_id",
+                    as: "gs_divisions"
+                  }
+                },
+                {
+                  $unwind: "$gs_divisions"
+                },
+                {
+                  $project: {
+                    "gs_divisions_id": "$gs_divisions._id",
+                    "gs_divisions_name": "$gs_divisions.name",
+                    "family": "$gs_divisions.family"
+                  }
+                }
+                 ])
+                 return successResponse("Gs Divisions get Successfully",result,res);
+            }
+            catch(err){
+              return failureResponse("Error Getting Divisions",err,res)
+            }
+  }
+    
+    // public get_user(req: Request, res: Response) {
+    //     if (req.params.id) {
+    //         const user_filter = { _id: req.params.id };
+    //         this.user_service.filterUser(user_filter, (err: any, user_data: IUser) => {
+    //             if (err) {
+    //                 mongoError(err, res);
+    //             } else {
+    //                 successResponse('get user successfull', user_data, res);
+    //             }
+    //         });
+    //     } else {
+    //         insufficientParameters(res);
+    //     }
+    // }
+
+    // public update_user(req: Request, res: Response) {
+    //     if (req.params.id &&
+    //         req.body.name || req.body.name.first_name || req.body.name.middle_name || req.body.name.last_name ||
+    //         req.body.email ||
+    //         req.body.phone_number ||
+    //         req.body.gender) {
+    //         const user_filter = { _id: req.params.id };
+    //         this.user_service.filterUser(user_filter, (err: any, user_data: IUser) => {
+    //             if (err) {
+    //                 mongoError(err, res);
+    //             } else if (user_data) {
+    //                 user_data.modification_notes.push({
+    //                     modified_on: new Date(Date.now()),
+    //                     modified_by: null,
+    //                     modification_note: 'User data updated'
+    //                 });
+    //                 const user_params: IUser = {
+    //                     _id: req.params.id,
+    //                     name: req.body.name ? {
+    //                         first_name: req.body.name.first_name ? req.body.name.first_name : user_data.name.first_name,
+    //                         middle_name: req.body.name.first_name ? req.body.name.middle_name : user_data.name.middle_name,
+    //                         last_name: req.body.name.first_name ? req.body.name.last_name : user_data.name.last_name
+    //                     } : user_data.name,
+    //                     email: req.body.email ? req.body.email : user_data.email,
+    //                     phone_number: req.body.phone_number ? req.body.phone_number : user_data.phone_number,
+    //                     gender: req.body.gender ? req.body.gender : user_data.gender,
+    //                     is_deleted: req.body.is_deleted ? req.body.is_deleted : user_data.is_deleted,
+    //                     modification_notes: user_data.modification_notes
+    //                 };
+    //                 this.user_service.updateUser(user_params, (err: any) => {
+    //                     if (err) {
+    //                         mongoError(err, res);
+    //                     } else {
+    //                         successResponse('update user successfull', null, res);
+    //                     }
+    //                 });
+    //             } else {
+    //                 failureResponse('invalid user', null, res);
+    //             }
+    //         });
+    //     } else {
+    //         insufficientParameters(res);
+    //     }
+    // }
+
+    // public delete_user(req: Request, res: Response) {
+    //     if (req.params.id) {
+    //         this.user_service.deleteUser(req.params.id, (err: any, delete_details) => {
+    //             if (err) {
+    //                 mongoError(err, res);
+    //             } else if (delete_details.deletedCount !== 0) {
+    //                 successResponse('delete user successfull', null, res);
+    //             } else {
+    //                 failureResponse('invalid user', null, res);
+    //             }
+    //         });
+    //     } else {
+    //         insufficientParameters(res);
+    //     }
+    // }
+}

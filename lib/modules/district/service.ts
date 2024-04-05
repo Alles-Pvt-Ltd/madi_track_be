@@ -1,9 +1,9 @@
-import { IUser } from './model';
+import { IDistrict } from './model';
 import users from './schema';
 
 export default class UserService {
     
-    public createUser(user_params: IUser, callback: any) {
+    public createUser(user_params: IDistrict, callback: any) {
         const _session = new users(user_params);
         _session.save(callback);
     }
@@ -12,7 +12,7 @@ export default class UserService {
         users.findOne(query, callback);
     }
 
-    public updateUser(user_params: IUser, callback: any) {
+    public updateUser(user_params: IDistrict, callback: any) {
         const query = { _id: user_params._id };
         users.findOneAndUpdate(query, user_params, callback);
     }
@@ -22,4 +22,11 @@ export default class UserService {
         users.deleteOne(query, callback);
     }
 
+    public filterDsDivisions(query: any, callback: any) {
+        users.find(query, callback);
+    }
+
+    public filterDistricts(query: any, callback: any) {
+        users.find({}, callback);
+    }
 }

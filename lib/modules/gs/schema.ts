@@ -19,7 +19,7 @@ const schema = new Schema({
     },
     gs_division_id: {
         type: Schema.Types.ObjectId,
-        ref: "gs_division",
+        ref: "gs_divisions",
         required: true
     },
     is_deleted: {

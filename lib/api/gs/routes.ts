@@ -21,18 +21,22 @@ export class UserRoutes {
             this.userController.login(req, res);
         });
 
+        //Add Family
         app.post(url+'/addFamily/:divisionId',(req: Request, res: Response) => {
             this.userController.addFamily(req, res);
         });
 
+        //Search Family By id
         app.get(url+'/:divisionId/:familyId', (req: Request, res: Response) => {
             this.userController.get_family(req, res);
         });
 
+        //Update Family
         app.put(url+'/:gsDivisionId/:familyId', (req: Request, res: Response) => {
             this.userController.update_Family(req, res);
         });
 
+        //Delete Family
         app.delete(url+'/:divisionId/:familyId', (req: Request, res: Response) => {
             this.userController.delete_family(req, res);
         });
@@ -43,18 +47,23 @@ export class UserRoutes {
         });
 
         //Delete Family Member
-        app.delete(url+'/:divisionId/:familyId/members/:memberId',this.verify.verify, (req: Request, res: Response) => {
+        app.delete(url+'/:divisionId/:familyId/members/:memberId', (req: Request, res: Response) => {
             this.userController.deleteMember(req, res);
         });
 
         //Update Family Member
-        app.put(url+'/:gsDivisionId/:familyId/members/:memberId',this.verify.verify, (req: Request, res: Response) => {
+        app.put(url+'/:gsDivisionId/:familyId/members/:memberId', (req: Request, res: Response) => {
             this.userController.updateMember(req, res);
         });
 
-        //Search family 
+        //Search family By Name
         app.get(url+'/:divisionId', (req: Request, res: Response) => {
             this.userController.searchFamily(req, res);
+        });
+
+        //Update GS Profile
+        app.patch(url+'/:gsId', (req: Request, res: Response) => {
+            this.userController.updateGsProfile(req, res);
         });
     }
 }

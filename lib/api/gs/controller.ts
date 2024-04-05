@@ -7,6 +7,7 @@ import FamilyService from '../../modules/gs_division/service';
 import { StringConstant } from '../../config/constant';
 import { AppFucntion } from '../../app/app_function';
 import GsDivision from '../../modules/gs_division/schema';
+import Gs from '../../modules/gs/schema';
 import { validationResult } from "express-validator";
 
 export class UserController {
@@ -22,9 +23,6 @@ export class UserController {
         if (validation[0]) {
             return validationError(validation[0].msg, req.body, res);
         }
-        // this check whether all the filds were send through the request or not
-        // if (req.body.name && req.body.email &&
-        //     req.body.password && req.body.gs_division_id) {
             const user_params: IUser = {
                 name: req.body.name,
                 email: req.body.email,
@@ -57,10 +55,6 @@ export class UserController {
                     return successResponse('create user successfull', responseData, res);
                 }
             });
-        // } else {
-        //     // error response if some fields are missing in request body
-        //     insufficientParameters("Some input fields are missing",res);
-        // }
     }
 
     public async login(req:Request, res:Response){
@@ -72,11 +66,9 @@ export class UserController {
         }
         
         const {email,password} = req.body;
-        // if(validateField)
-        // {
             this.userService.filterUser({email}, (err:any,sys_da:any) => {
                 if (err) {
-                  return mongoError("", res);
+                  return err;
                 } else {
                   if (!sys_da) {
                     return notFound(sys_da, res);
@@ -88,7 +80,6 @@ export class UserController {
                   }
 
                   const token = AppFucntion.createJwtToken(sys_da._id,sys_da.name)
-                  
                   if(token)
                   {
                       const responseData = {
@@ -99,12 +90,11 @@ export class UserController {
                           modification_notes: sys_da.modification_notes
                       }
                       return successResponse("login successfull", responseData, res);
+                      
                   }
                   
               }
-            })
-        // }
-       
+            })  
     }
 
     public async addFamily(req: Request, res: Response) {
@@ -116,9 +106,9 @@ export class UserController {
             }
             gsDivision.family.push(req.body);
             await gsDivision.save();
-            return successResponse('Family and Members added successfully',gsDivision,res)
+            return successResponse('Family added successfully',gsDivision,res)
         } catch (error) {
-            return failureResponse('Error adding Family and member',divisionId,res);
+            return failureResponse('Error adding Family',divisionId,res);
         }
     }
 
@@ -172,7 +162,7 @@ export class UserController {
                     {
                         const foundFamily = division_data.family.find((family: any) => family.name.toLowerCase() == req.query.name);
                         if (!foundFamily) {
-                            return res.status(404).json({ message: 'Family not found' });
+                            return DatanotFound('Family not found',req,res);
                         } else {
                             return successResponse('get family successfull', foundFamily, res);
                         }
@@ -215,7 +205,7 @@ export class UserController {
             const datas = await gsDivision.save();
             return successResponse('Family details updated successfully',datas,res)
         } catch (error) {
-            return forbidden('Internal Server Error',req,res);
+            return failureResponse('Internal Server Error',error,res);
         }
     }
 
@@ -275,10 +265,23 @@ export class UserController {
             }
             else
             {
-               
+                let flag = false;
+               foundFamily.member.forEach(item => {
+                if(item.name == req.body.name)
+                {
+                    flag = true
+                }
+               })
+               if(flag)
+               {
+                return forbidden('Member is Already registered',null,res);
+               }
+               else {
                 foundFamily.member.push(req.body);
                 await gsDivision.save();
                 return successResponse('Member added successfully',foundFamily.member,res)
+               }
+                
             }
             
         } catch (error) {
@@ -355,5 +358,37 @@ export class UserController {
                     return successResponse('Member Updated Successfully',members,res)
                 });
             }
+
+    public async updateGsProfile(req:Request, res:Response) {
+        const { gsId } = req.params;
+        const { name, email} = req.body;
+        try{
+            const gs = await Gs.findById(gsId);
+            if (!gs) {
+                return DatanotFound('GS not found',req,res);
+            }
+            else{
+                if(name)
+                    gs.name = name
+                if(email)
+                    gs.email = email
+                const data = await gs.save();
+                if(!data)
+                {
+                    return failureResponse("Data Not Updated",null,res)
+                }
+                const responseData = {
+                    _id: gs._id,
+                    name: gs.name,
+                    email: gs.email
+                }
+                return successResponse("GS Profile Updated Successfully",responseData,res)
+            }
+        }
+        catch(err) {
+            return failureResponse('Error Updating GS Profile', err.message,res)
+        }
+                   
+    }
  
 }

@@ -2,11 +2,12 @@ import * as express from "express";
 import * as cors from "cors";
 import * as bodyParser from "body-parser";
 import * as mongoose from 'mongoose';
+
 // import environment from "./config/environment";
 import { AppRoutes } from "./routes/appRoutes";
 
 class App {
-  public app: express.Application; //why we use this
+  public app; //why we use this
   public mongoUrl: string = 'mongodb+srv://kandasamykowtham125:4SVO4fNy08UI7JKm@cluster0.q50tq77.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
   constructor() {
