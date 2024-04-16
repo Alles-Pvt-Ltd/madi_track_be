@@ -29,6 +29,10 @@ const memberSchema = new Schema({
     occupation: {
         type: String,
         required: true
+    },
+    is_GovernmentEmployee : {
+        type: Boolean,
+        default: false
     }
 })
 

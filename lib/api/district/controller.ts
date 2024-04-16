@@ -4,10 +4,12 @@ import { IDistrict } from '../../modules/district/model';
 import UserService from '../../modules/district/service';
 import District from '../../modules/district/schema'
 import mongoose from 'mongoose';
+import Helper from './helper';
 
 export class UserController {
 
     private userService: UserService = new UserService();
+    private helper: Helper = new Helper();
 
     public addDistrict(req: Request, res: Response) {
             const {name,ds_divisions} = req.body
@@ -33,38 +35,16 @@ export class UserController {
     public async getAllGsDivisions(req:Request, res:Response) {
       const {districtId}  = req.params;
       try {
-        const result = await District.aggregate([
-            {
-                $match: {
-                  _id: new mongoose.Types.ObjectId(districtId)
-                }
-              },
-              {
-                $lookup: {
-                  from: "gs_divisions",
-                  localField: "ds_divisions.gs_divisions_id",
-                  foreignField: "_id",
-                  as: "gs_divisions"
-                }
-              },
-              {
-                $unwind: "$gs_divisions"
-              },
-              {
-                $project: {
-                  "gs_divisions_id": "$gs_divisions._id",
-                  "gs_divisions_name": "$gs_divisions.name",
-                  "gs_id": "$gs_divisions.gs_id",
-                  "family": "$gs_divisions.family"
-                }
-              }
-           ])
-           return successResponse("Gs Divisions get Successfully",result,res);
+        const result = await this.helper.FindGsDivisions(districtId)
+        if(result.length == 0)
+        {
+          return failureResponse("GS divisions not found",null,res)
+        }
+        return successResponse("Gs Divisions Find Successfully",result,res)
       }
-      catch(err){
-        return failureResponse("Error Getting Divisions",err,res)
-      }
-       
+      catch (err) {
+        return failureResponse("Error Find gs divisions",err.message,res)
+      }       
     }
 
     public async getAllDsDivisions(req:Request, res:Response) {
@@ -90,13 +70,14 @@ export class UserController {
           }
           else
           {
-            const responseData = {
-              name: district_data.name,
+            // const responseData = {
+            //   name: district_data.name,
               
-            }
+            // }
             const responseDatas = []
             district_data.forEach(item => {
                           const extractedItem = {
+                              _id: item._id,
                               name: item.name,
                               ds_divisions: item.ds_divisions
                           }

@@ -62,8 +62,28 @@ export class UserRoutes {
         });
 
         //Update GS Profile
-        app.patch(url+'/:gsId', (req: Request, res: Response) => {
+        app.patch(url+'/update/:gsId', (req: Request, res: Response) => {
             this.userController.updateGsProfile(req, res);
         });
+
+        //Get Family Count in a gs division
+        // app.get(url+'/gsdivision/:gsdivisionid/families', (req: Request, res: Response) => {
+        //     this.userController.getFamilyCount(req, res);
+        // });
+
+        //Get Childrens Count in a gs division
+        // app.get(url+'/gsdivision/:gsDivisionId/childrens', (req: Request, res: Response) => {
+        //     this.userController.getChildrensCount(req, res);
+        // });
+
+         //Get SeniorCitizens Count in a gs division
+        //  app.get(url+'/gsdivision/:gsDivisionId/seniorcitizens', (req: Request, res: Response) => {
+        //     this.userController.getSeniorCitizensCount(req, res);
+        // });
+
+         //Get Government Employees Count in a gs division
+        //  app.get(url+'/gsdivision/:gsDivisionId/governmentemployees', (req: Request, res: Response) => {
+        //     this.userController.getGovernmentEmployeesCount(req, res);
+        // });
     }
 }
