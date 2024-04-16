@@ -10,14 +10,12 @@ import GsDivision from '../../modules/gs_division/schema';
 import Gs from '../../modules/gs/schema';
 import { validationResult } from "express-validator";
 import mongoose from 'mongoose';
-import Helper from './helper';
 
 export class UserController {
 
     private userService: UserService = new UserService();
     private familyService: FamilyService = new FamilyService();
     private stringConstant:StringConstant = new StringConstant();
-    private helper:Helper = new Helper();
 
     public async userRegistration(req: Request, res: Response) {
         const validation = await validationResult(req).array(); //here we validate user request before create post
