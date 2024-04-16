@@ -5,7 +5,7 @@ import {Service} from '../../database/mongodb/service'
 
 export class DashboardController {
 
-    private helper: Helper = new Helper();
+    // private helper: Helper = new Helper();
     private service: Service = new Service();
 
     public dashboardList = async (req:Request, res:Response) => {
@@ -35,12 +35,12 @@ export class DashboardController {
                 return failureResponse("Families Count Not Found",null,res)
             }
     
-            const responseData = {
-                familycount: getFamilyCount.data,
-                childrenscount: getChildrensCount.data,
-                seniorcitizenscount: getSeniorCitizensCount.data,
-                governmentemployeescount: getGovernmentEmployeesCount.data
-            }
+            const responseData = Helper.dashboardResponse({
+                familyCount: getFamilyCount.data,
+                childrensCount: getChildrensCount.data,
+                seniorCitizensCount: getSeniorCitizensCount.data,
+                governmentEmployeesCount: getGovernmentEmployeesCount.data
+            });
             return successResponse('Dashboard Data Get Successfully',responseData,res)
         }
         catch(err) {

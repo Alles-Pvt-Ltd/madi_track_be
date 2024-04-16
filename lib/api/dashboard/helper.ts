@@ -1,118 +1,42 @@
-import mongoose from "mongoose";
-import { Request, Response } from 'express';
-import GsDivision from '../../modules/gs_division/schema';
-import { failureResponse,successResponse } from "modules/common/service";
-
-export default class Helper {
-    public countChildrens (gsDivisionId:any) {
-            const result = GsDivision.aggregate([
-                {
-                    '$match': {
-                      '_id': new mongoose.Types.ObjectId(gsDivisionId)
-                    }
-                  }, {
-                    '$unwind': '$family'
-                  }, {
-                    '$unwind': '$family.member'
-                  }, {
-                    '$addFields': {
-                      'age': {
-                        '$floor': {
-                          '$divide': [
-                            {
-                              '$subtract': [
-                                new Date(), '$family.member.dob'
-                              ]
-                            }, 31536000000
-                          ]
-                        }
-                      }
-                    }
-                  }, {
-                    '$match': {
-                      'age': {
-                        '$lt': 18
-                      }
-                    }
-                  }, {
-                    '$group': {
-                      '_id': '$_id', 
-                      'ChildrenCount': {
-                        '$sum': 1
-                      }
-                    }
-                  }
-            ])
-        return result;
-    }
-
-    public seniorCitizensCount (gsDivisionId:any) {
-        const result = GsDivision.aggregate([
-            {
-                '$match': {
-                  '_id': new mongoose.Types.ObjectId(gsDivisionId)
-                }
-              }, {
-                '$unwind': '$family'
-              }, {
-                '$unwind': '$family.member'
-              }, {
-                '$addFields': {
-                  'age': {
-                    '$floor': {
-                      '$divide': [
-                        {
-                          '$subtract': [
-                            new Date(), '$family.member.dob'
-                          ]
-                        }, 31536000000
-                      ]
-                    }
-                  }
-                }
-              }, {
-                '$match': {
-                  'age': {
-                    '$gt': 60
-                  }
-                }
-              }, {
-                '$group': {
-                  '_id': '$_id', 
-                  'SeniorCitizensCount': {
-                    '$sum': 1
-                  }
-                }
-              }
-        ])
-    return result;
+interface IDashboardHelperData {
+  familyCount?: any;
+  childrensCount?: any;
+  seniorCitizensCount?: any;
+  governmentEmployeesCount?: any;
 }
 
-    public governmentEmployeesCount (gsDivisionId:any) {
-        const result = GsDivision.aggregate([
-            {
-                '$match': {
-                  '_id':new mongoose.Types.ObjectId(gsDivisionId)
-                }
-            }, 
-            {
-                '$unwind': '$family'
-            },
-            {
-                '$unwind': '$family.member'
-            },
-			{
-				'$match': {'family.member.is_GovernmentEmployee':true}
-			},
-			{
-                '$group': {
-                  '_id': '$_id', 
-                  'GovermentEmployeesCount': {
-                    '$sum': 1
-                  }
-                }
-            }
-        ])
-        return result;
-    }
+export default class Helper {
+  public static dashboardResponse = (data: IDashboardHelperData) => {
+    const dashboardResponse: {
+      label: string;
+      count:Number;
+      bgColor:string;
+    }[] = [];
+
+    dashboardResponse.push({
+      label:"TotalFamily",
+      count:data.familyCount,
+      bgColor:"#DC6B19"
+    });
+
+    dashboardResponse.push({
+      label:"TotalChildrens",
+      count:data.childrensCount,
+      bgColor:"#DC6B19"
+    })
+
+    dashboardResponse.push({
+      label:"TotalSeniorCitizens",
+      count:data.seniorCitizensCount,
+      bgColor:"#DC6B19"
+    })
+
+    dashboardResponse.push({
+      label:"TotalGovernmentEmployees",
+      count:data.governmentEmployeesCount,
+      bgColor:"#DC6B19"
+    })
+
+    return dashboardResponse;
+  }
 }
