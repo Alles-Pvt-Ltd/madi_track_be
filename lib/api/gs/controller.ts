@@ -9,6 +9,7 @@ import { AppFucntion } from '../../app/app_function';
 import GsDivision from '../../modules/gs_division/schema';
 import Gs from '../../modules/gs/schema';
 import { validationResult } from "express-validator";
+import mongoose from 'mongoose';
 
 export class UserController {
 
@@ -104,9 +105,25 @@ export class UserController {
             if (!gsDivision) {
             return notFound;
             }
-            gsDivision.family.push(req.body);
-            await gsDivision.save();
-            return successResponse('Family added successfully',gsDivision,res)
+            else{
+                let flag = false;
+                gsDivision.family.forEach(item => {
+                    if(item.name == req.body.name && item.phone == req.body.phone)
+                    {
+                        flag = true;
+                    }
+                })
+                if(flag)
+                {
+                    return forbidden('Family is Already registered',null,res);
+                }
+                else{
+                    gsDivision.family.push(req.body);
+                    await gsDivision.save();
+                    return successResponse('Family added successfully',gsDivision,res)
+                }
+            }
+            
         } catch (error) {
             return failureResponse('Error adding Family',divisionId,res);
         }
@@ -361,7 +378,7 @@ export class UserController {
 
     public async updateGsProfile(req:Request, res:Response) {
         const { gsId } = req.params;
-        const { name, email} = req.body;
+        const { name, email, password} = req.body;
         try{
             const gs = await Gs.findById(gsId);
             if (!gs) {
@@ -372,6 +389,8 @@ export class UserController {
                     gs.name = name
                 if(email)
                     gs.email = email
+                if(password)
+                   gs.password = AppFucntion.encryptPassword(password)     
                 const data = await gs.save();
                 if(!data)
                 {

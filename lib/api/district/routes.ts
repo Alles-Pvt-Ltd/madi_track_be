@@ -3,32 +3,32 @@ import { UserController } from './controller';
 
 export class DistrictRoutes {
 
-    private user_controller: UserController = new UserController();
+    private userController: UserController = new UserController();
 
     public route(app: Application, url:String) {
         
         app.post(url+'/addDistrict', (req: Request, res: Response) => {
-            this.user_controller.addDistrict(req, res);
+            this.userController.addDistrict(req, res);
         });
 
         // Get all GS divisions by district id
-        app.get(url+'/:districtId', (req: Request, res: Response) => {
-            this.user_controller.getAllGsDivisions(req, res);
+        app.get(url+'/:districtId/gsdivisions', (req: Request, res: Response) => {
+            this.userController.getAllGsDivisions(req, res);
         });
 
         //Get all DS divisions by district id
         app.get(url+'/:districtId/DSdivisions', (req: Request, res: Response) => {
-            this.user_controller.getAllDsDivisions(req, res);
+            this.userController.getAllDsDivisions(req, res);
         });
 
-        //Get All GS Divisions
+        //Get All Districts
         app.get(url+'', (req: Request, res: Response) => {
-            this.user_controller.getAllDistricts(req, res);
+            this.userController.getAllDistricts(req, res);
         });
 
         // Get all GS divisions by Ds Division id
         app.get(url+'/:districtId/:ds_divisions_id', (req: Request, res: Response) => {
-            this.user_controller.getAllGsDivisionsByDsDivisionId(req, res);
+            this.userController.getAllGsDivisionsByDsDivisionId(req, res);
         });
 
         // app.put('/api/gs_division/:id', (req: Request, res: Response) => {

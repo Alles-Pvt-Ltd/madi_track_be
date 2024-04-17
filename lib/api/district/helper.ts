@@ -3,10 +3,9 @@ import { Request, Response } from 'express';
 import District from '../../modules/district/schema';
 
 export default class Helper {
-    public async FindGsDivisions (req:any) {
-        const {districtId}  = req.params;
-        try {
-            const result = await District.aggregate([
+    public FindGsDivisions (districtId:any) {
+        
+            const result = District.aggregate([
                 {
                     $match: {
                       _id: new mongoose.Types.ObjectId(districtId)
@@ -33,9 +32,5 @@ export default class Helper {
                   }
                ])
                return result;
-        }
-        catch(err){
-            return err
-          }
     }
 }
