@@ -18,28 +18,36 @@ export class DashboardController {
             }
             
             const getChildrensCount:any = await this.service.getChildrensCount(req,res)
-            if(getFamilyCount.err)
+            if(getChildrensCount.err)
             {
                 return failureResponse("Childrens Count Not Found",null,res)
             }
 
             const getSeniorCitizensCount:any = await this.service.getSeniorCitizensCount(req, res)
-            if(getFamilyCount.err)
+            if(getSeniorCitizensCount.err)
             {
                 return failureResponse("Families Count Not Found",null,res)
             }
 
             const getGovernmentEmployeesCount:any = await this.service.getGovernmentEmployeesCount(req,res)
-            if(getFamilyCount.err)
+            if(getGovernmentEmployeesCount.err)
             {
                 return failureResponse("Families Count Not Found",null,res)
+            }
+
+            const getUniversityStudentsCount:any = await this.service.getUniversityStudentsCount(req,res)
+            if(getUniversityStudentsCount.err)
+            {
+                return failureResponse("University Students Not Found",null,res)
             }
     
             const responseData = Helper.dashboardResponse({
                 familyCount: getFamilyCount.data,
                 childrensCount: getChildrensCount.data,
                 seniorCitizensCount: getSeniorCitizensCount.data,
-                governmentEmployeesCount: getGovernmentEmployeesCount.data
+                governmentEmployeesCount: getGovernmentEmployeesCount.data,
+                universityStudentsCount: getUniversityStudentsCount.data
+
             });
             return successResponse('Dashboard Data Get Successfully',responseData,res)
         }

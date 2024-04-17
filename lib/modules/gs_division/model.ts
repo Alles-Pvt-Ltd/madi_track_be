@@ -9,6 +9,8 @@ export interface IMember{
     dob: Date;
     nic_no: string;
     occupation: string;
+    is_GovernmentEmployee: boolean;
+    university?: object;
 }
 
 export interface IUsers {

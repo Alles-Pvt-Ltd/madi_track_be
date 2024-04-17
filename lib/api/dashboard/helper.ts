@@ -3,38 +3,45 @@ interface IDashboardHelperData {
   childrensCount?: any;
   seniorCitizensCount?: any;
   governmentEmployeesCount?: any;
+  universityStudentsCount?: any;
 }
 
 export default class Helper {
   public static dashboardResponse = (data: IDashboardHelperData) => {
     const dashboardResponse: {
-      label: string;
+      title: string;
       count:Number;
       bgColor:string;
     }[] = [];
 
     dashboardResponse.push({
-      label:"TotalFamily",
+      title:"Total Families",
       count:data.familyCount,
       bgColor:"#DC6B19"
     });
 
     dashboardResponse.push({
-      label:"TotalChildrens",
+      title:"Total Childrens",
       count:data.childrensCount,
-      bgColor:"#DC6B19"
+      bgColor:"#FB9AD1"
     })
 
     dashboardResponse.push({
-      label:"TotalSeniorCitizens",
+      title:"Total SeniorCitizens",
       count:data.seniorCitizensCount,
-      bgColor:"#DC6B19"
+      bgColor:"#FA7070"
     })
 
     dashboardResponse.push({
-      label:"TotalGovernmentEmployees",
+      title:"Total Government Employees",
       count:data.governmentEmployeesCount,
-      bgColor:"#DC6B19"
+      bgColor:"#4CCD99"
+    })
+
+    dashboardResponse.push({
+      title:"Total University Students",
+      count:data.universityStudentsCount,
+      bgColor:"#FB9AD1"
     })
 
     return dashboardResponse;

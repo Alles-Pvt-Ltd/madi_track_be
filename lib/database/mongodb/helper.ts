@@ -114,4 +114,15 @@ export default class Helper {
         ])
         return result;
     }
+
+    public universityStudentsCount (gsDivisionId:any) {
+      const result = GsDivision.aggregate([
+        { $match: { '_id': new mongoose.Types.ObjectId(gsDivisionId) } },
+        {$unwind: '$family'},
+        {$unwind: '$family.member'},
+        { $match: { 'family.member.university': { $exists: true } } },
+        { $group: { '_id': null, totalStudents: { $sum: 1 } } }
+      ])
+      return result;
+    }
 }

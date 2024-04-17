@@ -65,4 +65,20 @@ export class Service {
             return { err:true, data:err.message }
         }
     }
+
+    public async getUniversityStudentsCount(req:Request, res:Response) {
+        
+        const {gsDivisionId} = req.params;
+        try {
+            const count = await this.helper.universityStudentsCount(gsDivisionId);
+            if(count.length == 0)
+            {
+                return { err:true,data:"No University Students" }
+            }
+            return { err: false,data:count[0].totalStudents };
+        }
+        catch(err){
+            return { err:true, data:err.message }
+        }
+    }
 }

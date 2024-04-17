@@ -33,6 +33,10 @@ const memberSchema = new Schema({
     is_GovernmentEmployee : {
         type: Boolean,
         default: false
+    },
+    university: {
+        name: String,
+        course: String
     }
 })
 
