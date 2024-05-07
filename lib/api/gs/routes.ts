@@ -66,6 +66,16 @@ export class UserRoutes {
             this.userController.updateGsProfile(req, res);
         });
 
+        // List all families in a Gs division
+        app.post(url+'/getFamilies', (req:Request, res:Response) => {
+            this.userController.listAllFamilies(req, res)
+        })
+
+        // List all members of a family
+        app.post(url+'/getMembers', (req:Request, res:Response) => {
+            this.userController.listAllMembers(req, res)
+        })
+
         //Get Family Count in a gs division
         // app.get(url+'/gsdivision/:gsdivisionid/families', (req: Request, res: Response) => {
         //     this.userController.getFamilyCount(req, res);

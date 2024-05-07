@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { insufficientParameters, mongoError,validationError, successResponse, failureResponse, notFound, DatanotFound, forbidden } from '../../modules/common/service';
+import { insufficientParameters, mongoError,validationError, successResponse, failureResponse, notFound, DatanotFound, forbidden, serverError } from '../../modules/common/service';
 import { IUser } from '../../modules/gs/model';
 import { IUsers, IMember } from '../../modules/gs_division/model';
 import UserService from '../../modules/gs/service';
@@ -101,7 +101,7 @@ export class UserController {
     public async addFamily(req: Request, res: Response) {
         const { divisionId } = req.params;
         try {
-            const gsDivision = await GsDivision.findById(divisionId);
+            const gsDivision = await GsDivision.findById({_id:divisionId});
             if (!gsDivision) {
             return notFound;
             }
@@ -115,12 +115,19 @@ export class UserController {
                 })
                 if(flag)
                 {
-                    return forbidden('Family is Already registered',null,res);
+                    return failureResponse('Family is Already registered',null,res);
                 }
                 else{
                     gsDivision.family.push(req.body);
                     await gsDivision.save();
-                    return successResponse('Family added successfully',gsDivision,res)
+                    const response = gsDivision.family.find(fam => fam.name == req.body.name && fam.phone == req.body.phone)
+                    console.log(response)
+                    const finalResponse = {
+                        name: response.name,
+                        address: response.address,
+                        phone: response.phone,
+                        history: response.history                   }
+                    return successResponse('Family added successfully',finalResponse,res)
                 }
             }
             
@@ -296,7 +303,18 @@ export class UserController {
                else {
                 foundFamily.member.push(req.body);
                 await gsDivision.save();
-                return successResponse('Member added successfully',foundFamily.member,res)
+                const response = foundFamily.member.find(mem => mem.name == req.body.name)
+                const finalResponse = {
+                    name: response.name,
+                    gender: response.gender,
+                    role: response.role,
+                    dateOfBirth: new Date(response.dob).toISOString().split('T')[0],
+                    nicNo: response.nic_no,
+                    occupation: response.occupation,
+                    isGovernmemtEmployee: response.is_GovernmentEmployee,
+                    id: response._id
+                }
+                return successResponse('Member added successfully',finalResponse,res)
                }
                 
             }
@@ -407,7 +425,104 @@ export class UserController {
         catch(err) {
             return failureResponse('Error Updating GS Profile', err.message,res)
         }
-                   
+        
+    }
+
+    public async listAllFamilies(req:Request, res:Response) {
+        const { gsId } = req.body;
+        try {
+                const families = await Gs.aggregate([
+                    {
+                        $match: {
+                            _id: new mongoose.Types.ObjectId(gsId)
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "gs_divisions",
+                            localField: "gs_division_id",
+                            foreignField: "_id",
+                            as: "gsdivisions"
+                          }
+                    },
+                    {$unwind: '$gsdivisions'},
+                    {$unwind: '$gsdivisions.family'},
+                     {
+                        $project: {
+                            "_id" : 0,
+                            "gsdivisions" : 1
+                        }
+                    },
+                ])
+                if(families.length == 0)
+                {
+                    return failureResponse("No Families Found","No Families",res)
+                }
+                const modifiedResponse = families.map(item => ({
+                    name: item.gsdivisions.family.name,
+                    address: item.gsdivisions.family.address,
+                    phone: item.gsdivisions.family.phone,
+                    id: item.gsdivisions.family._id,
+                    totalMembers: item.gsdivisions.family.member.length
+                }));
+                return successResponse("Get families Successfully",modifiedResponse,res)
+            }
+        catch (err)
+        {
+            return serverError(err.message,null,res);
+        }
+    }
+
+    public async listAllMembers(req:Request, res:Response) {
+        const gsId = req.body.gsId;
+        const familyId = req.body.familyId;
+        try {
+                const familiesList = await Gs.aggregate([
+                    {
+                        $match: {
+                            _id: new mongoose.Types.ObjectId(gsId)
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "gs_divisions",
+                            localField: "gs_division_id",
+                            foreignField: "_id",
+                            as: "gsdivisions"
+                          }
+                    },
+                    {$unwind: '$gsdivisions'},
+                    {$unwind: '$gsdivisions.family'},
+                    {
+                        $match: {
+                            "gsdivisions.family._id": new mongoose.Types.ObjectId(familyId)
+                        }
+                    },
+                    {
+                        $project: {
+                            "_id" : 0,
+                            "gsdivisions" : 1
+                        }
+                    },
+                ])
+                const membersList = familiesList.reduce((acc, item) => {
+                    const members = item.gsdivisions.family.member.map(mem => ({
+                        name: mem.name,
+                        gender: mem.gender,
+                        dateOfBirth: new Date(mem.dob).toISOString().split('T')[0],
+                        role: mem.role,
+                        nicNo: mem.nic_no,
+                        occupation: mem.occupation,
+                        id: mem._id
+                    }));
+                    return acc.concat(members);
+                }, []);
+                return successResponse("Get Members Successfully",membersList,res)
+            }
+        catch (err)
+        {
+            return serverError(err.message,null,res);
+        }
     }
  
 }

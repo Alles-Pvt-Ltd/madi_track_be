@@ -86,3 +86,11 @@ export function commenError (err: any,req:Request, res: Response) {
    });
 }
 
+export function serverError (message: string,req:Request,res:Response) {
+    res.status(response_status_codes.internal_server_error).json({
+        status: false,
+        message: message,
+        data: req
+    })
+}
+
