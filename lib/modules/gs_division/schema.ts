@@ -40,7 +40,7 @@ const memberSchema = new Schema({
     }
 })
 
-const schema = new Schema({
+const schema = new Schema<IUsers>({
     name: {
         type: String,
         required: true

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { insufficientParameters, mongoError,validationError, successResponse, failureResponse, notFound, DatanotFound, forbidden, serverError } from '../../modules/common/service';
+import { insufficientParameters, mongoError,validationError, successResponse, failureResponse, notFound, DatanotFound, forbidden, serverError, commenError } from '../../modules/common/service';
 import { IUser } from '../../modules/gs/model';
 import { IUsers, IMember } from '../../modules/gs_division/model';
 import UserService from '../../modules/gs/service';
@@ -28,7 +28,8 @@ export class UserController {
                 name: req.body.name,
                 email: req.body.email,
                 password: AppFucntion.encryptPassword(req.body.password),
-                gs_division_id: req.body.gs_division_id,
+                phone:req.body.phone,
+                gs_division_id: req.body.gsDivisionId,
                 modification_notes: [{
                     modified_on: new Date(Date.now()),
                     modified_by: null,
@@ -37,21 +38,23 @@ export class UserController {
             };
             this.userService.createUser(user_params, (err: any, user_data: IUser) => {
                 if (err) {
-                    if (err.code === 11000 && err.keyPattern && err.keyValue.email)
+                    if (err.code === 11000 && err.keyPattern && err.keyValue.email) //this line is check email is already created or not
                     {
                         return forbidden('Email is Already registered',user_data,res);
                     }
                     else{
-                        return mongoError(err, res);
+                        return validationError("Can't register because You missed some data fields",null,res);
                     }
                     
                 }
                  else {
                     const responseData = {
+                        id: user_data._id,
                         name: user_data.name,
                         email: user_data.email,
-                        gs_division_id: user_data.gs_division_id,
-                        modification_notes: user_data.modification_notes
+                        phone: user_data.phone,
+                        gsDivisionId: user_data.gs_division_id,
+                        modificationNotes: user_data.modification_notes
                     }
                     return successResponse('create user successfull', responseData, res);
                 }
@@ -59,43 +62,51 @@ export class UserController {
     }
 
     public async login(req:Request, res:Response){
-        const validation = await validationResult(req).array(); //here we validate user request before create post
+        try {
+            const validation = await validationResult(req).array(); //here we validate user request before create post
 
-        // if we have validation error
-        if (validation[0]) {
-            return validationError(validation[0].msg, req.body, res);
-        }
-        
-        const {email,password} = req.body;
-            this.userService.filterUser({email}, (err:any,sys_da:any) => {
-                if (err) {
-                  return err;
-                } else {
-                  if (!sys_da) {
-                    return notFound(sys_da, res);
-                  }
-                  const comparePassword = AppFucntion.passwordVerify(password,sys_da.password)
-                  if(!comparePassword)
-                  {
-                      return forbidden(this.stringConstant.passwordMissMatch, null, res);
-                  }
-
-                  const token = AppFucntion.createJwtToken(sys_da._id,sys_da.name)
-                  if(token)
-                  {
-                      const responseData = {
-                          _id: sys_da._id,
-                          name: sys_da.name,
-                          email: sys_da.email,
-                          gs_division_id: sys_da.gs_division_id,
-                          modification_notes: sys_da.modification_notes
+            // if we have validation error
+            if (validation[0]) {
+                return validationError(validation[0].msg, null, res);
+            }
+            
+            const {email,password} = req.body;
+                 this.userService.filterUser({email}, (err:any,sys_da:any) => {
+                    if (err) {
+                      return commenError("You provided wrong credentials",null,res);
+                    } 
+                    else if (!sys_da) {
+                        return forbidden(this.stringConstant.emailPasswordMismatch, null, res);
+                    }
+                    else {
+                      const comparePassword = AppFucntion.passwordVerify(password,sys_da.password)
+                      if(!comparePassword)
+                      {
+                          return forbidden(this.stringConstant.emailPasswordMismatch, null, res);
                       }
-                      return successResponse("login successfull", responseData, res);
+    
+                      const token = AppFucntion.createJwtToken(sys_da._id,sys_da.name)
+                      if(token)
+                      {
+                          const responseData = {
+                              id: sys_da._id,
+                              name: sys_da.name,
+                              email: sys_da.email,
+                              gsDivisionId: sys_da.gs_division_id,
+                              modificationNotes: sys_da.modification_notes
+                          }
+                          return successResponse("login successfull", responseData, res);
+                          
+                      }
                       
                   }
-                  
-              }
-            })  
+                })  
+        }
+        catch (err)
+        {
+            return serverError("Server Error!!! Please Contact Admin",null,res)
+        }
+        
     }
 
     public async addFamily(req: Request, res: Response) {
@@ -126,7 +137,8 @@ export class UserController {
                         name: response.name,
                         address: response.address,
                         phone: response.phone,
-                        history: response.history                   }
+                        history: response.history,
+                        id: response._id                   }
                     return successResponse('Family added successfully',finalResponse,res)
                 }
             }
@@ -227,7 +239,16 @@ export class UserController {
             if (updatedFamilyData.history) foundFamily.history = updatedFamilyData.history;
 
             const datas = await gsDivision.save();
-            return successResponse('Family details updated successfully',datas,res)
+            const response = datas.family
+            const family = response.find(fam => fam._id == familyId)
+            const finalResponse = ({
+                name: family.name,
+                address: family.address,
+                phone: family.phone,
+                id: family._id,
+                history: family.history
+            })
+            return successResponse('Family details updated successfully',finalResponse,res)
         } catch (error) {
             return failureResponse('Internal Server Error',error,res);
         }
@@ -375,13 +396,14 @@ export class UserController {
                 }
                 const updatedMember = foundFamily.member[memberIndex];
                 const member_params: any = {
-                                        // _id: req.params.id,
+                                        '_id': memberId,
                                         'name': req.body.name ? req.body.name : updatedMember.name,
                                         'gender': req.body.gender ? req.body.gender : updatedMember.gender,
                                         'dob': req.body.dob ? req.body.dob : updatedMember.dob,
                                         'role': req.body.role ? req.body.role : updatedMember.role,
-                                        'nic_no': req.body.nic_no ? req.body.nic_no : updatedMember.nic_no,
+                                        'nic_no': req.body.nicNo ? req.body.nicNo : updatedMember.nic_no,
                                         'occupation': req.body.occupation ? req.body.occupation : updatedMember.occupation,
+                                        'is_GovernmentEmployee': req.body.isGovernmentEmployee ? req.body.isGovernmentEmployee : updatedMember.is_GovernmentEmployee
                                     };
                 foundFamily.member.splice(memberIndex, 1,member_params);
                 gsDivision.save((err,division) => {
@@ -390,10 +412,20 @@ export class UserController {
                         return failureResponse('Failed to update a member',foundFamily.member,res)
                     }
                     const members = foundFamily.member;
-                    return successResponse('Member Updated Successfully',members,res)
+                    const response = members.find((mem: any) => mem._id == memberId )
+                    const finalResponse = ({
+                        name: response.name,
+                        gender: response.gender,
+                        role:response.role,
+                        dateOfBirth: response.dob,
+                        nicNo: response.nic_no,
+                        occupation: response.occupation,
+                        isGovernmentEmployee: response.is_GovernmentEmployee,
+                        id: response._id
+                    })
+                    return successResponse('Member Updated Successfully',finalResponse,res)
                 });
             }
-
     public async updateGsProfile(req:Request, res:Response) {
         const { gsId } = req.params;
         const { name, email, password} = req.body;

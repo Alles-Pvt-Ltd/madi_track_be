@@ -32,7 +32,7 @@ export class UserRoutes {
         });
 
         //Update Family
-        app.put(url+'/:gsDivisionId/:familyId', (req: Request, res: Response) => {
+        app.patch(url+'/:gsDivisionId/:familyId', (req: Request, res: Response) => {
             this.userController.update_Family(req, res);
         });
 
@@ -52,10 +52,9 @@ export class UserRoutes {
         });
 
         //Update Family Member
-        app.put(url+'/:gsDivisionId/:familyId/members/:memberId', (req: Request, res: Response) => {
+        app.patch(url+'/:gsDivisionId/:familyId/members/:memberId', (req: Request, res: Response) => {
             this.userController.updateMember(req, res);
         });
-
         //Search family By Name
         app.get(url+'/:divisionId', (req: Request, res: Response) => {
             this.userController.searchFamily(req, res);
