@@ -19,7 +19,7 @@ export default class Helper {
       title:"Total Families",
       count:data.familyCount,
       bgColor:"#DC6B19",
-      imageUrl: "https://i.postimg.cc/66zHHyXZ/family.png"
+      imageUrl: "https://bitbucket.org/allespl/images/raw/dfc9664ff1570e729c5073de52fc9f51aaa4b6a7/Pripaid.png"
     });
 
     dashboardResponse.push({
@@ -46,7 +46,7 @@ export default class Helper {
     dashboardResponse.push({
       title:"Total University Students",
       count:data.universityStudentsCount,
-      bgColor:"#FB9AD1",
+      bgColor:"#2FC6FF",
       imageUrl: "https://i.postimg.cc/GmtRqHSg/university-student.png"
     })
 

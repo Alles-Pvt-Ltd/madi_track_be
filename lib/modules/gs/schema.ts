@@ -1,9 +1,10 @@
 import * as mongoose from 'mongoose';
 import { ModificationNote } from '../common/model';
+import { IUser } from './model';
 
 const Schema = mongoose.Schema;
 
-const schema = new Schema({
+const schema = new Schema<IUser>({
     name: {
         type: String,
         required: true
@@ -16,6 +17,10 @@ const schema = new Schema({
     password: {
         type: String,
         required: true,
+    },
+    phone: {
+        type: Number,
+        required: true
     },
     gs_division_id: {
         type: Schema.Types.ObjectId,

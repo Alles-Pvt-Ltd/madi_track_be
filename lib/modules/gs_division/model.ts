@@ -1,3 +1,4 @@
+import { Interface } from "readline";
 import { ModificationNote } from "../common/model";
 import mongoose from "mongoose";
 
@@ -16,7 +17,7 @@ export interface IMember{
 export interface IUsers {
     _id?: string | mongoose.Types.ObjectId;
     name: string;
-    family?: [{
+    family?: {
         _id?: string | mongoose.Types.ObjectId,
         name: string,
         address: string,
@@ -30,8 +31,8 @@ export interface IUsers {
             date: string,
             description: string
         }[]
-    }][]
-    gs_id?: string;
+    }[]
+    gs_id?: string | mongoose.Types.ObjectId;
     is_deleted?: Boolean;
     modification_notes?: ModificationNote[]
 }

@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import { ModificationNote } from "../common/model";
 
 export interface IUser {
@@ -6,7 +6,8 @@ export interface IUser {
     name: String;
     email: String;
     password: String;
-    gs_division_id: ObjectId;
+    phone: number;
+    gs_division_id: string | mongoose.Types.ObjectId;
     is_deleted?: Boolean;
     modification_notes?: ModificationNote[]
 }

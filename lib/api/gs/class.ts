@@ -3,8 +3,7 @@ import { check } from "express-validator";
 export class Validation {
   // login
   public loginValidation = [
-    //check("mobile").not().custom((val) => /[^+0-9\s]/g.test(val)).withMessage('enter valid phone number1').isInt().withMessage('data type should be integer').isLength({ min: 9 ,max:10 }).withMessage('phone number lenth incorrect').optional({ nullable: true }),
-    check("email").isEmail().notEmpty().withMessage('Enter valid email').optional({ nullable: false }),
+    check("email").notEmpty().withMessage('Email is required').isEmail().withMessage('Enter valid email').optional({ nullable: false }),
     check("password").notEmpty().withMessage('password is required').isLength({ min: 5 }).withMessage('password minimum charactors 5'),
   ];
 
