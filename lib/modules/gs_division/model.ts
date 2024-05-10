@@ -22,6 +22,7 @@ export interface IUsers {
         name: string,
         address: string,
         phone: string,
+        nicNo: string,
         member: IMember[],
         location: {
             type: object,

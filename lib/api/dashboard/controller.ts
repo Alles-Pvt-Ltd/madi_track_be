@@ -11,44 +11,50 @@ export class DashboardController {
     public dashboardList = async (req:Request, res:Response) => {
         try {
             const { gsDivisionId } = req.params
+            const response:any = {}
+
             const getFamilyCount = await this.service.getFamilyCount(req,res)
-            if(getFamilyCount.err)
+            if(!getFamilyCount.err)
             {
-                return failureResponse("Families Count Not Found",null,res)
+                response.familyCount = getFamilyCount.data
             }
             
             const getChildrensCount:any = await this.service.getChildrensCount(req,res)
-            if(getChildrensCount.err)
+            if(!getChildrensCount.err)
             {
-                return failureResponse("Childrens Count Not Found",null,res)
+                response.childrensCount = getChildrensCount.data
             }
 
             const getSeniorCitizensCount:any = await this.service.getSeniorCitizensCount(req, res)
-            if(getSeniorCitizensCount.err)
+            if(!getSeniorCitizensCount.err)
             {
-                return failureResponse("Families Count Not Found",null,res)
+                response.seniorCitizensCount = getSeniorCitizensCount.data
             }
 
             const getGovernmentEmployeesCount:any = await this.service.getGovernmentEmployeesCount(req,res)
-            if(getGovernmentEmployeesCount.err)
+            if(!getGovernmentEmployeesCount.err)
             {
-                return failureResponse("Families Count Not Found",null,res)
+                response.governmentEmployeesCount = getGovernmentEmployeesCount.data
             }
 
             const getUniversityStudentsCount:any = await this.service.getUniversityStudentsCount(req,res)
-            if(getUniversityStudentsCount.err)
+            if(!getUniversityStudentsCount.err)
             {
-                return failureResponse("University Students Not Found",null,res)
+                response.universityStudentsCount  = getUniversityStudentsCount.data
             }
     
-            const responseData = Helper.dashboardResponse({
-                familyCount: getFamilyCount.data,
-                childrensCount: getChildrensCount.data,
-                seniorCitizensCount: getSeniorCitizensCount.data,
-                governmentEmployeesCount: getGovernmentEmployeesCount.data,
-                universityStudentsCount: getUniversityStudentsCount.data
+            if (Object.keys(response).length === 0) {
+                return failureResponse("No data available for dashboard", null, res);
+            }
+            const responseData = Helper.dashboardResponse(response)
+                // {
+                // familyCount: getFamilyCount.data,
+                // childrensCount: getChildrensCount.data,
+                // seniorCitizensCount: getSeniorCitizensCount.data,
+                // governmentEmployeesCount: getGovernmentEmployeesCount.data,
+                // universityStudentsCount: getUniversityStudentsCount.data
 
-            });
+            // });
             return successResponse('Dashboard Data Get Successfully',responseData,res)
         }
         catch(err) {

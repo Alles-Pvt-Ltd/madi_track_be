@@ -119,7 +119,7 @@ export class UserController {
             else{
                 let flag = false;
                 gsDivision.family.forEach(item => {
-                    if(item.name == req.body.name && item.phone == req.body.phone)
+                    if(item.nicNo == req.body.nicNo)
                     {
                         flag = true;
                     }
@@ -131,20 +131,21 @@ export class UserController {
                 else{
                     gsDivision.family.push(req.body);
                     await gsDivision.save();
-                    const response = gsDivision.family.find(fam => fam.name == req.body.name && fam.phone == req.body.phone)
-                    console.log(response)
+                    const response = gsDivision.family.find(fam => fam.name == req.body.name && fam.nicNo == req.body.nicNo)
                     const finalResponse = {
                         name: response.name,
                         address: response.address,
                         phone: response.phone,
+                        nicNo:response.nicNo,
                         history: response.history,
-                        id: response._id                   }
+                        id: response._id                   
+                    }
                     return successResponse('Family added successfully',finalResponse,res)
                 }
             }
             
         } catch (error) {
-            return failureResponse('Error adding Family',divisionId,res);
+            return failureResponse('Error adding family please contact admin',divisionId,res);
         }
     }
 
