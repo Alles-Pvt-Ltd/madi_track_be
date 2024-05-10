@@ -119,7 +119,7 @@ export class UserController {
             else{
                 let flag = false;
                 gsDivision.family.forEach(item => {
-                    if(item.name == req.body.name && item.phone == req.body.phone)
+                    if(item.nicNo == req.body.nicNo)
                     {
                         flag = true;
                     }
@@ -131,20 +131,21 @@ export class UserController {
                 else{
                     gsDivision.family.push(req.body);
                     await gsDivision.save();
-                    const response = gsDivision.family.find(fam => fam.name == req.body.name && fam.phone == req.body.phone)
-                    console.log(response)
+                    const response = gsDivision.family.find(fam => fam.name == req.body.name && fam.nicNo == req.body.nicNo)
                     const finalResponse = {
                         name: response.name,
                         address: response.address,
                         phone: response.phone,
+                        nicNo:response.nicNo,
                         history: response.history,
-                        id: response._id                   }
+                        id: response._id                   
+                    }
                     return successResponse('Family added successfully',finalResponse,res)
                 }
             }
             
         } catch (error) {
-            return failureResponse('Error adding Family',divisionId,res);
+            return failureResponse('Error adding family please contact admin',divisionId,res);
         }
     }
 
@@ -312,7 +313,7 @@ export class UserController {
             {
                 let flag = false;
                foundFamily.member.forEach(item => {
-                if(item.name == req.body.name)
+                if(item.nic_no == req.body.nic_no)
                 {
                     flag = true
                 }
@@ -362,6 +363,7 @@ export class UserController {
                 if (memberIndex === -1) {
                     return res.status(404).json({ error: 'Member not found in the family' });
                 }
+                const deleteFamily = foundFamily.member[memberIndex]
                 foundFamily.member.splice(memberIndex, 1);
                 gsDivision.save((err,updatedFamily) => {
                     if(err)
@@ -369,7 +371,17 @@ export class UserController {
                         return failureResponse('Failed to delete a member',foundFamily.member,res)
                     }
                     const members = foundFamily.member;
-                    return successResponse('Member Deleted Successfully',members,res)
+                    const responseData = ({
+                        name:deleteFamily.name,
+                        gender:deleteFamily.gender,
+                        role:deleteFamily.role,
+                        dateOfBirth:new Date(deleteFamily.dob).toISOString().split('T')[0],
+                        nicNo:deleteFamily.nic_no,
+                        occupation:deleteFamily.occupation,
+                        isGovernmentEmployee:deleteFamily.is_GovernmentEmployee,
+                        id:deleteFamily._id
+                    })
+                    return successResponse('Member Deleted Successfully',responseData,res)
                 });
             }
             

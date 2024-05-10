@@ -47,7 +47,7 @@ export class UserRoutes {
         });
 
         //Delete Family Member
-        app.delete(url+'/:divisionId/:familyId/members/:memberId', (req: Request, res: Response) => {
+        app.delete(url+'/:divisionId/:familyId/deleteMember/:memberId', (req: Request, res: Response) => {
             this.userController.deleteMember(req, res);
         });
 

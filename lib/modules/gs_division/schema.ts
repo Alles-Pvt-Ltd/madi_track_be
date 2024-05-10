@@ -58,6 +58,11 @@ const schema = new Schema<IUsers>({
             type: String,
             required: true
         },
+        nicNo: {
+            type: String,
+            required: true,
+            unique: true
+        },
         member: [memberSchema],
         location: {
             type: Object
