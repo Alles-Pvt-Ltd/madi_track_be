@@ -313,7 +313,7 @@ export class UserController {
             {
                 let flag = false;
                foundFamily.member.forEach(item => {
-                if(item.name == req.body.name)
+                if(item.nic_no == req.body.nic_no)
                 {
                     flag = true
                 }
@@ -363,6 +363,7 @@ export class UserController {
                 if (memberIndex === -1) {
                     return res.status(404).json({ error: 'Member not found in the family' });
                 }
+                const deleteFamily = foundFamily.member[memberIndex]
                 foundFamily.member.splice(memberIndex, 1);
                 gsDivision.save((err,updatedFamily) => {
                     if(err)
@@ -370,7 +371,17 @@ export class UserController {
                         return failureResponse('Failed to delete a member',foundFamily.member,res)
                     }
                     const members = foundFamily.member;
-                    return successResponse('Member Deleted Successfully',members,res)
+                    const responseData = ({
+                        name:deleteFamily.name,
+                        gender:deleteFamily.gender,
+                        role:deleteFamily.role,
+                        dateOfBirth:new Date(deleteFamily.dob).toISOString().split('T')[0],
+                        nicNo:deleteFamily.nic_no,
+                        occupation:deleteFamily.occupation,
+                        isGovernmentEmployee:deleteFamily.is_GovernmentEmployee,
+                        id:deleteFamily._id
+                    })
+                    return successResponse('Member Deleted Successfully',responseData,res)
                 });
             }
             
