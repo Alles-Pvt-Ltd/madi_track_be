@@ -60,7 +60,7 @@ const schema = new Schema<IUsers>({
         },
         nicNo: {
             type: String,
-            required: true,
+            // required: true,
             unique: true
         },
         member: [memberSchema],

@@ -119,7 +119,7 @@ export class UserController {
             else{
                 let flag = false;
                 gsDivision.family.forEach(item => {
-                    if(item.nicNo == req.body.nicNo)
+                    if(item.phone == req.body.phone)
                     {
                         flag = true;
                     }
