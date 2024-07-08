@@ -61,16 +61,35 @@ const schema = new Schema<IUsers>({
         nicNo: {
             type: String,
             // required: true,
-            unique: true
+            // unique: true
         },
         member: [memberSchema],
-        location: {
-            type: Object
+        lat : {
+            type: Number,
+            // required: true
         },
+        lon : {
+            type: Number,
+            // required: true
+        },
+        geoLocation: {
+            type: {
+                type: String,
+                enum: ['Point'],
+                default: 'Point',
+                required: true
+              },
+              coordinates: {
+                type: [Number],
+                required: true
+              }
+          },
         history: [
-           {event: String}, 
-           {date: Date},
-           {description: String} 
+           {
+            date: Date,
+            description: String,
+            organization: String,
+           }
         ]
     }],
     gs_id: {
@@ -84,5 +103,7 @@ const schema = new Schema<IUsers>({
     },
     modification_notes: [ModificationNote]
 });
+
+schema.index({ geoLocation: '2dsphere' });
 
 export default mongoose.model('gs_divisions', schema);

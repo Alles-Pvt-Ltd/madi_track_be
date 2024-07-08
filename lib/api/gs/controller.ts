@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { insufficientParameters, mongoError,validationError, successResponse, failureResponse, notFound, DatanotFound, forbidden, serverError, commenError } from '../../modules/common/service';
 import { IUser } from '../../modules/gs/model';
-import { IUsers, IMember } from '../../modules/gs_division/model';
+import { IUsers, IMember, IFamily } from '../../modules/gs_division/model';
 import UserService from '../../modules/gs/service';
 import FamilyService from '../../modules/gs_division/service';
 import { StringConstant } from '../../config/constant';
@@ -85,15 +85,17 @@ export class UserController {
                           return forbidden(this.stringConstant.emailPasswordMismatch, null, res);
                       }
     
-                      const token = AppFucntion.createJwtToken(sys_da._id,sys_da.name)
+                      const token = AppFucntion.createJwtToken(sys_da._id)
                       if(token)
                       {
                           const responseData = {
                               id: sys_da._id,
                               name: sys_da.name,
                               email: sys_da.email,
+                              phone:sys_da.phone,
                               gsDivisionId: sys_da.gs_division_id,
-                              modificationNotes: sys_da.modification_notes
+                              modificationNotes: sys_da.modification_notes,
+                              token: token
                           }
                           return successResponse("login successfull", responseData, res);
                           
@@ -129,23 +131,36 @@ export class UserController {
                     return failureResponse('Family is Already registered',null,res);
                 }
                 else{
-                    gsDivision.family.push(req.body);
+                    const parsedLat = parseFloat(req.body.lat);
+                    const parsedLon = parseFloat(req.body.lon);
+                    const inputData: any = {
+                        name: req.body.name,
+                        address: req.body.address,
+                        phone: req.body.phone,
+                        lat: parsedLat,
+                        lon: parsedLon,
+                        geoLocation: {
+                            type: 'Point',
+                            coordinates: [parsedLon, parsedLat]
+                        }
+                    }
+                    gsDivision.family.push(inputData);
                     await gsDivision.save();
-                    const response = gsDivision.family.find(fam => fam.name == req.body.name && fam.nicNo == req.body.nicNo)
+                    const response = gsDivision.family.find(fam => fam.name == req.body.name && fam.phone == req.body.phone)
                     const finalResponse = {
                         name: response.name,
                         address: response.address,
                         phone: response.phone,
-                        nicNo:response.nicNo,
-                        history: response.history,
+                        geoLocation: response.geoLocation,
                         id: response._id                   
                     }
+            
                     return successResponse('Family added successfully',finalResponse,res)
                 }
             }
             
         } catch (error) {
-            return failureResponse('Error adding family please contact admin',divisionId,res);
+            return failureResponse('Error adding family please contact admin',error,res);
         }
     }
 
@@ -233,11 +248,13 @@ export class UserController {
             if (updatedFamilyData.address) foundFamily.address = updatedFamilyData.address;
             if (updatedFamilyData.phone) foundFamily.phone = updatedFamilyData.phone;
 
-            // Update the member array if provided
-            if (updatedFamilyData.member) foundFamily.member = updatedFamilyData.member;
+            // Update the lat
+            if(updatedFamilyData.lat) foundFamily.lat = updatedFamilyData.lat;
 
-            // Update the history array if provided
-            if (updatedFamilyData.history) foundFamily.history = updatedFamilyData.history;
+            //Update the lon
+            if(updatedFamilyData.lon) foundFamily.lon = updatedFamilyData.lon;
+
+            if(updatedFamilyData.lat && updatedFamilyData.lon) foundFamily.geoLocation = {type: 'Point',coordinates: [updatedFamilyData.lon, updatedFamilyData.lat]} as any
 
             const datas = await gsDivision.save();
             const response = datas.family
@@ -246,6 +263,9 @@ export class UserController {
                 name: family.name,
                 address: family.address,
                 phone: family.phone,
+                lat: family.lat,
+                lon: family.lon,
+                geoLocation: family.geoLocation,
                 id: family._id,
                 history: family.history
             })
@@ -507,6 +527,8 @@ export class UserController {
                     address: item.gsdivisions.family.address,
                     phone: item.gsdivisions.family.phone,
                     id: item.gsdivisions.family._id,
+                    members: item.gsdivisions.family.member,
+                    history: item.gsdivisions.family.history,
                     totalMembers: item.gsdivisions.family.member.length
                 }));
                 return successResponse("Get families Successfully",modifiedResponse,res)
@@ -549,6 +571,7 @@ export class UserController {
                         }
                     },
                 ])
+
                 const membersList = familiesList.reduce((acc, item) => {
                     const members = item.gsdivisions.family.member.map(mem => ({
                         name: mem.name,
@@ -568,5 +591,56 @@ export class UserController {
             return serverError(err.message,null,res);
         }
     }
- 
+
+    public addHistory = async (req: Request, res: Response) => {
+        const { divisionId,familyId } = req.params;
+        const { history } = req.body;
+        try {
+            const gsDivision = await GsDivision.findOne({_id: divisionId});
+            if (!gsDivision) {
+                return DatanotFound('GS division not found',req,res);
+            }
+            const foundFamily = gsDivision.family.find((family: any) => family._id == familyId);
+            if (!foundFamily) {
+                return DatanotFound('Family not found',req,res);
+            }
+
+            foundFamily.history.push(history);
+            const savedData  = await gsDivision.save();
+            if(!savedData)
+            {
+                return failureResponse("History not added!!!",null,res);
+            }
+            return successResponse("History Added Successfully",foundFamily.history,res)
+        }
+            
+        catch (error) {
+            return failureResponse('An Error occur while adding histroy',divisionId,res);
+        }
+    } 
+
+    // List all histories of a family
+    public getHistories = async (req: Request, res:Response) => {
+        const { divisionId,familyId } = req.params;
+        try {
+            const gsDivision = await GsDivision.findOne({_id: divisionId});
+            if (!gsDivision) {
+                return DatanotFound('GS division not found',req,res);
+            }
+            const foundFamily = gsDivision.family.find((family: any) => family._id == familyId);
+            if (!foundFamily) {
+                return DatanotFound('Family not found',req,res);
+            }
+            const historyDatas = foundFamily.history;
+            if(historyDatas.length === 0)
+            {
+                return DatanotFound('No history for this family',req,res);
+            }
+            return successResponse("Histories Retrived Successfully",historyDatas,res);
+        }
+        catch (err) {
+            return failureResponse("An Error occured while get histories",null,res);
+        }
+    }
+
 }

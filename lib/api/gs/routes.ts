@@ -22,27 +22,27 @@ export class UserRoutes {
         });
 
         //Add Family
-        app.post(url+'/addFamily/:divisionId',(req: Request, res: Response) => {
+        app.post(url+'/addFamily/:divisionId',this.verify.verify,(req: Request, res: Response) => {
             this.userController.addFamily(req, res);
         });
 
-        //Search Family By id
-        app.get(url+'/:divisionId/:familyId', (req: Request, res: Response) => {
+        //Get Family By id
+        app.get(url+'/:divisionId/:familyId', this.verify.verify,(req: Request, res: Response) => {
             this.userController.get_family(req, res);
         });
 
         //Update Family
-        app.patch(url+'/:gsDivisionId/:familyId', (req: Request, res: Response) => {
+        app.put(url+'/:gsDivisionId/:familyId', this.verify.verify, (req: Request, res: Response) => {
             this.userController.update_Family(req, res);
         });
 
         //Delete Family
-        app.delete(url+'/:divisionId/:familyId', (req: Request, res: Response) => {
+        app.delete(url+'/:divisionId/:familyId', this.verify.verify, (req: Request, res: Response) => {
             this.userController.delete_family(req, res);
         });
 
         //Add family Member
-        app.post(url+'/:divisionId/:familyId/addMember',(req: Request, res: Response) => {
+        app.post(url+'/:divisionId/:familyId/addMember',this.verify.verify,(req: Request, res: Response) => {
             this.userController.addMember(req, res);
         });
 
@@ -72,7 +72,17 @@ export class UserRoutes {
 
         // List all members of a family
         app.post(url+'/getMembers', (req:Request, res:Response) => {
-            this.userController.listAllMembers(req, res)
+            this.userController.listAllMembers(req, res);
+        })
+
+        // Add history into family
+        app.post(url + '/:divisionId/:familyId/history/add', this.verify.verify, (req: Request, res: Response) => {
+            this.userController.addHistory(req,res);
+        })
+
+        //List all histories of a family
+        app.get(url + '/:divisionId/:familyId/histories', this.verify.verify, (req: Request, res: Response) => {
+            this.userController.getHistories(req,res);
         })
 
         //Get Family Count in a gs division
