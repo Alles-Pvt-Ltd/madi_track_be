@@ -1,4 +1,5 @@
-import { IMember, IUsers } from './model';
+import { error } from 'console';
+import { IMember, IUsers, IHistory } from './model';
 import users from './schema';
 
 export default class UserService {
@@ -25,5 +26,4 @@ export default class UserService {
     public filterDivisions(query: any, callback: any) {
         users.find({}, callback);
     }
-
 }

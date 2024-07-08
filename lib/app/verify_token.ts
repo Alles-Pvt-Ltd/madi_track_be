@@ -6,7 +6,7 @@ export class Verify{
 
     public verify(req:any,res:any,next:NextFunction){
         
-        const verifyToken=req.header('auth_token');//when we login we store token in header in the name of auth_token,so we get token from header
+        const verifyToken=req.header('token');//when we login we store token in header in the name of auth_token,so we get token from header
         
         // if verify token not in header
         if (!verifyToken) {

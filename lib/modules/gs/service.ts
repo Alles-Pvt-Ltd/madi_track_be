@@ -20,6 +20,6 @@ export default class UserService {
     public deleteUser(_id: String, callback: any) {
         const query = { _id: _id };
         users.deleteOne(query, callback);
-    }
+    } 
 
 }
