@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { insufficientParameters, mongoError,validationError, successResponse, failureResponse, notFound, DatanotFound, forbidden, serverError, commenError } from '../../modules/common/service';
 import { IUser } from '../../modules/gs/model';
-import { IUsers, IMember, IFamily } from '../../modules/gs_division/model';
+import { IUsers, IMember, IFamily, IHistory } from '../../modules/gs_division/model';
 import UserService from '../../modules/gs/service';
 import FamilyService from '../../modules/gs_division/service';
 import { StringConstant } from '../../config/constant';
@@ -151,6 +151,8 @@ export class UserController {
                         name: response.name,
                         address: response.address,
                         phone: response.phone,
+                        lat: response.lat,
+                        lon: response.lon,
                         geoLocation: response.geoLocation,
                         id: response._id                   
                     }
@@ -449,7 +451,7 @@ export class UserController {
                         name: response.name,
                         gender: response.gender,
                         role:response.role,
-                        dateOfBirth: response.dob,
+                        dateOfBirth:  new Date(response.dob).toISOString().split('T')[0],
                         nicNo: response.nic_no,
                         occupation: response.occupation,
                         isGovernmentEmployee: response.is_GovernmentEmployee,
@@ -526,6 +528,9 @@ export class UserController {
                     name: item.gsdivisions.family.name,
                     address: item.gsdivisions.family.address,
                     phone: item.gsdivisions.family.phone,
+                    lat: item.gsdivisions.family.lat,
+                    lon: item.gsdivisions.family.lon,
+                    geoLocation: item.gsdivisions.family.geoLocation,
                     id: item.gsdivisions.family._id,
                     members: item.gsdivisions.family.member,
                     history: item.gsdivisions.family.history,
@@ -611,7 +616,15 @@ export class UserController {
             {
                 return failureResponse("History not added!!!",null,res);
             }
-            return successResponse("History Added Successfully",foundFamily.history,res)
+            const historyLength = foundFamily.history.length
+            const responseHistory = foundFamily.history[historyLength-1]
+            const finalResponse = {
+                date: new Date(responseHistory.date).toISOString().split('T')[0],
+                description: responseHistory.description,
+                organization: responseHistory.organization,
+                id: responseHistory._id
+            }
+            return successResponse("History Added Successfully",finalResponse,res)
         }
             
         catch (error) {
@@ -636,7 +649,14 @@ export class UserController {
             {
                 return DatanotFound('No history for this family',req,res);
             }
-            return successResponse("Histories Retrived Successfully",historyDatas,res);
+            const finalResponse = historyDatas.map((item) => ({
+                date: new Date(item.date).toISOString().split('T')[0],
+                description: item.description,
+                organization: item.organization,
+                id: item._id
+
+            }));
+            return successResponse("Histories Retrived Successfully",finalResponse,res);
         }
         catch (err) {
             return failureResponse("An Error occured while get histories",null,res);

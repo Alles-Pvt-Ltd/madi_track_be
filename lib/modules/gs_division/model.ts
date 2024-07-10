@@ -47,9 +47,11 @@ export interface IUsers {
         lat: number,
         lon: number,
         geoLocation: {
-            type: object,
+            type: 'Point';
+            coordinates: [number, number];
         },
         history?: {
+            _id: string | mongoose.Types.ObjectId,
             date: string,
             description: string,
             organization: string
