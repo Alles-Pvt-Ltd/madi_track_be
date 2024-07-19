@@ -599,7 +599,7 @@ export class UserController {
 
     public addHistory = async (req: Request, res: Response) => {
         const { divisionId,familyId } = req.params;
-        const { history } = req.body;
+        const history = req.body;
         try {
             const gsDivision = await GsDivision.findOne({_id: divisionId});
             if (!gsDivision) {
@@ -640,14 +640,16 @@ export class UserController {
             if (!gsDivision) {
                 return DatanotFound('GS division not found',req,res);
             }
+            
             const foundFamily = gsDivision.family.find((family: any) => family._id == familyId);
             if (!foundFamily) {
                 return DatanotFound('Family not found',req,res);
             }
+            
             const historyDatas = foundFamily.history;
-            if(historyDatas.length === 0)
+            if(historyDatas.length == 0)
             {
-                return DatanotFound('No history for this family',req,res);
+                return DatanotFound('No history for this family',null,res);
             }
             const finalResponse = historyDatas.map((item) => ({
                 date: new Date(item.date).toISOString().split('T')[0],
@@ -656,9 +658,11 @@ export class UserController {
                 id: item._id
 
             }));
+
             return successResponse("Histories Retrived Successfully",finalResponse,res);
         }
         catch (err) {
+            console.log(err)
             return failureResponse("An Error occured while get histories",null,res);
         }
     }
