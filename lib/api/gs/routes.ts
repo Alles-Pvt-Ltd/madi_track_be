@@ -47,12 +47,12 @@ export class UserRoutes {
         });
 
         //Delete Family Member
-        app.delete(url+'/:divisionId/:familyId/deleteMember/:memberId', (req: Request, res: Response) => {
+        app.delete(url+'/:divisionId/:familyId/deleteMember/:memberId',this.verify.verify, (req: Request, res: Response) => {
             this.userController.deleteMember(req, res);
         });
 
         //Update Family Member
-        app.patch(url+'/:gsDivisionId/:familyId/members/:memberId', (req: Request, res: Response) => {
+        app.patch(url+'/:gsDivisionId/:familyId/members/:memberId', this.verify.verify, (req: Request, res: Response) => {
             this.userController.updateMember(req, res);
         });
         //Search family By Name
