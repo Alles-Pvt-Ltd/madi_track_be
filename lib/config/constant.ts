@@ -1,5 +1,6 @@
 export  class StringConstant{
     public emailPasswordMismatch = "Email or Password incorrect"
+    public static usernamePasswordMismatch = "Username or Password incorrect"
     public unableGet:string= "Unable to get data for this user code";
     public unableGetData:string= "Unable to get data";
     public passwordMissMatch:string= "Phone Number or Password incorrect";
