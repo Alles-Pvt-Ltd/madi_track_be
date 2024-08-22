@@ -14,7 +14,7 @@ export class UserController {
           return badResponse(errors.array(), res);
         }
 
-        const loginResponse = await User.login(req.body.userName);
+        const loginResponse = await User.findUserByUsername(req.body.userName);
         if (loginResponse.err) {
           return failureResponse(loginResponse.message, res);
         }
@@ -43,7 +43,7 @@ export class UserController {
       if (user.err) {
         return failureResponse(user.message, res);
       }
-      if(user.data[0].length > 0)
+      if(user.data.length > 0)
       {
         return failureResponse("User already exist", res);
       }

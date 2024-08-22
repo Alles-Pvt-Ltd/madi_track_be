@@ -14,4 +14,5 @@ export class Family {
           }
         return { err: false, data: sqlData.result } as IData;
     }
+
 }

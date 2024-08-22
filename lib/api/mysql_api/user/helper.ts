@@ -8,7 +8,7 @@ export default class Helper {
     const temUser = { ...user };
     temUser.token = AppFunction.createJwtToken(user.code);
     delete temUser.password;
-    // delete temUser.isDeleted;
+    delete temUser.isDeleted;
     return temUser;
   };
 
