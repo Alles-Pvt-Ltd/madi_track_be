@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Family } from "../../../database/mysql/family";
 import { badResponse, failureResponse, successResponse } from "../../../core/response";
 import { validationResult } from "express-validator";
+import Helper from "./helper";
 
 export class FamilyController {
     public addFamily = async (req: Request, res: Response) => {
@@ -19,5 +20,16 @@ export class FamilyController {
         }
 
         return successResponse(addedFamily.data, "Family Added Successfully", res);
+    }
+
+    public getAllFamiliesDetails = async (req: Request, res: Response) => {
+        const divisionId = parseInt(req.params.divisionId);
+        const familiesDetails = await Family.getAllFamiliesDetails(divisionId);
+        if(familiesDetails.err)
+        {
+            return failureResponse(familiesDetails.message, res);
+        }
+
+        return successResponse(Helper.familyResponse(familiesDetails.data[0],familiesDetails.data[1]), "Families Got Successfully", res);
     }
 }

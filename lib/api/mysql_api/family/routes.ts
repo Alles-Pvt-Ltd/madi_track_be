@@ -13,5 +13,12 @@ export class FamilyRoutes {
         this.userCtrl.addFamily(req, res);
       }
     );
+
+    app.get(
+      url + "/list/:divisionId",
+      (req: Request, res: Response) => {
+        this.userCtrl.getAllFamiliesDetails(req, res);
+      }
+    );
   }
 }

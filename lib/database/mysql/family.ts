@@ -15,4 +15,14 @@ export class Family {
         return { err: false, data: sqlData.result } as IData;
     }
 
+    public static getAllFamiliesDetails = async (divisionId: number) => {
+        const sqlQueryString = `CALL sp_getAllFamiliesOfGsDivision (${divisionId})`;
+
+        const sqlData = await Mysql.connect(sqlQueryString, null);
+        
+        if (sqlData.err) {
+            return { err: true, message: sqlData.result } as IData;
+          }
+        return { err: false, data: sqlData.result } as IData;
+    }
 }
