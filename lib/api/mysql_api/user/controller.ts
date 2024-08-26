@@ -59,4 +59,15 @@ export class UserController {
       return successResponse(register.data, "User Registered Successfully", res);
 
     }
+
+    public reference  = async (req: Request, res: Response) => {
+      const responseData = await User.reference();
+
+      const referenceData = {
+        genderReference: responseData.data[0],
+        familyRoleReference: responseData.data[1]
+      }
+
+      return successResponse(referenceData,"Successfully retrieved",res);
+    }
 }

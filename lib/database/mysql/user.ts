@@ -34,4 +34,14 @@ export class User {
       }
       return { err: false, data: sqlData.result[0] } as IData;
     };
+
+    public static reference = async () => {
+      const sqlQueryString = `CALL sp_reference ()`;
+      const sqlData = await Mysql.connect(sqlQueryString, null);
+  
+      if (sqlData.err) {
+        return { err: true, message: sqlData.result } as IData;
+      }
+      return { err: false, data: sqlData.result } as IData;
+    };
 }

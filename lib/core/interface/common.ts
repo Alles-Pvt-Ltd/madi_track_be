@@ -15,8 +15,8 @@ export interface IMember {
     lastName: string;
     mobile: string;
     email: string;
-    gender: string;
-    role: string;
+    gender: number;
+    role: number;
     dateOfBirth: string;
     nicNo: string;
     occupation: string;
