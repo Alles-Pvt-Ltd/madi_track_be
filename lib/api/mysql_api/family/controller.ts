@@ -3,6 +3,8 @@ import { Family } from "../../../database/mysql/family";
 import { badResponse, failureResponse, successResponse } from "../../../core/response";
 import { validationResult } from "express-validator";
 import Helper from "./helper";
+import { User } from "../../../database/mysql/user";
+import { JwtToken } from "../../../core/jwt";
 
 export class FamilyController {
     public addFamily = async (req: Request, res: Response) => {
@@ -23,13 +25,42 @@ export class FamilyController {
     }
 
     public getAllFamiliesDetails = async (req: Request, res: Response) => {
-        const divisionId = parseInt(req.params.divisionId);
-        const familiesDetails = await Family.getAllFamiliesDetails(divisionId);
+        const jwtData = JwtToken.get(req);
+        const userInfo = await User.getUserByCode(jwtData.code);
+        if (userInfo.err) {
+            return failureResponse(userInfo.message, res);
+        }
+
+        const familiesDetails = await Family.getAllFamiliesDetails(userInfo.data[0].gsDivisionId);
         if(familiesDetails.err)
         {
             return failureResponse(familiesDetails.message, res);
         }
 
         return successResponse(Helper.familyResponse(familiesDetails.data[0],familiesDetails.data[1]), "Families Got Successfully", res);
+    }
+
+    public addMember = async (req: Request, res: Response) => {
+        const body = req.body;
+        const insertedData = await Family.addMember(body);
+
+        if(insertedData.err)
+        {
+            return failureResponse(insertedData.message, res);
+        }
+
+        return successResponse(insertedData.data, "Member Added Successfully", res);
+    }
+
+    public updateMember = async (req: Request, res: Response) => {
+        const body = req.body;
+        const updatedData = await Family.updateMemmber(body);
+
+        if(updatedData.err)
+        {
+            return failureResponse(updatedData.message, res);
+        }
+
+        return successResponse(updatedData.data, "Member updated Successfully", res);
     }
 }

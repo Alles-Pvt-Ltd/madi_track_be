@@ -1,5 +1,6 @@
 import { Application, Request, Response } from "express";
 import { FamilyController } from "./controller";
+import { JwtToken } from "../../../core/jwt";
 import { Validation } from "./class";
 
 export class FamilyRoutes {
@@ -9,15 +10,35 @@ export class FamilyRoutes {
     app.post(
       url + "/add",
       Validation.addFamilyValidation,
+      JwtToken.verify,
       (req: Request, res: Response) => {
         this.userCtrl.addFamily(req, res);
       }
     );
 
     app.get(
-      url + "/list/:divisionId",
+      url + "/list",
+      JwtToken.verify,
       (req: Request, res: Response) => {
         this.userCtrl.getAllFamiliesDetails(req, res);
+      }
+    );
+
+    app.post(
+      url + "/member/add",
+      Validation.addMemberValidation,
+      JwtToken.verify,
+      (req: Request, res: Response) => {
+        this.userCtrl.addMember(req, res);
+      }
+    );
+
+    app.put(
+      url + "/member/update",
+      Validation.updateMemberValidation,
+      JwtToken.verify,
+      (req: Request, res: Response) => {
+        this.userCtrl.updateMember(req, res);
       }
     );
   }
