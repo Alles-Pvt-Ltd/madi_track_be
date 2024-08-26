@@ -14,6 +14,11 @@ export class FamilyController {
         }
 
         const body = req.body; 
+        const duplicateFamily = await Family.getDuplicateFamily(body.nicNo);
+        if(duplicateFamily.data.length !== 0)
+        {
+            return failureResponse("Family Already Exist",res);
+        }
         const addedFamily = await Family.addFamily(body);
 
         if(addedFamily.err)
@@ -42,6 +47,12 @@ export class FamilyController {
 
     public addMember = async (req: Request, res: Response) => {
         const body = req.body;
+        const duplicateMember = await Family.getDuplicateMember(body.nicNo);
+        if(duplicateMember.data.length !== 0)
+        {
+            return failureResponse("Member Already Exist",res);
+        }
+
         const insertedData = await Family.addMember(body);
 
         if(insertedData.err)

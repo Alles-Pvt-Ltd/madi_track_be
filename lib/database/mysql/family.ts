@@ -3,6 +3,18 @@ import { IData } from "../../core/common/constant";
 import { IFamily, IMember } from "core/interface/common";
 
 export class Family {
+
+    public static getDuplicateFamily = async (nicNo: string) => {
+        const sqlQueryString = `CALL sp_getFamilyByNicNo ('${nicNo}')`;
+
+        const sqlData = await Mysql.connect(sqlQueryString, null);
+
+        if (sqlData.err) {
+            return { err: true, message: sqlData.result } as IData;
+          }
+        return { err: false, data: sqlData.result[0] } as IData;
+    }
+
     public static addFamily = async (familyData: IFamily) => {
         const sqlQueryString = `CALL sp_addFamily ('${familyData.cardNumber}', '${familyData.familyName}', '${familyData.address}',
         '${familyData.phone}', '${familyData.nicNo}', ${familyData.gsDivisionId})`;
@@ -24,6 +36,17 @@ export class Family {
             return { err: true, message: sqlData.result } as IData;
           }
         return { err: false, data: sqlData.result } as IData;
+    }
+
+    public static getDuplicateMember = async (nicNo: string) => {
+      const sqlQueryString = `CALL sp_getMemberByNicNo ('${nicNo}')`;
+
+      const sqlData = await Mysql.connect(sqlQueryString, null);
+
+      if (sqlData.err) {
+          return { err: true, message: sqlData.result } as IData;
+        }
+      return { err: false, data: sqlData.result[0] } as IData;
     }
 
     public static addMember = async (memberData: IMember) => {
