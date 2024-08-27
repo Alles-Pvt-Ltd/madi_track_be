@@ -9,8 +9,6 @@ junit.xml
 
 # Mac
 .DS_Store
-**/dist/
-**/dist
 **/upload/
 **/upload
 upload/
