@@ -21,5 +21,12 @@ export class UserRoutes {
         this.userCtrl.register(req, res);
       }
     );
+
+    app.get(
+      url + "/reference",
+      (req: Request, res: Response) => {
+        this.userCtrl.reference(req, res);
+      }
+    );
   }
 }

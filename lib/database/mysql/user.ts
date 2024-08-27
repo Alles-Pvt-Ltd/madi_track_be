@@ -23,4 +23,25 @@ export class User {
       }
       return { err: false, data: sqlData.result } as IData;
     }
+
+    public static getUserByCode = async (code: string) => {
+      let relatedQuery = `CALL sp_getUserByCode ('${code}')`;
+  
+      const sqlData = await Mysql.connect(relatedQuery, null);
+  
+      if (sqlData.err) {
+        return { err: true, message: sqlData.result } as IData;
+      }
+      return { err: false, data: sqlData.result[0] } as IData;
+    };
+
+    public static reference = async () => {
+      const sqlQueryString = `CALL sp_reference ()`;
+      const sqlData = await Mysql.connect(sqlQueryString, null);
+  
+      if (sqlData.err) {
+        return { err: true, message: sqlData.result } as IData;
+      }
+      return { err: false, data: sqlData.result } as IData;
+    };
 }
