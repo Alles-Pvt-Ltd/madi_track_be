@@ -10,3 +10,17 @@ Helper.familyResponse = (familyData, memberData) => {
     });
     return familyData;
 };
+Helper.familyResponseById = (familyData, memberData) => {
+    const finalFamilyData = {
+        id: familyData[0].id,
+        cardNumber: familyData[0].cardNumber,
+        familyName: familyData[0].familyName,
+        address: familyData[0].address,
+        phone: familyData[0].phone,
+        nicNo: familyData[0].nicNo,
+        divisionName: familyData[0].divisionName,
+        members: memberData,
+        membersCount: memberData.length
+    };
+    return finalFamilyData;
+};
