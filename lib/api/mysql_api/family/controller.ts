@@ -74,4 +74,17 @@ export class FamilyController {
 
         return successResponse(updatedData.data, "Member updated Successfully", res);
     }
+
+    public getFamilyDetailsById = async (req: Request, res: Response) => {
+        const familyId = parseInt(req.params.familyId);
+        const familyDetails = await Family.getFamilyDetailsById(familyId);
+        if (familyDetails.err) {
+            console.log("Error getting family details:", familyDetails.message);
+            return failureResponse(familyDetails.message, res);
+        }
+
+        const response = Helper.familyResponse(familyDetails.data[0], familyDetails.data[1]);
+        console.log("Family details retrieved successfully:", response);
+        return successResponse(response, "Family Details Retrieved Successfully", res);
+    }
 }

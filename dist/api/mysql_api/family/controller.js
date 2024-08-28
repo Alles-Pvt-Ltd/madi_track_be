@@ -66,6 +66,17 @@ class FamilyController {
             }
             return (0, response_1.successResponse)(updatedData.data, "Member updated Successfully", res);
         });
+        this.getFamilyDetailsById = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const familyId = parseInt(req.params.familyId);
+            const familyDetails = yield family_1.Family.getFamilyDetailsById(familyId);
+            if (familyDetails.err) {
+                console.log("Error getting family details:", familyDetails.message);
+                return (0, response_1.failureResponse)(familyDetails.message, res);
+            }
+            const response = helper_1.default.familyResponse(familyDetails.data[0], familyDetails.data[1]);
+            console.log("Family details retrieved successfully:", response);
+            return (0, response_1.successResponse)(response, "Family Details Retrieved Successfully", res);
+        });
     }
 }
 exports.FamilyController = FamilyController;
