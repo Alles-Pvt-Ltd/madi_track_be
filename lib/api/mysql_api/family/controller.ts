@@ -79,12 +79,10 @@ export class FamilyController {
         const familyId = parseInt(req.params.familyId);
         const familyDetails = await Family.getFamilyDetailsById(familyId);
         if (familyDetails.err) {
-            console.log("Error getting family details:", familyDetails.message);
             return failureResponse(familyDetails.message, res);
         }
 
-        const response = Helper.familyResponse(familyDetails.data[0], familyDetails.data[1]);
-        console.log("Family details retrieved successfully:", response);
+        const response = Helper.singleFamilyResponse(familyDetails.data[0], familyDetails.data[1]);
         return successResponse(response, "Family Details Retrieved Successfully", res);
     }
 }

@@ -90,10 +90,8 @@ export class Family {
       const sqlData = await Mysql.connect(sqlQueryString, null);
 
       if (sqlData.err) {
-          console.log("Error executing getFamilyDetailsById query:", sqlData.result);
           return { err: true, message: sqlData.result } as IData;
       }
-      console.log("getFamilyDetailsById query executed successfully:", sqlData.result);
       return { err: false, data: sqlData.result } as IData;
   }
 }
