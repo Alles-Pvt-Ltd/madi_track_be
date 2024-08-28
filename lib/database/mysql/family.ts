@@ -83,4 +83,15 @@ export class Family {
         return { err: true, message: error.message}
       }
     }
+
+    public static getFamilyDetailsById = async (familyId: number) => {
+      const sqlQueryString = `CALL sp_getFamilyById (${familyId})`;
+
+      const sqlData = await Mysql.connect(sqlQueryString, null);
+
+      if (sqlData.err) {
+          return { err: true, message: sqlData.result } as IData;
+      }
+      return { err: false, data: sqlData.result } as IData;
+  }
 }
