@@ -1,6 +1,6 @@
 import Mysql from "./connection";
 import { IData } from "../../core/common/constant";
-import { IFamily, IMember } from "core/interface/common";
+import { IFamily, IHistory, IMember } from "core/interface/common";
 
 export class Family {
 
@@ -94,4 +94,17 @@ export class Family {
       }
       return { err: false, data: sqlData.result } as IData;
   }
+
+  public static addHistory = async (historyData: IHistory, createdBy: number) => {
+    const sqlQueryString = `CALL sp_addHistory ('${historyData.date}', '${historyData.description}', '${historyData.organization}',
+    '${historyData.familyId}', NOW(), ${createdBy})`;
+
+    const sqlData = await Mysql.connect(sqlQueryString, null);
+
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result } as IData;
+      }
+    return { err: false, data: sqlData.result } as IData;
+}
+
 }

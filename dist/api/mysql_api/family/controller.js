@@ -72,9 +72,20 @@ class FamilyController {
             if (familyDetails.err) {
                 return (0, response_1.failureResponse)(familyDetails.message, res);
             }
-            console.log(familyDetails.data[0][0].id);
-            const response = helper_1.default.familyResponseById(familyDetails.data[0], familyDetails.data[1]);
+            const response = helper_1.default.singleFamilyResponse(familyDetails.data[0], familyDetails.data[1], familyDetails.data[2]);
             return (0, response_1.successResponse)(response, "Family Details Retrieved Successfully", res);
+        });
+        this.addHistory = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const jwtData = jwt_1.JwtToken.get(req);
+            const userInfo = yield user_1.User.getUserByCode(jwtData.code);
+            if (userInfo.err) {
+                return (0, response_1.failureResponse)(userInfo.message, res);
+            }
+            const addedHistory = yield family_1.Family.addHistory(req.body, userInfo.data[0].id);
+            if (addedHistory.err) {
+                return (0, response_1.failureResponse)(addedHistory.message, res);
+            }
+            return (0, response_1.successResponse)(addedHistory.data, "History Added Successfully", res);
         });
     }
 }

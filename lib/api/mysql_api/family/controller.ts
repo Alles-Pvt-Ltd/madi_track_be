@@ -82,7 +82,22 @@ export class FamilyController {
             return failureResponse(familyDetails.message, res);
         }
 
-        const response = Helper.singleFamilyResponse(familyDetails.data[0], familyDetails.data[1]);
+        const response = Helper.singleFamilyResponse(familyDetails.data[0], familyDetails.data[1], familyDetails.data[2]);
         return successResponse(response, "Family Details Retrieved Successfully", res);
+    }
+
+    public addHistory = async (req: Request, res: Response) => {
+        const jwtData = JwtToken.get(req);
+        const userInfo = await User.getUserByCode(jwtData.code);
+        if (userInfo.err) {
+            return failureResponse(userInfo.message, res);
+        }
+
+        const addedHistory = await Family.addHistory(req.body, userInfo.data[0].id);
+        if(addedHistory.err)
+        {
+            return failureResponse(addedHistory.message, res);
+        }
+        return successResponse(addedHistory.data,"History Added Successfully",res);
     }
 }

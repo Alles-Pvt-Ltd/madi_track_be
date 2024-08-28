@@ -49,5 +49,14 @@ export class FamilyRoutes {
                 this.userCtrl.getFamilyDetailsById(req, res);
             }
         );
+
+        app.post(
+            url + "/history/add",
+            Validation.familyHistoryValidation,
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.userCtrl.addHistory(req, res);
+            }
+        );
     }
 }

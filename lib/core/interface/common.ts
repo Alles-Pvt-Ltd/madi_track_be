@@ -23,3 +23,15 @@ export interface IMember {
     isGovernmentEmployee: number;
     familyId: string;
 }
+
+export interface IHistory {
+    id?: number;
+    date: string;
+    description: string;
+    organization: string;
+    familyId: number;
+    createdDate: string;
+    createdBy: number;
+    updatedDate: string;
+    updatedBy: number;
+}

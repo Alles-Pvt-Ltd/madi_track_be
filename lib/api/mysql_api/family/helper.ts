@@ -11,7 +11,7 @@ export default class Helper {
     return familyData;
   };
 
-  public static singleFamilyResponse = (familyData: any, memberData: any) => {
+  public static singleFamilyResponse = (familyData: any, memberData: any, historyData: any) => {
     const finalFamilyData = {
       id: familyData[0].id,
       cardNumber: familyData[0].cardNumber,
@@ -21,7 +21,8 @@ export default class Helper {
       nicNo: familyData[0].nicNo,
       divisionName: familyData[0].divisionName,
       members: memberData,
-      membersCount: memberData.length
+      membersCount: memberData.length,
+      history: historyData
     }
 
     return finalFamilyData;
