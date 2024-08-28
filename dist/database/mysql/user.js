@@ -48,3 +48,15 @@ User.reference = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     return { err: false, data: sqlData.result };
 });
+User.changePassword = (code, password) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `UPDATE t_user SET password='${password}' WHERE code='${code}'`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
+    }
+    return {
+        err: false,
+        data: sqlData.result,
+        message: "Password changed successfully",
+    };
+});

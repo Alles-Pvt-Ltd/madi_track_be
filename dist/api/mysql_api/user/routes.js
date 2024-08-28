@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRoutes = void 0;
 const controller_1 = require("./controller");
 const class_1 = require("./class");
+const jwt_1 = require("../../../core/jwt");
 class UserRoutes {
     constructor() {
         this.userCtrl = new controller_1.UserController();
@@ -16,6 +17,9 @@ class UserRoutes {
         });
         app.get(url + "/reference", (req, res) => {
             this.userCtrl.reference(req, res);
+        });
+        app.post(url + "/change_password", class_1.Validation.changePasswordValidation, jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.changePassword(req, res);
         });
     }
 }

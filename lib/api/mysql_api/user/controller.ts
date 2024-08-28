@@ -6,6 +6,7 @@ import Helper from "./helper";
 import { StringConstant } from "../../../config/constant";
 import {IUser} from "../../../core/interface/user"
 import { validationResult } from "express-validator";
+import { JwtToken } from "../../../core/jwt";
 
 export class UserController {
     public login = async (req: Request, res: Response) => {
@@ -70,4 +71,34 @@ export class UserController {
 
       return successResponse(referenceData,"Successfully retrieved",res);
     }
+
+    public changePassword = async (req: Request, res: Response) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return badResponse(errors.array(), res);
+      }
+      const jwtData = JwtToken.get(req);
+      const userInfo = await User.getUserByCode(jwtData.code);
+      if (userInfo.err) {
+        return failureResponse(userInfo.message, res);
+      }
+      if (
+        !AppFunction.passwordVerify(
+          req.body.oldPassword,
+          userInfo.data[0].password
+        )
+      ) {
+        return failureResponse("Password not match", res);
+      }
+  
+      const changedPassword = await User.changePassword(
+        jwtData.code,
+        AppFunction.encryptPassword(req.body.newPassword)
+      );
+      if (changedPassword.err) {
+        return failureResponse(changedPassword.message, res);
+      }
+  
+      return successResponse(changedPassword.data, changedPassword.message, res);
+    };
 }

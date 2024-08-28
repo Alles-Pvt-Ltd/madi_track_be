@@ -44,4 +44,18 @@ export class User {
       }
       return { err: false, data: sqlData.result } as IData;
     };
+
+    public static changePassword = async (code: string, password: string) => {
+      const sqlQueryString = `UPDATE t_user SET password='${password}' WHERE code='${code}'`;
+      const sqlData = await Mysql.connect(sqlQueryString, null);
+  
+      if (sqlData.err) {
+        return { err: true, message: sqlData.result } as IData;
+      }
+      return {
+        err: false,
+        data: sqlData.result,
+        message: "Password changed successfully",
+      } as IData;
+    };
 }
