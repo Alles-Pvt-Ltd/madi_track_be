@@ -66,7 +66,8 @@ export class UserController {
 
       const referenceData = {
         genderReference: responseData.data[0],
-        familyRoleReference: responseData.data[1]
+        familyRoleReference: responseData.data[1],
+        occupationReference: responseData.data[2]
       }
 
       return successResponse(referenceData,"Successfully retrieved",res);

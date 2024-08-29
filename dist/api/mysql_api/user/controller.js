@@ -59,7 +59,8 @@ class UserController {
             const responseData = yield user_1.User.reference();
             const referenceData = {
                 genderReference: responseData.data[0],
-                familyRoleReference: responseData.data[1]
+                familyRoleReference: responseData.data[1],
+                occupationReference: responseData.data[2]
             };
             return (0, response_1.successResponse)(referenceData, "Successfully retrieved", res);
         });
