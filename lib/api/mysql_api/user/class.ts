@@ -15,4 +15,9 @@ export class Validation {
     check("role").notEmpty().withMessage("Role is required"),
     check("gsDivisionId").notEmpty().withMessage("Gs division is required")
   ];
+
+  public static changePasswordValidation = [
+    check("oldPassword").notEmpty().withMessage("oldPassword is required"),
+    check("newPassword").notEmpty().withMessage("newPassword is required"),
+  ];
 }

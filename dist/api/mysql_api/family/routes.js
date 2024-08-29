@@ -25,6 +25,9 @@ class FamilyRoutes {
         (req, res) => {
             this.userCtrl.getFamilyDetailsById(req, res);
         });
+        app.post(url + "/history/add", class_1.Validation.familyHistoryValidation, jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.addHistory(req, res);
+        });
     }
 }
 exports.FamilyRoutes = FamilyRoutes;

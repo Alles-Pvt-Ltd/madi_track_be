@@ -86,3 +86,12 @@ Family.getFamilyDetailsById = (familyId) => __awaiter(void 0, void 0, void 0, fu
     }
     return { err: false, data: sqlData.result };
 });
+Family.addHistory = (historyData, createdBy) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_addHistory ('${historyData.date}', '${historyData.description}', '${historyData.organization}',
+    '${historyData.familyId}', NOW(), ${createdBy})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
+    }
+    return { err: false, data: sqlData.result };
+});

@@ -16,6 +16,7 @@ const app_1 = require("../../../core/app");
 const helper_1 = require("./helper");
 const constant_1 = require("../../../config/constant");
 const express_validator_1 = require("express-validator");
+const jwt_1 = require("../../../core/jwt");
 class UserController {
     constructor() {
         this.login = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -30,7 +31,8 @@ class UserController {
             if (!app_1.AppFunction.passwordVerify(req.body.password, loginResponse.data[0].password)) {
                 return (0, response_1.failureResponse)(constant_1.StringConstant.usernamePasswordMismatch, res);
             }
-            return (0, response_1.successResponse)(helper_1.default.loginResponse(loginResponse.data[0]), "Login successfull", res);
+            const divisionName = yield user_1.User.getUserDivision(loginResponse.data[0].id);
+            return (0, response_1.successResponse)(helper_1.default.loginResponse(loginResponse.data[0], divisionName.data[0][0].divisionName), "Login successfull", res);
         });
         this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const errors = (0, express_validator_1.validationResult)(req);
@@ -60,6 +62,25 @@ class UserController {
                 familyRoleReference: responseData.data[1]
             };
             return (0, response_1.successResponse)(referenceData, "Successfully retrieved", res);
+        });
+        this.changePassword = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const errors = (0, express_validator_1.validationResult)(req);
+            if (!errors.isEmpty()) {
+                return (0, response_1.badResponse)(errors.array(), res);
+            }
+            const jwtData = jwt_1.JwtToken.get(req);
+            const userInfo = yield user_1.User.getUserByCode(jwtData.code);
+            if (userInfo.err) {
+                return (0, response_1.failureResponse)(userInfo.message, res);
+            }
+            if (!app_1.AppFunction.passwordVerify(req.body.oldPassword, userInfo.data[0].password)) {
+                return (0, response_1.failureResponse)("Password not match", res);
+            }
+            const changedPassword = yield user_1.User.changePassword(jwtData.code, app_1.AppFunction.encryptPassword(req.body.newPassword));
+            if (changedPassword.err) {
+                return (0, response_1.failureResponse)(changedPassword.message, res);
+            }
+            return (0, response_1.successResponse)(changedPassword.data, changedPassword.message, res);
         });
     }
 }

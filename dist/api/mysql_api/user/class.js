@@ -17,3 +17,7 @@ Validation.registerValidation = [
     (0, express_validator_1.check)("role").notEmpty().withMessage("Role is required"),
     (0, express_validator_1.check)("gsDivisionId").notEmpty().withMessage("Gs division is required")
 ];
+Validation.changePasswordValidation = [
+    (0, express_validator_1.check)("oldPassword").notEmpty().withMessage("oldPassword is required"),
+    (0, express_validator_1.check)("newPassword").notEmpty().withMessage("newPassword is required"),
+];

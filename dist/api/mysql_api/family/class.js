@@ -37,3 +37,9 @@ Validation.updateMemberValidation = [
     (0, express_validator_1.check)("occupation").notEmpty().withMessage("Occupation is required"),
     (0, express_validator_1.check)("isGovernmentEmployee").notEmpty().withMessage("Government Employee detail is required")
 ];
+Validation.familyHistoryValidation = [
+    (0, express_validator_1.check)("date").notEmpty().withMessage("Date is required"),
+    (0, express_validator_1.check)("description").notEmpty().withMessage("Description is required"),
+    (0, express_validator_1.check)("organization").notEmpty().withMessage("Organization is required"),
+    (0, express_validator_1.check)("familyId").notEmpty().withMessage("Family Id is required")
+];

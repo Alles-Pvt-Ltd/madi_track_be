@@ -36,4 +36,13 @@ export class Validation {
     check("occupation").notEmpty().withMessage("Occupation is required"),
     check("isGovernmentEmployee").notEmpty().withMessage("Government Employee detail is required")
   ];
+
+  public static familyHistoryValidation = [
+    check("date").notEmpty().withMessage("Date is required"),
+    check("description").notEmpty().withMessage("Description is required"),
+    check("organization").notEmpty().withMessage("Organization is required"),
+    check("familyId").notEmpty().withMessage("Family Id is required")
+
+
+  ];
 }
