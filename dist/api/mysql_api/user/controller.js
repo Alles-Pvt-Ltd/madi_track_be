@@ -31,7 +31,8 @@ class UserController {
             if (!app_1.AppFunction.passwordVerify(req.body.password, loginResponse.data[0].password)) {
                 return (0, response_1.failureResponse)(constant_1.StringConstant.usernamePasswordMismatch, res);
             }
-            return (0, response_1.successResponse)(helper_1.default.loginResponse(loginResponse.data[0]), "Login successfull", res);
+            const divisionName = yield user_1.User.getUserDivision(loginResponse.data[0].id);
+            return (0, response_1.successResponse)(helper_1.default.loginResponse(loginResponse.data[0], divisionName.data[0][0].divisionName), "Login successfull", res);
         });
         this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const errors = (0, express_validator_1.validationResult)(req);

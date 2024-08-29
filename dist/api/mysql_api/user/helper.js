@@ -4,9 +4,10 @@ const app_1 = require("../../../core/app");
 class Helper {
 }
 exports.default = Helper;
-Helper.loginResponse = (user) => {
+Helper.loginResponse = (user, divisionName) => {
     const temUser = Object.assign({}, user);
     temUser.token = app_1.AppFunction.createJwtToken(user.code);
+    temUser.divisionName = divisionName;
     delete temUser.password;
     delete temUser.isDeleted;
     return temUser;

@@ -28,8 +28,8 @@ export class UserController {
         ) {
           return failureResponse(StringConstant.usernamePasswordMismatch, res);
         }
-  
-        return successResponse(Helper.loginResponse(loginResponse.data[0]), "Login successfull", res);
+        const divisionName = await User.getUserDivision(loginResponse.data[0].id);
+        return successResponse(Helper.loginResponse(loginResponse.data[0], divisionName.data[0][0].divisionName), "Login successfull", res);
     };
 
     public register = async (req: Request, res: Response) => {
