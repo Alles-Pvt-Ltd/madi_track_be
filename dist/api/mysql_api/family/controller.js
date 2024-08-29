@@ -87,6 +87,14 @@ class FamilyController {
             }
             return (0, response_1.successResponse)(addedHistory.data, "History Added Successfully", res);
         });
+        this.updateFamily = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const body = req.body;
+            const updatedData = yield family_1.Family.updateFamily(body);
+            if (updatedData.err) {
+                return (0, response_1.failureResponse)(updatedData.message, res);
+            }
+            return (0, response_1.successResponse)(updatedData.data, "Family updated Successfully", res);
+        });
     }
 }
 exports.FamilyController = FamilyController;

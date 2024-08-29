@@ -58,5 +58,16 @@ export class FamilyRoutes {
                 this.userCtrl.addHistory(req, res);
             }
         );
+
+        // Family update
+        app.put(
+            url + "/update",
+            Validation.updateFamilyValidation,
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.userCtrl.updateFamily(req, res);
+            }
+        );
+
     }
 }

@@ -106,7 +106,22 @@ export class Family {
       }
     return { err: false, data: sqlData.result } as IData;
   }
-  
 
+  public static updateFamily = async (familyData: IFamily) => {
+    const sqlQueryString = `CALL sp_updateFamily ('${familyData.id}', '${familyData.cardNumber}', '${familyData.familyName}', '${familyData.address}',
+    '${familyData.phone}', '${familyData.nicNo}')`;
+
+    try {
+      const sqlData = await Mysql.connect(sqlQueryString, null);
+      if(sqlData.err)
+      {
+        throw new Error("Database Error");
+      }
+      return { err: false, data: sqlData.result}
+    }
+    catch (error) {
+      return { err: true, message: "Server Error Please contact admin"}
+    }
+  }
 
 }

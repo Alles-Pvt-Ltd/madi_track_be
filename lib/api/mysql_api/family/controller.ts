@@ -100,4 +100,16 @@ export class FamilyController {
         }
         return successResponse(addedHistory.data,"History Added Successfully",res);
     }
+
+    public updateFamily = async (req: Request, res: Response) => {
+        const body = req.body;
+        const updatedData = await Family.updateFamily(body);
+
+        if(updatedData.err)
+        {
+            return failureResponse(updatedData.message, res);
+        }
+
+        return successResponse(updatedData.data, "Family updated Successfully", res);
+    }
 }

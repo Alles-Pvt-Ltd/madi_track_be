@@ -5,6 +5,6 @@ export interface IUser {
     lastName: string;
     userName: string;
     password: string;
-    role: string;
+    role: number;
     gsDivisionId: number;
 }
