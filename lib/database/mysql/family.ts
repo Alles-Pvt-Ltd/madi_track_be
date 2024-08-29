@@ -124,4 +124,15 @@ export class Family {
     }
   }
 
+  public static updateHistory = async (historyData: IHistory, updatedBy: number) => {
+    const sqlQueryString = `CALL sp_updateHistory (${historyData.id},'${historyData.date}', '${historyData.description}', '${historyData.organization}',
+    NOW(), ${updatedBy})`;
+
+    const sqlData = await Mysql.connect(sqlQueryString, null);
+
+    if (sqlData.err) {
+        return { err: true, message: "Cannot update, please try after sometime" } as IData;
+      }
+    return { err: false, data: sqlData.result } as IData;
+  }
 }

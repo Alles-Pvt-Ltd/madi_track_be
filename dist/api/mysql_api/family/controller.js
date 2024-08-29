@@ -95,6 +95,18 @@ class FamilyController {
             }
             return (0, response_1.successResponse)(updatedData.data, "Family updated Successfully", res);
         });
+        this.updateHistory = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const jwtData = jwt_1.JwtToken.get(req);
+            const userInfo = yield user_1.User.getUserByCode(jwtData.code);
+            if (userInfo.err) {
+                return (0, response_1.failureResponse)(userInfo.message, res);
+            }
+            const updatedHistory = yield family_1.Family.updateHistory(req.body, userInfo.data[0].id);
+            if (updatedHistory.err) {
+                return (0, response_1.failureResponse)(updatedHistory.message, res);
+            }
+            return (0, response_1.successResponse)(updatedHistory.data, "History Updated Successfully", res);
+        });
     }
 }
 exports.FamilyController = FamilyController;

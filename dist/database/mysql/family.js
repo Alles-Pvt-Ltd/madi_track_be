@@ -109,3 +109,12 @@ Family.updateFamily = (familyData) => __awaiter(void 0, void 0, void 0, function
         return { err: true, message: "Server Error Please contact admin" };
     }
 });
+Family.updateHistory = (historyData, updatedBy) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_updateHistory (${historyData.id},'${historyData.date}', '${historyData.description}', '${historyData.organization}',
+    NOW(), ${updatedBy})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: "Cannot update, please try after sometime" };
+    }
+    return { err: false, data: sqlData.result };
+});

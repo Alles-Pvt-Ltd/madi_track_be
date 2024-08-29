@@ -50,3 +50,8 @@ Validation.updateFamilyValidation = [
     (0, express_validator_1.check)("phone").notEmpty().withMessage("Phone is required"),
     (0, express_validator_1.check)("nicNo").notEmpty().withMessage("NIC number is required")
 ];
+Validation.familyHistoryUpdateValidation = [
+    (0, express_validator_1.check)("date").notEmpty().withMessage("Date is required"),
+    (0, express_validator_1.check)("description").notEmpty().withMessage("Description is required"),
+    (0, express_validator_1.check)("organization").notEmpty().withMessage("Organization is required")
+];

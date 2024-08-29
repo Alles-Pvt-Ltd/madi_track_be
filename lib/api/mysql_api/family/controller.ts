@@ -112,4 +112,19 @@ export class FamilyController {
 
         return successResponse(updatedData.data, "Family updated Successfully", res);
     }
+
+    public updateHistory = async (req: Request, res: Response) => {
+        const jwtData = JwtToken.get(req);
+        const userInfo = await User.getUserByCode(jwtData.code);
+        if (userInfo.err) {
+            return failureResponse(userInfo.message, res);
+        }
+
+        const updatedHistory = await Family.updateHistory(req.body, userInfo.data[0].id);
+        if(updatedHistory.err)
+        {
+            return failureResponse(updatedHistory.message, res);
+        }
+        return successResponse(updatedHistory.data,"History Updated Successfully",res);
+    }
 }

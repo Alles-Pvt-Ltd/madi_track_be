@@ -51,4 +51,10 @@ export class Validation {
     check("phone").notEmpty().withMessage("Phone is required"),
     check("nicNo").notEmpty().withMessage("NIC number is required")
   ];
+
+  public static familyHistoryUpdateValidation = [
+    check("date").notEmpty().withMessage("Date is required"),
+    check("description").notEmpty().withMessage("Description is required"),
+    check("organization").notEmpty().withMessage("Organization is required")
+  ];
 }
