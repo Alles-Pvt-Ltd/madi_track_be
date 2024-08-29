@@ -105,6 +105,8 @@ export class Family {
         return { err: true, message: sqlData.result } as IData;
       }
     return { err: false, data: sqlData.result } as IData;
-}
+  }
+  
+
 
 }
