@@ -78,5 +78,13 @@ export class FamilyRoutes {
             }
         );
 
+        app.post(
+            url + "/history/delete/:id",
+            JwtToken.verify,
+            (req:Request, res:Response) => {
+              this.userCtrl.deleteHistory(req,res)
+            }
+        );
+
     }
 }

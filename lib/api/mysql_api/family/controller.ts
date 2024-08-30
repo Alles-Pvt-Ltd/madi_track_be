@@ -127,4 +127,22 @@ export class FamilyController {
         }
         return successResponse(updatedHistory.data,"History Updated Successfully",res);
     }
+
+    public deleteHistory = async (req: Request, res:Response) => {
+        const jwtData = JwtToken.get(req);
+        const userInfo = await User.getUserByCode(jwtData.code);
+        if (userInfo.err) {
+          return failureResponse(userInfo.message, res);
+        }
+    
+        const historyDelete = await Family.deleteHistory(
+          parseInt(req.params.id),
+          userInfo.data[0].id
+        );
+        if (historyDelete.err) {
+          return failureResponse(historyDelete.message, res);
+        }
+    
+        return successResponse(historyDelete.data, "History Deleted Successfully",res);
+      }
 }

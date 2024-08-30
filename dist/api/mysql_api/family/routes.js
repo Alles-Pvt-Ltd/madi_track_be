@@ -35,6 +35,9 @@ class FamilyRoutes {
         app.put(url + "/history/update", class_1.Validation.familyHistoryUpdateValidation, jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.updateHistory(req, res);
         });
+        app.post(url + "/history/delete/:id", jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.deleteHistory(req, res);
+        });
     }
 }
 exports.FamilyRoutes = FamilyRoutes;

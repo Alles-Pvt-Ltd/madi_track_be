@@ -107,6 +107,18 @@ class FamilyController {
             }
             return (0, response_1.successResponse)(updatedHistory.data, "History Updated Successfully", res);
         });
+        this.deleteHistory = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const jwtData = jwt_1.JwtToken.get(req);
+            const userInfo = yield user_1.User.getUserByCode(jwtData.code);
+            if (userInfo.err) {
+                return (0, response_1.failureResponse)(userInfo.message, res);
+            }
+            const historyDelete = yield family_1.Family.deleteHistory(parseInt(req.params.id), userInfo.data[0].id);
+            if (historyDelete.err) {
+                return (0, response_1.failureResponse)(historyDelete.message, res);
+            }
+            return (0, response_1.successResponse)(historyDelete.data, "History Deleted Successfully", res);
+        });
     }
 }
 exports.FamilyController = FamilyController;

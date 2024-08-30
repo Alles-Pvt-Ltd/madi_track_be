@@ -135,4 +135,14 @@ export class Family {
       }
     return { err: false, data: sqlData.result } as IData;
   }
+
+  public static deleteHistory = async (id: number, userId: number) => {
+    const sqlQueryString = `CALL sp_deleteHistory (${id}, ${userId}, NOW())`;
+    const sqlData = await Mysql.connect(sqlQueryString, null);
+
+    if (sqlData.err) {
+      return { err: true, message: "Error while delete, try after some time" } as IData;
+    }
+    return { err: false, data: sqlData.result} as IData;
+  }
 }
