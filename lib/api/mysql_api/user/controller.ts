@@ -19,13 +19,12 @@ export class UserController {
         if (loginResponse.err) {
           return failureResponse(loginResponse.message, res);
         }
-    
-        if (
-          !AppFunction.passwordVerify(
-            req.body.password,
-            loginResponse.data[0].password
-          )
-        ) {
+        if(loginResponse.data.length === 0)
+        {
+          return failureResponse(StringConstant.usernamePasswordMismatch, res);
+        }
+        if (!AppFunction.passwordVerify(req.body.password, loginResponse.data[0].password) )
+        {
           return failureResponse(StringConstant.usernamePasswordMismatch, res);
         }
         const divisionName = await User.getUserDivision(loginResponse.data[0].id);

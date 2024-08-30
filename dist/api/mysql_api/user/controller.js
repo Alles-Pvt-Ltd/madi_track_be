@@ -28,6 +28,9 @@ class UserController {
             if (loginResponse.err) {
                 return (0, response_1.failureResponse)(loginResponse.message, res);
             }
+            if (loginResponse.data.length === 0) {
+                return (0, response_1.failureResponse)(constant_1.StringConstant.usernamePasswordMismatch, res);
+            }
             if (!app_1.AppFunction.passwordVerify(req.body.password, loginResponse.data[0].password)) {
                 return (0, response_1.failureResponse)(constant_1.StringConstant.usernamePasswordMismatch, res);
             }
