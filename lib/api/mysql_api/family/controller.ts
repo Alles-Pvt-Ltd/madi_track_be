@@ -100,4 +100,49 @@ export class FamilyController {
         }
         return successResponse(addedHistory.data,"History Added Successfully",res);
     }
+
+    public updateFamily = async (req: Request, res: Response) => {
+        const body = req.body;
+        const updatedData = await Family.updateFamily(body);
+
+        if(updatedData.err)
+        {
+            return failureResponse(updatedData.message, res);
+        }
+
+        return successResponse(updatedData.data, "Family updated Successfully", res);
+    }
+
+    public updateHistory = async (req: Request, res: Response) => {
+        const jwtData = JwtToken.get(req);
+        const userInfo = await User.getUserByCode(jwtData.code);
+        if (userInfo.err) {
+            return failureResponse(userInfo.message, res);
+        }
+
+        const updatedHistory = await Family.updateHistory(req.body, userInfo.data[0].id);
+        if(updatedHistory.err)
+        {
+            return failureResponse(updatedHistory.message, res);
+        }
+        return successResponse(updatedHistory.data,"History Updated Successfully",res);
+    }
+
+    public deleteHistory = async (req: Request, res:Response) => {
+        const jwtData = JwtToken.get(req);
+        const userInfo = await User.getUserByCode(jwtData.code);
+        if (userInfo.err) {
+          return failureResponse(userInfo.message, res);
+        }
+    
+        const historyDelete = await Family.deleteHistory(
+          parseInt(req.params.id),
+          userInfo.data[0].id
+        );
+        if (historyDelete.err) {
+          return failureResponse(historyDelete.message, res);
+        }
+    
+        return successResponse(historyDelete.data, "History Deleted Successfully",res);
+      }
 }

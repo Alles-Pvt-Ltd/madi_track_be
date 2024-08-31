@@ -95,3 +95,34 @@ Family.addHistory = (historyData, createdBy) => __awaiter(void 0, void 0, void 0
     }
     return { err: false, data: sqlData.result };
 });
+Family.updateFamily = (familyData) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_updateFamily ('${familyData.id}', '${familyData.cardNumber}', '${familyData.familyName}', '${familyData.address}',
+    '${familyData.phone}', '${familyData.nicNo}')`;
+    try {
+        const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+        if (sqlData.err) {
+            throw new Error("Database Error");
+        }
+        return { err: false, data: sqlData.result };
+    }
+    catch (error) {
+        return { err: true, message: "Server Error Please contact admin" };
+    }
+});
+Family.updateHistory = (historyData, updatedBy) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_updateHistory (${historyData.id},'${historyData.date}', '${historyData.description}', '${historyData.organization}',
+    NOW(), ${updatedBy})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: "Cannot update, please try after sometime" };
+    }
+    return { err: false, data: sqlData.result };
+});
+Family.deleteHistory = (id, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_deleteHistory (${id}, ${userId}, NOW())`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: "Error while delete, try after some time" };
+    }
+    return { err: false, data: sqlData.result };
+});

@@ -42,7 +42,19 @@ export class Validation {
     check("description").notEmpty().withMessage("Description is required"),
     check("organization").notEmpty().withMessage("Organization is required"),
     check("familyId").notEmpty().withMessage("Family Id is required")
+  ];
 
+  public static updateFamilyValidation = [
+    check("cardNumber").notEmpty().withMessage("CardNumber is required"),
+    check("familyName").notEmpty().withMessage("FamilyName is required"),
+    check("address").notEmpty().withMessage("Address is required"),
+    check("phone").notEmpty().withMessage("Phone is required"),
+    check("nicNo").notEmpty().withMessage("NIC number is required")
+  ];
 
+  public static familyHistoryUpdateValidation = [
+    check("date").notEmpty().withMessage("Date is required"),
+    check("description").notEmpty().withMessage("Description is required"),
+    check("organization").notEmpty().withMessage("Organization is required")
   ];
 }

@@ -28,6 +28,16 @@ class FamilyRoutes {
         app.post(url + "/history/add", class_1.Validation.familyHistoryValidation, jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.addHistory(req, res);
         });
+        // Family update
+        app.put(url + "/update", class_1.Validation.updateFamilyValidation, jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.updateFamily(req, res);
+        });
+        app.put(url + "/history/update", class_1.Validation.familyHistoryUpdateValidation, jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.updateHistory(req, res);
+        });
+        app.post(url + "/history/delete/:id", jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.deleteHistory(req, res);
+        });
     }
 }
 exports.FamilyRoutes = FamilyRoutes;

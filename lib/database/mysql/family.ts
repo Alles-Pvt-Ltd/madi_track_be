@@ -106,7 +106,43 @@ export class Family {
       }
     return { err: false, data: sqlData.result } as IData;
   }
-  
 
+  public static updateFamily = async (familyData: IFamily) => {
+    const sqlQueryString = `CALL sp_updateFamily ('${familyData.id}', '${familyData.cardNumber}', '${familyData.familyName}', '${familyData.address}',
+    '${familyData.phone}', '${familyData.nicNo}')`;
 
+    try {
+      const sqlData = await Mysql.connect(sqlQueryString, null);
+      if(sqlData.err)
+      {
+        throw new Error("Database Error");
+      }
+      return { err: false, data: sqlData.result}
+    }
+    catch (error) {
+      return { err: true, message: "Server Error Please contact admin"}
+    }
+  }
+
+  public static updateHistory = async (historyData: IHistory, updatedBy: number) => {
+    const sqlQueryString = `CALL sp_updateHistory (${historyData.id},'${historyData.date}', '${historyData.description}', '${historyData.organization}',
+    NOW(), ${updatedBy})`;
+
+    const sqlData = await Mysql.connect(sqlQueryString, null);
+
+    if (sqlData.err) {
+        return { err: true, message: "Cannot update, please try after sometime" } as IData;
+      }
+    return { err: false, data: sqlData.result } as IData;
+  }
+
+  public static deleteHistory = async (id: number, userId: number) => {
+    const sqlQueryString = `CALL sp_deleteHistory (${id}, ${userId}, NOW())`;
+    const sqlData = await Mysql.connect(sqlQueryString, null);
+
+    if (sqlData.err) {
+      return { err: true, message: "Error while delete, try after some time" } as IData;
+    }
+    return { err: false, data: sqlData.result} as IData;
+  }
 }

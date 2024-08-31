@@ -43,3 +43,15 @@ Validation.familyHistoryValidation = [
     (0, express_validator_1.check)("organization").notEmpty().withMessage("Organization is required"),
     (0, express_validator_1.check)("familyId").notEmpty().withMessage("Family Id is required")
 ];
+Validation.updateFamilyValidation = [
+    (0, express_validator_1.check)("cardNumber").notEmpty().withMessage("CardNumber is required"),
+    (0, express_validator_1.check)("familyName").notEmpty().withMessage("FamilyName is required"),
+    (0, express_validator_1.check)("address").notEmpty().withMessage("Address is required"),
+    (0, express_validator_1.check)("phone").notEmpty().withMessage("Phone is required"),
+    (0, express_validator_1.check)("nicNo").notEmpty().withMessage("NIC number is required")
+];
+Validation.familyHistoryUpdateValidation = [
+    (0, express_validator_1.check)("date").notEmpty().withMessage("Date is required"),
+    (0, express_validator_1.check)("description").notEmpty().withMessage("Description is required"),
+    (0, express_validator_1.check)("organization").notEmpty().withMessage("Organization is required")
+];

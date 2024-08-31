@@ -58,5 +58,33 @@ export class FamilyRoutes {
                 this.userCtrl.addHistory(req, res);
             }
         );
+
+        // Family update
+        app.put(
+            url + "/update",
+            Validation.updateFamilyValidation,
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.userCtrl.updateFamily(req, res);
+            }
+        );
+
+        app.put(
+            url + "/history/update",
+            Validation.familyHistoryUpdateValidation,
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.userCtrl.updateHistory(req, res);
+            }
+        );
+
+        app.post(
+            url + "/history/delete/:id",
+            JwtToken.verify,
+            (req:Request, res:Response) => {
+              this.userCtrl.deleteHistory(req,res)
+            }
+        );
+
     }
 }

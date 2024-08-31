@@ -87,6 +87,38 @@ class FamilyController {
             }
             return (0, response_1.successResponse)(addedHistory.data, "History Added Successfully", res);
         });
+        this.updateFamily = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const body = req.body;
+            const updatedData = yield family_1.Family.updateFamily(body);
+            if (updatedData.err) {
+                return (0, response_1.failureResponse)(updatedData.message, res);
+            }
+            return (0, response_1.successResponse)(updatedData.data, "Family updated Successfully", res);
+        });
+        this.updateHistory = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const jwtData = jwt_1.JwtToken.get(req);
+            const userInfo = yield user_1.User.getUserByCode(jwtData.code);
+            if (userInfo.err) {
+                return (0, response_1.failureResponse)(userInfo.message, res);
+            }
+            const updatedHistory = yield family_1.Family.updateHistory(req.body, userInfo.data[0].id);
+            if (updatedHistory.err) {
+                return (0, response_1.failureResponse)(updatedHistory.message, res);
+            }
+            return (0, response_1.successResponse)(updatedHistory.data, "History Updated Successfully", res);
+        });
+        this.deleteHistory = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const jwtData = jwt_1.JwtToken.get(req);
+            const userInfo = yield user_1.User.getUserByCode(jwtData.code);
+            if (userInfo.err) {
+                return (0, response_1.failureResponse)(userInfo.message, res);
+            }
+            const historyDelete = yield family_1.Family.deleteHistory(parseInt(req.params.id), userInfo.data[0].id);
+            if (historyDelete.err) {
+                return (0, response_1.failureResponse)(historyDelete.message, res);
+            }
+            return (0, response_1.successResponse)(historyDelete.data, "History Deleted Successfully", res);
+        });
     }
 }
 exports.FamilyController = FamilyController;
