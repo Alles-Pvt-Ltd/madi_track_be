@@ -30,10 +30,10 @@ class DashboardController {
                     governmentEmployeesCount: governmentEmployeesCount.data[0].totalGovernmentEmployees,
                     universityStudentsCount: universityStudentsCount.data[0].totalUniversityStudents
                 };
-                return (0, response_1.successResponse)(helper_1.default.dashboardResponse(response), "Datas got success", res);
+                return (0, response_1.successResponse)(helper_1.default.dashboardResponse(response), "Dashboard Data Got Successfully", res);
             }
             catch (error) {
-                return (0, response_1.failureResponse)("Error while getting data, Please try after some time", res);
+                console.error("Error while getting data, Please try after some time");
             }
         });
     }

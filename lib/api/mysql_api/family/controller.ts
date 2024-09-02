@@ -145,4 +145,14 @@ export class FamilyController {
     
         return successResponse(historyDelete.data, "History Deleted Successfully",res);
       }
+
+      public getMemmberById = async (req: Request, res: Response) => {
+        const memberId = parseInt(req.params.id);
+        const memberDetails = await Family.getMemberById(memberId);
+        if (memberDetails.err) {
+            return failureResponse(memberDetails.message, res);
+        }
+
+        return successResponse(memberDetails.data[0], "member Details Retrieved Successfully", res);
+      }
 }

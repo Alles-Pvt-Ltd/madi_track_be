@@ -18,6 +18,9 @@ class FamilyRoutes {
         app.post(url + "/member/add", class_1.Validation.addMemberValidation, jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.addMember(req, res);
         });
+        app.get(url + "/member/:id", jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.getMemmberById(req, res);
+        });
         app.put(url + "/member/update", class_1.Validation.updateMemberValidation, jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.updateMember(req, res);
         });

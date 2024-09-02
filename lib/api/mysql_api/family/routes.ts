@@ -33,6 +33,14 @@ export class FamilyRoutes {
             }
         );
 
+        app.get(
+            url + "/member/:id",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.userCtrl.getMemmberById(req, res);
+            }
+        );
+
         app.put(
             url + "/member/update",
             Validation.updateMemberValidation,
