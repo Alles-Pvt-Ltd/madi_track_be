@@ -5,15 +5,18 @@ const routes_1 = require("../api/mysql_api/user/routes");
 const constant_1 = require("../config/constant");
 const verify_token_1 = require("../app/verify_token");
 const routes_2 = require("../api/mysql_api/family/routes");
+const routes_3 = require("../api/mysql_api/dashboard/routes");
 class GsAppRoutes {
     // add every root here
     constructor(app) {
         this.userRoutes = new routes_1.UserRoutes();
         this.familyRoutes = new routes_2.FamilyRoutes();
+        this.dashboardRoutes = new routes_3.DashboardRoutes();
         this.verify = new verify_token_1.Verify();
         this.appConstant = new constant_1.default();
         this.userRoutes.route(app, this.appConstant.baseURL + '/user');
         this.familyRoutes.route(app, this.appConstant.baseURL + '/family');
+        this.dashboardRoutes.route(app, this.appConstant.baseURL + '/dashboard');
         app.all('*', function (req, res) {
             res.status(404).send({ error: true, message: 'Check your URL please' });
         });
