@@ -19,14 +19,14 @@ interface IDashboardHelperData {
         title:"Total Families",
         count:data.familyCount,
         bgColor:"#DC6B19",
-        imageUrl: "https://www.svgrepo.com/show/493236/family-of-3-upper-body.svg"
+        imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
       });
   
       dashboardResponse.push({
         title:"Total Childrens",
         count:data.childrenCount,
         bgColor:"#FB9AD1",
-        imageUrl: "https://www.svgrepo.com/show/216316/children-movement.svg"
+        imageUrl: "https://i.ibb.co/yhrVz14/children-movement-svgrepo-com.png"
       })
   
       dashboardResponse.push({
@@ -40,14 +40,14 @@ interface IDashboardHelperData {
         title:"Total Government Employees",
         count:data.governmentEmployeesCount,
         bgColor:"#4CCD99",
-        imageUrl: "https://www.svgrepo.com/show/476911/parliament.svg"
+        imageUrl: "https://i.ibb.co/tcxGy2w/employee-worker-svgrepo-com.png"
       })
   
       dashboardResponse.push({
         title:"Total University Students",
         count:data.universityStudentsCount,
         bgColor:"#2FC6FF",
-        imageUrl: "https://www.svgrepo.com/show/337727/degree-hat.svg"
+        imageUrl: "https://i.ibb.co/qMGWzCX/graduation-academy-grad-svgrepo-com.png"
       })
   
       return dashboardResponse;
