@@ -62,7 +62,8 @@ class UserController {
             const referenceData = {
                 genderReference: responseData.data[0],
                 familyRoleReference: responseData.data[1],
-                occupationReference: responseData.data[2]
+                occupationReference: responseData.data[2],
+                gsDivisions: responseData.data[3]
             };
             return (0, response_1.successResponse)(referenceData, "Successfully retrieved", res);
         });

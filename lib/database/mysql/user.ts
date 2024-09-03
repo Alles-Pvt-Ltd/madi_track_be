@@ -59,14 +59,14 @@ export class User {
       } as IData;
     };
 
-    public static getUserDivision = async (userId: number) => {
-      const sqlQueryString = `CALL sp_userDetails (${userId})`;
-      const sqlData = await Mysql.connect(sqlQueryString, null);
+    // public static getUserDivision = async (userId: number) => {
+    //   const sqlQueryString = `CALL sp_userDetails (${userId})`;
+    //   const sqlData = await Mysql.connect(sqlQueryString, null);
 
-      if(sqlData.err)
-      {
-        return { err: true, message: sqlData.result } as IData;
-      }
-      return { err: true, data: sqlData.result}
-    }
+    //   if(sqlData.err)
+    //   {
+    //     return { err: true, message: sqlData.result } as IData;
+    //   }
+    //   return { err: true, data: sqlData.result}
+    // }
 }

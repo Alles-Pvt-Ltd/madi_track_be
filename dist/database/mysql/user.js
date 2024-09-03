@@ -60,11 +60,3 @@ User.changePassword = (code, password) => __awaiter(void 0, void 0, void 0, func
         message: "Password changed successfully",
     };
 });
-User.getUserDivision = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_userDetails (${userId})`;
-    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
-    if (sqlData.err) {
-        return { err: true, message: sqlData.result };
-    }
-    return { err: true, data: sqlData.result };
-});
