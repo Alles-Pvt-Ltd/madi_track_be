@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { successResponse, failureResponse } from '../../modules/common/service';
 import Helper from './helper';
 import {Service} from '../../database/mongodb/service'
-
+const { exec } = require('child_process');
 export class DashboardController {
 
     // private helper: Helper = new Helper();
@@ -62,6 +62,18 @@ export class DashboardController {
         }
         
     }
+
+    public deployment = async (req: Request, res: Response) => {
+        exec('sh deploy.sh',
+          (error, stdout, stderr) => {
+              console.log(stdout);
+              console.log(stderr);
+              if (error !== null) {
+                return failureResponse('Error fetching dashboard data',error.message, res);
+              }
+              return successResponse("Deployment done...", {},res);
+          });
+      };
     
 }
 
