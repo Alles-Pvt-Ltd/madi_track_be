@@ -126,3 +126,11 @@ Family.deleteHistory = (id, userId) => __awaiter(void 0, void 0, void 0, functio
     }
     return { err: false, data: sqlData.result };
 });
+Family.getMemberById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_getMemberById (${id})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
+    }
+    return { err: false, data: sqlData.result[0] };
+});

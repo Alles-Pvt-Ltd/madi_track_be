@@ -13,12 +13,12 @@ export interface IMember {
     id?: number;
     firstName: string;
     lastName: string;
-    mobile: string;
-    email: string;
+    mobile?: string;
+    email?: string;
     gender: number;
     role: number;
     dateOfBirth: string;
-    nicNo: string;
+    nicNo?: string;
     occupation: string;
     isGovernmentEmployee: number;
     familyId: string;

@@ -16,24 +16,24 @@ Validation.addFamilyValidation = [
 Validation.addMemberValidation = [
     (0, express_validator_1.check)("firstName").notEmpty().withMessage("Firstname is required"),
     (0, express_validator_1.check)("lastName").notEmpty().withMessage("Lastname is required"),
-    (0, express_validator_1.check)("mobile").notEmpty().withMessage("Mobile is required"),
-    (0, express_validator_1.check)("email").notEmpty().withMessage("Email is required"),
+    // check("mobile").notEmpty().withMessage("Mobile is required"),
+    // check("email").notEmpty().withMessage("Email is required"),
     (0, express_validator_1.check)("gender").notEmpty().withMessage("Gender is required"),
     (0, express_validator_1.check)("role").notEmpty().withMessage("Role is required"),
     (0, express_validator_1.check)("dateOfBirth").notEmpty().withMessage("Date Of Birth is required"),
-    (0, express_validator_1.check)("nicNo").notEmpty().withMessage("NIC number is required"),
+    // check("nicNo").notEmpty().withMessage("NIC number is required"),
     (0, express_validator_1.check)("occupation").notEmpty().withMessage("Occupation is required"),
     (0, express_validator_1.check)("familyId").notEmpty().withMessage("Family Id is required")
 ];
 Validation.updateMemberValidation = [
     (0, express_validator_1.check)("firstName").notEmpty().withMessage("Firstname is required"),
     (0, express_validator_1.check)("lastName").notEmpty().withMessage("Lastname is required"),
-    (0, express_validator_1.check)("mobile").notEmpty().withMessage("Mobile is required"),
-    (0, express_validator_1.check)("email").notEmpty().withMessage("Email is required"),
+    // check("mobile").notEmpty().withMessage("Mobile is required"),
+    // check("email").notEmpty().withMessage("Email is required"),
     (0, express_validator_1.check)("gender").notEmpty().withMessage("Gender is required"),
     (0, express_validator_1.check)("role").notEmpty().withMessage("Role is required"),
     (0, express_validator_1.check)("dateOfBirth").notEmpty().withMessage("Date Of Birth is required"),
-    (0, express_validator_1.check)("nicNo").notEmpty().withMessage("NIC number is required"),
+    // check("nicNo").notEmpty().withMessage("NIC number is required"),
     (0, express_validator_1.check)("occupation").notEmpty().withMessage("Occupation is required"),
     (0, express_validator_1.check)("isGovernmentEmployee").notEmpty().withMessage("Government Employee detail is required")
 ];

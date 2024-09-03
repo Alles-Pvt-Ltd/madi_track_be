@@ -119,6 +119,14 @@ class FamilyController {
             }
             return (0, response_1.successResponse)(historyDelete.data, "History Deleted Successfully", res);
         });
+        this.getMemmberById = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const memberId = parseInt(req.params.id);
+            const memberDetails = yield family_1.Family.getMemberById(memberId);
+            if (memberDetails.err) {
+                return (0, response_1.failureResponse)(memberDetails.message, res);
+            }
+            return (0, response_1.successResponse)(memberDetails.data[0], "member Details Retrieved Successfully", res);
+        });
     }
 }
 exports.FamilyController = FamilyController;

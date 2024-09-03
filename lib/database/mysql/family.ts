@@ -145,4 +145,15 @@ export class Family {
     }
     return { err: false, data: sqlData.result} as IData;
   }
+
+  public static getMemberById = async (id: number) => {
+    const sqlQueryString = `CALL sp_getMemberById (${id})`;
+
+      const sqlData = await Mysql.connect(sqlQueryString, null);
+
+      if (sqlData.err) {
+          return { err: true, message: sqlData.result } as IData;
+      }
+      return { err: false, data: sqlData.result[0] } as IData; 
+  }
 }
