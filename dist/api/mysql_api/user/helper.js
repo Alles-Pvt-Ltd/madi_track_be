@@ -4,12 +4,18 @@ const app_1 = require("../../../core/app");
 class Helper {
 }
 exports.default = Helper;
-Helper.loginResponse = (user, divisionName) => {
-    const temUser = Object.assign({}, user);
-    temUser.token = app_1.AppFunction.createJwtToken(user.code);
-    temUser.divisionName = divisionName;
+Helper.loginResponse = (result) => {
+    const temUser = Object.assign({}, result[0][0]);
+    temUser.token = app_1.AppFunction.createJwtToken(temUser.code);
     delete temUser.password;
     delete temUser.isDeleted;
+    temUser.divisionIds = [];
+    result[1].map((item) => {
+        temUser.divisionIds.push({
+            id: item.divisionId,
+            name: item.name
+        });
+    });
     return temUser;
 };
 Helper.getToken = (code) => {

@@ -23,12 +23,11 @@ export class UserController {
         {
           return failureResponse(StringConstant.usernamePasswordMismatch, res);
         }
-        if (!AppFunction.passwordVerify(req.body.password, loginResponse.data[0].password) )
+        if (!AppFunction.passwordVerify(req.body.password, loginResponse.data[0][0].password) )
         {
           return failureResponse(StringConstant.usernamePasswordMismatch, res);
         }
-        const divisionName = await User.getUserDivision(loginResponse.data[0].id);
-        return successResponse(Helper.loginResponse(loginResponse.data[0], divisionName.data[0][0].divisionName), "Login successfull", res);
+        return successResponse(Helper.loginResponse(loginResponse.data), "Login successfull", res);
     };
 
     public register = async (req: Request, res: Response) => {

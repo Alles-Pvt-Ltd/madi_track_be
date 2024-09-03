@@ -11,7 +11,7 @@ export class User {
       if (sqlData.err) {
         return { err: true, message: sqlData.result } as IData;
       }
-      return { err: false, data: sqlData.result[0] } as IData;
+      return { err: false, data: sqlData.result } as IData;
     };
 
     public static register = async (data: IUser) => {
