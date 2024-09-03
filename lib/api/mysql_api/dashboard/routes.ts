@@ -13,9 +13,9 @@ export class DashboardRoutes {
       (req: Request, res: Response) => {
         this.dashboardCtlr.dashboardList(req, res);
       }
-    ),
-      app.post(url + "/deploy", (req: Request, res: Response) => {
-        this.dashboardCtlr.deployment(req, res);
-      });
+    )
+      // app.post(url + "/deploy", (req: Request, res: Response) => {
+      //   this.dashboardCtlr.deployment(req, res);
+      // });
   }
 }
