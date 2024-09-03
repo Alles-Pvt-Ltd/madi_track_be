@@ -22,7 +22,7 @@ User.findUserByUsername = (userName) => __awaiter(void 0, void 0, void 0, functi
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
     }
-    return { err: false, data: sqlData.result[0] };
+    return { err: false, data: sqlData.result };
 });
 User.register = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const insertUser = `CALL sp_register ('${data.code}','${data.firstName}', '${data.lastName}', '${data.userName}', '${data.password}', '${data.role}',${data.gsDivisionId})`;
