@@ -5,7 +5,7 @@ import { validationResult } from "express-validator";
 import Helper from "./helper";
 import { Dashboard } from "../../../database/mysql/dashboard";
 import { JwtToken } from "../../../core/jwt";
-
+const { exec } = require('child_process');
 export class DashboardController {
     public dashboardList = async (req: Request, res: Response) => {
         const gsDivisionId = parseInt(req.params.divisionId);
@@ -31,4 +31,16 @@ export class DashboardController {
         }
         
     }
+
+    public deployment = async (req: Request, res: Response) => {
+        exec('sh deploy.sh',
+          (error, stdout, stderr) => {
+              console.log(stdout);
+              console.log(stderr);
+              if (error !== null) {
+                return failureResponse(error.message, res);
+              }
+              return successResponse({message:"Deployment done..."},"",res);
+          });
+      };
 }

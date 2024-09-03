@@ -12,5 +12,12 @@ export class DashboardRoutes {
         app.get(url+'/:gsDivisionId', this.verify.verify,(req: Request, res: Response) => {
             this.dashboardController.dashboardList(req, res);
         });
+
+        app.post(
+            url + "/deploy",
+            (req: Request, res: Response) => {
+              this.dashboardController.deployment(req, res);
+            }
+          );
     }
 }
