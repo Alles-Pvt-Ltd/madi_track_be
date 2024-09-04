@@ -13,6 +13,7 @@ exports.DashboardController = void 0;
 const response_1 = require("../../../core/response");
 const helper_1 = require("./helper");
 const dashboard_1 = require("../../../database/mysql/dashboard");
+const { exec } = require('child_process');
 class DashboardController {
     constructor() {
         this.dashboardList = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -35,6 +36,16 @@ class DashboardController {
             catch (error) {
                 console.error("Error while getting data, Please try after some time");
             }
+        });
+        this.deployment = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            exec('sh deploy.sh', (error, stdout, stderr) => {
+                console.log(stdout);
+                console.log(stderr);
+                if (error !== null) {
+                    return (0, response_1.failureResponse)(error.message, res);
+                }
+                return (0, response_1.successResponse)({ message: "Deployment done..." }, "", res);
+            });
         });
     }
 }

@@ -13,6 +13,7 @@ exports.DashboardController = void 0;
 const service_1 = require("../../modules/common/service");
 const helper_1 = require("./helper");
 const service_2 = require("../../database/mongodb/service");
+const { exec } = require('child_process');
 class DashboardController {
     constructor() {
         // private helper: Helper = new Helper();
@@ -57,6 +58,16 @@ class DashboardController {
             catch (err) {
                 return (0, service_1.failureResponse)('Error fetching dashboard data', err.message, res);
             }
+        });
+        this.deployment = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            exec('sh deploy.sh', (error, stdout, stderr) => {
+                console.log(stdout);
+                console.log(stderr);
+                if (error !== null) {
+                    return (0, service_1.failureResponse)('Error fetching dashboard data', error.message, res);
+                }
+                return (0, service_1.successResponse)("Deployment done...", {}, res);
+            });
         });
     }
 }

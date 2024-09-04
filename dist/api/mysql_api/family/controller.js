@@ -48,7 +48,7 @@ class FamilyController {
         });
         this.addMember = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const body = req.body;
-            const duplicateMember = yield family_1.Family.getDuplicateMember(body.nicNo);
+            const duplicateMember = yield family_1.Family.getDuplicateMember(body.firstName, body.lastName, body.familyId);
             if (duplicateMember.data.length !== 0) {
                 return (0, response_1.failureResponse)("Member Already Exist", res);
             }

@@ -38,11 +38,10 @@ export class Family {
         return { err: false, data: sqlData.result } as IData;
     }
 
-    public static getDuplicateMember = async (nicNo: string) => {
-      const sqlQueryString = `CALL sp_getMemberByNicNo ('${nicNo}')`;
+    public static getDuplicateMember = async (firstName: string, lastName: string, familyId: number) => {
+      const sqlQueryString = `CALL sp_getDuplicateMember ('${firstName}','${lastName}',${familyId})`;
 
       const sqlData = await Mysql.connect(sqlQueryString, null);
-
       if (sqlData.err) {
           return { err: true, message: sqlData.result } as IData;
         }
@@ -50,9 +49,13 @@ export class Family {
     }
 
     public static addMember = async (memberData: IMember) => {
-      const sqlQueryString = `CALL sp_addMember ('${memberData.firstName}', '${memberData.lastName}', '${memberData.mobile}', '${memberData.email}',
-      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', '${memberData.nicNo}', '${memberData.occupation}', '${memberData.isGovernmentEmployee}',
-      '${memberData.familyId}')`;
+      const mobile = memberData.mobile !== null ? `'${memberData.mobile}'` : "NULL";
+      const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
+      const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
+
+      const sqlQueryString = `CALL sp_addMember ('${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
+      ${memberData.gender}, ${memberData.role}, '${memberData.dateOfBirth}', ${nicNo}, ${memberData.occupation}, '${memberData.isGovernmentEmployee}',
+      ${memberData.familyId})`;
 
       try {
         const sqlData = await Mysql.connect(sqlQueryString, null);
@@ -68,8 +71,12 @@ export class Family {
     }
 
     public static updateMemmber = async (memberData: IMember) => {
-      const sqlQueryString = `CALL sp_updateMember ('${memberData.id}', '${memberData.firstName}', '${memberData.lastName}', '${memberData.mobile}', '${memberData.email}',
-      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', '${memberData.nicNo}', '${memberData.occupation}', '${memberData.isGovernmentEmployee}')`;
+      const mobile = memberData.mobile !== null ? `'${memberData.mobile}'` : "NULL";
+      const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
+      const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
+
+      const sqlQueryString = `CALL sp_updateMember ('${memberData.id}', '${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
+      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', ${nicNo}, '${memberData.occupation}', '${memberData.isGovernmentEmployee}')`;
 
       try {
         const sqlData = await Mysql.connect(sqlQueryString, null);
