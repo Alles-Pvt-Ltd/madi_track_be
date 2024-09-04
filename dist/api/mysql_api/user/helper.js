@@ -4,20 +4,6 @@ const app_1 = require("../../../core/app");
 class Helper {
 }
 exports.default = Helper;
-// public static loginResponse = (result) => {
-//   const temUser = { ...result[0][0] };
-//   temUser.token = AppFunction.createJwtToken(temUser.code);
-//   delete temUser.password;
-//   delete temUser.isDeleted;
-//   temUser.divisionIds = [];
-//    result[1].map((item) => {
-//     temUser.divisionIds.push({
-//       id: item.divisionId,
-//       name: item.name
-//     })
-//   })
-//   return temUser;
-// };
 Helper.getToken = (code) => {
     const temUInfo = {};
     temUInfo.token = app_1.AppFunction.createJwtToken(code);
