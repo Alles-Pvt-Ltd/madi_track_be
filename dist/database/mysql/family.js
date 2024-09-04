@@ -41,8 +41,8 @@ Family.getAllFamiliesDetails = (divisionId) => __awaiter(void 0, void 0, void 0,
     }
     return { err: false, data: sqlData.result };
 });
-Family.getDuplicateMember = (nicNo) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_getMemberByNicNo ('${nicNo}')`;
+Family.getDuplicateMember = (firstName, lastName, familyId) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_getDuplicateMember ('${firstName}','${lastName}',${familyId})`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
@@ -50,9 +50,12 @@ Family.getDuplicateMember = (nicNo) => __awaiter(void 0, void 0, void 0, functio
     return { err: false, data: sqlData.result[0] };
 });
 Family.addMember = (memberData) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_addMember ('${memberData.firstName}', '${memberData.lastName}', '${memberData.mobile}', '${memberData.email}',
-      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', '${memberData.nicNo}', '${memberData.occupation}', '${memberData.isGovernmentEmployee}',
-      '${memberData.familyId}')`;
+    const mobile = memberData.mobile !== null ? `'${memberData.mobile}'` : "NULL";
+    const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
+    const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
+    const sqlQueryString = `CALL sp_addMember ('${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
+      ${memberData.gender}, ${memberData.role}, '${memberData.dateOfBirth}', ${nicNo}, ${memberData.occupation}, '${memberData.isGovernmentEmployee}',
+      ${memberData.familyId})`;
     try {
         const sqlData = yield connection_1.default.connect(sqlQueryString, null);
         if (sqlData.err) {
@@ -65,8 +68,11 @@ Family.addMember = (memberData) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 Family.updateMemmber = (memberData) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_updateMember ('${memberData.id}', '${memberData.firstName}', '${memberData.lastName}', '${memberData.mobile}', '${memberData.email}',
-      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', '${memberData.nicNo}', '${memberData.occupation}', '${memberData.isGovernmentEmployee}')`;
+    const mobile = memberData.mobile !== null ? `'${memberData.mobile}'` : "NULL";
+    const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
+    const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
+    const sqlQueryString = `CALL sp_updateMember ('${memberData.id}', '${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
+      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', ${nicNo}, '${memberData.occupation}', '${memberData.isGovernmentEmployee}')`;
     try {
         const sqlData = yield connection_1.default.connect(sqlQueryString, null);
         if (sqlData.err) {

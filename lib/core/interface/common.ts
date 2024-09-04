@@ -19,7 +19,7 @@ export interface IMember {
     role: number;
     dateOfBirth: string;
     nicNo?: string;
-    occupation: string;
+    occupation: number;
     isGovernmentEmployee: number;
     familyId: string;
 }

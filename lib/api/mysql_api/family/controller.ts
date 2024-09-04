@@ -47,7 +47,7 @@ export class FamilyController {
 
     public addMember = async (req: Request, res: Response) => {
         const body = req.body;
-        const duplicateMember = await Family.getDuplicateMember(body.nicNo);
+        const duplicateMember = await Family.getDuplicateMember(body.firstName,body.lastName,body.familyId);
         if(duplicateMember.data.length !== 0)
         {
             return failureResponse("Member Already Exist",res);
