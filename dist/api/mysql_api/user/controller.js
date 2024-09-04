@@ -34,7 +34,7 @@ class UserController {
             if (!app_1.AppFunction.passwordVerify(req.body.password, loginResponse.data[0][0].password)) {
                 return (0, response_1.failureResponse)(constant_1.StringConstant.usernamePasswordMismatch, res);
             }
-            return (0, response_1.successResponse)(helper_1.default.loginResponse(loginResponse.data), "Login successfull", res);
+            return (0, response_1.successResponse)(helper_1.default.getToken(loginResponse.data[0][0].code), "Login successfull", res);
         });
         this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const errors = (0, express_validator_1.validationResult)(req);
@@ -85,6 +85,18 @@ class UserController {
                 return (0, response_1.failureResponse)(changedPassword.message, res);
             }
             return (0, response_1.successResponse)(changedPassword.data, changedPassword.message, res);
+        });
+        this.userInfo = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const jwtData = jwt_1.JwtToken.get(req);
+            const userInfo = yield user_1.User.getUserByCode(jwtData.code);
+            if (userInfo.err) {
+                return (0, response_1.failureResponse)(userInfo.message, res);
+            }
+            const userDetail = yield user_1.User.userInfo(userInfo.data[0].id);
+            if (userDetail.err) {
+                return (0, response_1.failureResponse)("Error Occur, UserDetails Not Found", res);
+            }
+            return (0, response_1.successResponse)(helper_1.default.userResponse(userDetail.data), userDetail.message, res);
         });
     }
 }

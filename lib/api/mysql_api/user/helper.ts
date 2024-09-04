@@ -4,22 +4,6 @@ import { AppFunction } from "../../../core/app";
 
 
 export default class Helper {
-  public static loginResponse = (result) => {
-    const temUser = { ...result[0][0] };
-    temUser.token = AppFunction.createJwtToken(temUser.code);
-    delete temUser.password;
-    delete temUser.isDeleted;
-    temUser.divisionIds = [];
-
-     result[1].map((item) => {
-      temUser.divisionIds.push({
-        id: item.divisionId,
-        name: item.name
-      })
-    })
-    
-    return temUser;
-  };
 
   public static getToken = (code:string): {token?: string}  => {
     
@@ -27,4 +11,20 @@ export default class Helper {
     temUInfo.token = AppFunction.createJwtToken(code);
     return temUInfo;
   };
+
+  public static userResponse = (userData: any) => {
+    const userInfo = { ...userData[0][0] };
+    delete userInfo.password;
+    delete userInfo.isDeleted;
+    userInfo.divisionIds = [];
+
+    userData[1].map((item) => {
+      userInfo.divisionIds.push({
+        id: item.divisionId,
+        name: item.name
+      })
+    })
+    
+    return userInfo;
+  }
 }

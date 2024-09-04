@@ -38,5 +38,13 @@ export class UserRoutes {
         this.userCtrl.changePassword(req, res);
       }
     );
+
+    app.get(
+      url + "/info",
+      JwtToken.verify,
+      (req: Request, res: Response) => {
+        this.userCtrl.userInfo(req, res);
+      }
+    );
   }
 }
