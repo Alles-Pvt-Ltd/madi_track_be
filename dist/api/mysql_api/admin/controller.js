@@ -21,6 +21,13 @@ class AdminController {
             }
             return (0, response_1.successResponse)(gsList.data, gsList.message, res);
         });
+        this.getAllFamilies = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const familyList = yield admin_1.Admin.getAllFamilies(req.body.divisionId);
+            if (familyList.err) {
+                return (0, response_1.failureResponse)(familyList.message, res);
+            }
+            return (0, response_1.successResponse)(familyList.data, familyList.message, res);
+        });
     }
 }
 exports.AdminController = AdminController;

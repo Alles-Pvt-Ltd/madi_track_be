@@ -14,4 +14,14 @@ export class AdminController {
 
         return successResponse(gsList.data, gsList.message, res);
     }
+
+    public getAllFamilies = async (req: Request, res: Response) => {
+        const familyList = await Admin.getAllFamilies(req.body.divisionId);
+        if(familyList.err)
+        {
+            return failureResponse(familyList.message, res);
+        }
+
+        return successResponse(familyList.data, familyList.message, res);
+    }
 }

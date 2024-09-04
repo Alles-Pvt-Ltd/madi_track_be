@@ -14,5 +14,13 @@ export class AdminRoutes {
                 this.adminCtrl.getAllGsList(req, res);
             }
         );
+
+        app.post(
+            url + "/family/list",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.adminCtrl.getAllFamilies(req, res);
+            }
+        );
     }
 }

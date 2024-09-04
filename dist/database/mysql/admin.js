@@ -24,3 +24,12 @@ Admin.getAllGsList = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     return { err: false, data: sqlData.result[0], message: "GS List Successfully Retrieved" };
 });
+Admin.getAllFamilies = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
+    const gsDivisionId = divisionId !== null ? `${divisionId}` : "null";
+    const sqlQueryString = `CALL sp_getAllFamilies (${gsDivisionId})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: "Error Occur While Getting Family List" };
+    }
+    return { err: false, data: sqlData.result[0], message: "Family List Retrieved Successfuly" };
+});
