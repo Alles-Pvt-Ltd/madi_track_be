@@ -42,7 +42,7 @@ export class UserController {
       if (user.err) {
         return failureResponse(user.message, res);
       }
-      if(user.data.length > 0)
+      if(user.data[0].length > 0)
       {
         return failureResponse("User already exist", res);
       }
