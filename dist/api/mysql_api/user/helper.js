@@ -4,22 +4,39 @@ const app_1 = require("../../../core/app");
 class Helper {
 }
 exports.default = Helper;
-Helper.loginResponse = (result) => {
-    const temUser = Object.assign({}, result[0][0]);
-    temUser.token = app_1.AppFunction.createJwtToken(temUser.code);
-    delete temUser.password;
-    delete temUser.isDeleted;
-    temUser.divisionIds = [];
-    result[1].map((item) => {
-        temUser.divisionIds.push({
-            id: item.divisionId,
-            name: item.name
-        });
-    });
-    return temUser;
-};
+// public static loginResponse = (user) => {
+//   const tempUser = { ...user[0][0] }
+//   tempUser.token = AppFunction.createJwtToken(tempUser.code)
+//   delete tempUser.password;
+//   delete tempUser.isDeleted;
+//   delete tempUser.role;
+//   delete tempUser.firstname;
+//   delete tempUser.lastname;
+//   tempUser.divisionId = user[1]
+//   user[1].map((item) => {
+//     tempUser.divisionIds.push({
+//       id: item.divisionId,
+//       name: item.name
+//     })
+//   })
+//   return tempUser;
+// }
 Helper.getToken = (code) => {
     const temUInfo = {};
     temUInfo.token = app_1.AppFunction.createJwtToken(code);
     return temUInfo;
+};
+Helper.userResponse = (userData) => {
+    const userInfo = Object.assign({}, userData[0][0]);
+    delete userInfo.password;
+    delete userInfo.isDeleted;
+    userInfo.divisionIds = [];
+    userData[1].map((item) => {
+        userInfo.divisionIds.push({
+            id: item.divisionId,
+            name: item.name,
+            isDefault: item.isDefault
+        });
+    });
+    return userInfo;
 };

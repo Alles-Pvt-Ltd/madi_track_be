@@ -21,6 +21,9 @@ class UserRoutes {
         app.post(url + "/change_password", class_1.Validation.changePasswordValidation, jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.changePassword(req, res);
         });
+        app.get(url + "/info", jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.userInfo(req, res);
+        });
     }
 }
 exports.UserRoutes = UserRoutes;

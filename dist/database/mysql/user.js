@@ -60,3 +60,11 @@ User.changePassword = (code, password) => __awaiter(void 0, void 0, void 0, func
         message: "Password changed successfully",
     };
 });
+User.userInfo = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_userInfo (${userId})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
+    }
+    return { err: false, data: sqlData.result, message: "User Details Got Success" };
+});

@@ -27,7 +27,7 @@ export class UserController {
         {
           return failureResponse(StringConstant.usernamePasswordMismatch, res);
         }
-        return successResponse(Helper.loginResponse(loginResponse.data), "Login successfull", res);
+        return successResponse(Helper.getToken(loginResponse.data[0][0].code), "Login successfull", res);
     };
 
     public register = async (req: Request, res: Response) => {
@@ -42,7 +42,7 @@ export class UserController {
       if (user.err) {
         return failureResponse(user.message, res);
       }
-      if(user.data.length > 0)
+      if(user.data[0].length > 0)
       {
         return failureResponse("User already exist", res);
       }
@@ -101,4 +101,19 @@ export class UserController {
   
       return successResponse(changedPassword.data, changedPassword.message, res);
     };
+
+    public userInfo = async (req: Request, res: Response) => {
+      const jwtData = JwtToken.get(req);
+      const userInfo = await User.getUserByCode(jwtData.code);
+      if (userInfo.err) {
+        return failureResponse(userInfo.message, res);
+      }
+
+      const userDetail = await User.userInfo(userInfo.data[0].id);
+      if(userDetail.err)
+      {
+        return failureResponse("Error Occur, UserDetails Not Found", res)
+      }
+      return successResponse(Helper.userResponse(userDetail.data), userDetail.message, res);
+    }
 }
