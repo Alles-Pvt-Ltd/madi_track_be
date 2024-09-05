@@ -138,5 +138,5 @@ Family.getMemberById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
     }
-    return { err: false, data: sqlData.result[0] };
+    return { err: false, data: sqlData.result };
 });

@@ -125,7 +125,8 @@ class FamilyController {
             if (memberDetails.err) {
                 return (0, response_1.failureResponse)(memberDetails.message, res);
             }
-            return (0, response_1.successResponse)(memberDetails.data[0], "member Details Retrieved Successfully", res);
+            console.log(memberDetails.data);
+            return (0, response_1.successResponse)(helper_1.default.memberResponse(memberDetails.data), "member Details Retrieved Successfully", res);
         });
     }
 }

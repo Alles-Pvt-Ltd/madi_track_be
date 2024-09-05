@@ -21,9 +21,9 @@ exports.default = Helper;
 //   })
 //   return tempUser;
 // }
-Helper.getToken = (code) => {
+Helper.getToken = (code, role) => {
     const temUInfo = {};
-    temUInfo.token = app_1.AppFunction.createJwtToken(code);
+    temUInfo.token = app_1.AppFunction.createJwtToken(code, role);
     return temUInfo;
 };
 Helper.userResponse = (userData) => {

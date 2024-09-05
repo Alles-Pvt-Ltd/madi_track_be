@@ -152,7 +152,7 @@ export class FamilyController {
         if (memberDetails.err) {
             return failureResponse(memberDetails.message, res);
         }
-
-        return successResponse(memberDetails.data[0], "member Details Retrieved Successfully", res);
+        console.log(memberDetails.data)
+        return successResponse(Helper.memberResponse(memberDetails.data), "member Details Retrieved Successfully", res);
       }
 }

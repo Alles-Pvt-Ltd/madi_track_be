@@ -27,7 +27,7 @@ export class UserController {
         {
           return failureResponse(StringConstant.usernamePasswordMismatch, res);
         }
-        return successResponse(Helper.getToken(loginResponse.data[0][0].code), "Login successfull", res);
+        return successResponse(Helper.getToken(loginResponse.data[0][0].code,loginResponse.data[0][0].role), "Login successfull", res);
     };
 
     public register = async (req: Request, res: Response) => {

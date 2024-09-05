@@ -42,8 +42,8 @@ export  class AppFunction {
     return jwt.verify(jwtToken, "HJOGHJOAHF") as {code:string};
   }
 
-  public static createJwtToken(userCode: string) {
-    return jwt.sign({ code: userCode }, "HJOGHJOAHF", {
+  public static createJwtToken(userCode: string, role: number) {
+    return jwt.sign({ code: userCode, role }, "HJOGHJOAHF", {
       // expiresIn: "2h", //token will expaire after 2 hours
     });
   }
