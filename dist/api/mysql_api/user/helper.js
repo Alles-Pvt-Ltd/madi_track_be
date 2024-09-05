@@ -34,7 +34,8 @@ Helper.userResponse = (userData) => {
     userData[1].map((item) => {
         userInfo.divisionIds.push({
             id: item.divisionId,
-            name: item.name
+            name: item.name,
+            isDefault: item.isDefault
         });
     });
     return userInfo;

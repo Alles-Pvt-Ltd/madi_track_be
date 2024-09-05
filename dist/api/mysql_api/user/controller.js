@@ -46,7 +46,6 @@ class UserController {
             if (user.err) {
                 return (0, response_1.failureResponse)(user.message, res);
             }
-            console.log(user.data[0]);
             if (user.data[0].length > 0) {
                 return (0, response_1.failureResponse)("User already exist", res);
             }
