@@ -35,12 +35,13 @@ class FamilyController {
             return (0, response_1.successResponse)(addedFamily.data, "Family Added Successfully", res);
         });
         this.getAllFamiliesDetails = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const jwtData = jwt_1.JwtToken.get(req);
-            const userInfo = yield user_1.User.getUserByCode(jwtData.code);
-            if (userInfo.err) {
-                return (0, response_1.failureResponse)(userInfo.message, res);
-            }
-            const familiesDetails = yield family_1.Family.getAllFamiliesDetails(userInfo.data[0].gsDivisionId);
+            // const jwtData = JwtToken.get(req);
+            // const userInfo = await User.getUserByCode(jwtData.code);
+            // if (userInfo.err) {
+            //     return failureResponse(userInfo.message, res);
+            // }
+            const gsDivisionId = parseInt(req.params.divisionId);
+            const familiesDetails = yield family_1.Family.getAllFamiliesDetails(gsDivisionId);
             if (familiesDetails.err) {
                 return (0, response_1.failureResponse)(familiesDetails.message, res);
             }
@@ -125,7 +126,7 @@ class FamilyController {
             if (memberDetails.err) {
                 return (0, response_1.failureResponse)(memberDetails.message, res);
             }
-            return (0, response_1.successResponse)(memberDetails.data[0], "member Details Retrieved Successfully", res);
+            return (0, response_1.successResponse)(helper_1.default.memberResponse(memberDetails.data), "member Details Retrieved Successfully", res);
         });
     }
 }

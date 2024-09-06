@@ -30,13 +30,9 @@ export class FamilyController {
     }
 
     public getAllFamiliesDetails = async (req: Request, res: Response) => {
-        const jwtData = JwtToken.get(req);
-        const userInfo = await User.getUserByCode(jwtData.code);
-        if (userInfo.err) {
-            return failureResponse(userInfo.message, res);
-        }
+        const gsDivisionId = parseInt(req.params.divisionId);
 
-        const familiesDetails = await Family.getAllFamiliesDetails(userInfo.data[0].gsDivisionId);
+        const familiesDetails = await Family.getAllFamiliesDetails(gsDivisionId);
         if(familiesDetails.err)
         {
             return failureResponse(familiesDetails.message, res);
@@ -152,7 +148,6 @@ export class FamilyController {
         if (memberDetails.err) {
             return failureResponse(memberDetails.message, res);
         }
-
-        return successResponse(memberDetails.data[0], "member Details Retrieved Successfully", res);
+        return successResponse(Helper.memberResponse(memberDetails.data), "member Details Retrieved Successfully", res);
       }
 }

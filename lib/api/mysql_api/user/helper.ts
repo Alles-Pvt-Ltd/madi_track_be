@@ -23,10 +23,10 @@ export default class Helper {
   //   return tempUser;
   // }
 
-  public static getToken = (code:string): {token?: string}  => {
+  public static getToken = (code:string, role: number): {token?: string}  => {
     
     const temUInfo: {token?: string} = {};
-    temUInfo.token = AppFunction.createJwtToken(code);
+    temUInfo.token = AppFunction.createJwtToken(code,role);
     return temUInfo;
   };
 

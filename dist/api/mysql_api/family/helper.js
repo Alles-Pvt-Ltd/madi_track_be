@@ -25,3 +25,20 @@ Helper.singleFamilyResponse = (familyData, memberData, historyData) => {
     };
     return finalFamilyData;
 };
+Helper.memberResponse = (data) => {
+    const memberData = {
+        id: data[0][0].id,
+        firstname: data[0][0].firstname,
+        lastname: data[0][0].lastname,
+        mobile: data[0][0].mobile,
+        email: data[0][0].email,
+        gender: data[0][0].gender,
+        role: data[0][0].role,
+        dateOfBirth: data[0][0].dateOfBirth,
+        nicNo: data[0][0].nicNo,
+        occupation: data[0][0].occupation,
+        isGovernmentEmployee: data[0][0].isGovernmentEmployee,
+        memberHistory: data[1]
+    };
+    return memberData;
+};
