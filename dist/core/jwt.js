@@ -26,5 +26,22 @@ class JwtToken {
         const verifyToken = req.header("token");
         return app_1.AppFunction.jwtVerify(verifyToken);
     }
+    static adminVerify(req, res, next) {
+        const verifyToken = req.header("token");
+        if (!verifyToken) {
+            return (0, response_1.forbidden)("Access Denied, please check you are providing correct token", req.body, res);
+        }
+        try {
+            const verified = app_1.AppFunction.jwtVerify(verifyToken);
+            if (verified.role !== 2) {
+                return (0, response_1.forbidden)("Access Denied", req.body, res);
+            }
+            req.user = verified;
+        }
+        catch (error) {
+            return (0, response_1.forbidden)("Please provide valid token", req.body, res);
+        }
+        return next();
+    }
 }
 exports.JwtToken = JwtToken;

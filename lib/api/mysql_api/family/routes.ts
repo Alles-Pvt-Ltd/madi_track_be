@@ -17,7 +17,7 @@ export class FamilyRoutes {
         );
 
         app.get(
-            url + "/list",
+            url + "/list/:divisionId",
             JwtToken.verify,
             (req: Request, res: Response) => {
                 this.userCtrl.getAllFamiliesDetails(req, res);

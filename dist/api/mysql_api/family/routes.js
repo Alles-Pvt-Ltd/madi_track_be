@@ -12,7 +12,7 @@ class FamilyRoutes {
         app.post(url + "/add", class_1.Validation.addFamilyValidation, jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.addFamily(req, res);
         });
-        app.get(url + "/list", jwt_1.JwtToken.verify, (req, res) => {
+        app.get(url + "/list/:divisionId", jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.getAllFamiliesDetails(req, res);
         });
         app.post(url + "/member/add", class_1.Validation.addMemberValidation, jwt_1.JwtToken.verify, (req, res) => {

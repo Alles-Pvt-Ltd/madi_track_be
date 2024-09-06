@@ -31,10 +31,10 @@ class UserController {
             if (loginResponse.data.length === 0) {
                 return (0, response_1.failureResponse)(constant_1.StringConstant.usernamePasswordMismatch, res);
             }
-            if (!app_1.AppFunction.passwordVerify(req.body.password, loginResponse.data[0][0].password)) {
+            if (!app_1.AppFunction.passwordVerify(req.body.password, loginResponse.data[0].password)) {
                 return (0, response_1.failureResponse)(constant_1.StringConstant.usernamePasswordMismatch, res);
             }
-            return (0, response_1.successResponse)(helper_1.default.getToken(loginResponse.data[0][0].code, loginResponse.data[0][0].role), "Login successfull", res);
+            return (0, response_1.successResponse)(helper_1.default.getToken(loginResponse.data[0].code, loginResponse.data[0].role), "Login successfull", res);
         });
         this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const errors = (0, express_validator_1.validationResult)(req);
