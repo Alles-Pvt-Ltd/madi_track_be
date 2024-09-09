@@ -2,8 +2,8 @@ import Mysql from "./connection";
 import { IData } from "../../core/common/constant";
 
 export class Admin {
-    public static getAllGsList = async () => {
-        const sqlQueryString = `CALL sp_getAllGSList ()`;
+    public static getAllGsList = async (divisionId: number) => {
+        const sqlQueryString = `CALL sp_getAllGSList (${divisionId})`;
         const sqlData = await Mysql.connect(sqlQueryString, null);
         if(sqlData.err)
         {

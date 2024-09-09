@@ -3,10 +3,12 @@ import { badResponse, failureResponse, successResponse } from "../../../core/res
 import { validationResult } from "express-validator";
 import { Admin } from "../../../database/mysql/admin";
 import { JwtToken } from "../../../core/jwt";
+import { User } from "../../../database/mysql/user"
 
 export class AdminController {
     public getAllGsList = async (req: Request, res: Response) => {
-        const gsList = await Admin.getAllGsList();
+        const divisionId = parseInt(req.params.divisionId)
+        const gsList = await Admin.getAllGsList(divisionId);
         if(gsList.err)
         {
             return failureResponse(gsList.message, res);

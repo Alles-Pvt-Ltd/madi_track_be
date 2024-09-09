@@ -16,8 +16,8 @@ class Admin {
 }
 exports.Admin = Admin;
 _a = Admin;
-Admin.getAllGsList = () => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_getAllGSList ()`;
+Admin.getAllGsList = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_getAllGSList (${divisionId})`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
         return { err: true, message: "Error Occur While Getting GS List" };

@@ -8,7 +8,7 @@ export class AdminRoutes {
     public route(app: Application, url: string) {
 
         app.get(
-            url + "/gslist",
+            url + "/gslist/:divisionId",
             JwtToken.verify,
             (req: Request, res: Response) => {
                 this.adminCtrl.getAllGsList(req, res);

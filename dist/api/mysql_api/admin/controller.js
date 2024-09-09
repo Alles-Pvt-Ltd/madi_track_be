@@ -15,7 +15,8 @@ const admin_1 = require("../../../database/mysql/admin");
 class AdminController {
     constructor() {
         this.getAllGsList = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const gsList = yield admin_1.Admin.getAllGsList();
+            const divisionId = parseInt(req.params.divisionId);
+            const gsList = yield admin_1.Admin.getAllGsList(divisionId);
             if (gsList.err) {
                 return (0, response_1.failureResponse)(gsList.message, res);
             }

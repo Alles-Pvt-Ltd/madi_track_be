@@ -35,11 +35,6 @@ class FamilyController {
             return (0, response_1.successResponse)(addedFamily.data, "Family Added Successfully", res);
         });
         this.getAllFamiliesDetails = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            // const jwtData = JwtToken.get(req);
-            // const userInfo = await User.getUserByCode(jwtData.code);
-            // if (userInfo.err) {
-            //     return failureResponse(userInfo.message, res);
-            // }
             const gsDivisionId = parseInt(req.params.divisionId);
             const familiesDetails = yield family_1.Family.getAllFamiliesDetails(gsDivisionId);
             if (familiesDetails.err) {
