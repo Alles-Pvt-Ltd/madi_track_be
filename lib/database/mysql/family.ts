@@ -4,8 +4,8 @@ import { IFamily, IHistory, IMember } from "core/interface/common";
 
 export class Family {
 
-    public static getDuplicateFamily = async (nicNo: string) => {
-        const sqlQueryString = `CALL sp_getFamilyByNicNo ('${nicNo}')`;
+    public static getDuplicateFamily = async (nicNo: string,cardNumber: number) => {
+        const sqlQueryString = `CALL sp_getFamilyByNicNo ('${nicNo}',${cardNumber})`;
 
         const sqlData = await Mysql.connect(sqlQueryString, null);
 

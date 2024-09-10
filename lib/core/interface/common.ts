@@ -1,7 +1,7 @@
 
 export interface IFamily {
     id?: number;
-    cardNumber: string;
+    cardNumber: number;
     familyName: string;
     address: string;
     phone: string;

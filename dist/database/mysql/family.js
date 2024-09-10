@@ -16,8 +16,8 @@ class Family {
 }
 exports.Family = Family;
 _a = Family;
-Family.getDuplicateFamily = (nicNo) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_getFamilyByNicNo ('${nicNo}')`;
+Family.getDuplicateFamily = (nicNo, cardNumber) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_getFamilyByNicNo ('${nicNo}',${cardNumber})`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
