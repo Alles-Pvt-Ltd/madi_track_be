@@ -140,3 +140,43 @@ Family.getMemberById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
     return { err: false, data: sqlData.result };
 });
+Family.initiateTransfer = (transferData) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const sqlQueryString = `CALL sp_initiateFamilyTransfer (${transferData.familyId}, ${transferData.oldDivision}, ${transferData.newDivision},
+      '${transferData.reason}')`;
+        const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+        if (sqlData.err) {
+            return { err: true, message: "Error occur while transfer, try after some time" };
+        }
+        return { err: false, data: sqlData.result };
+    }
+    catch (error) {
+        return { err: false, message: "Server error, please contact admin" };
+    }
+});
+Family.getAllFamilyTransfersForAGsDivision = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const sqlQueryString = `CALL sp_getAllFamilyTransfersForAGsDivision (${divisionId})`;
+        const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+        if (sqlData.err) {
+            return { err: true, message: "Error occur while getting transfer list, try after some time" };
+        }
+        return { err: false, data: sqlData.result };
+    }
+    catch (error) {
+        return { err: false, message: "Server error, please contact admin" };
+    }
+});
+Family.transferAcceptOrRejectByGs = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const sqlQueryString = `CALL sp_acceptOrRejectFamilyTransferByGs (${data.id},${data.status})`;
+        const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+        if (sqlData.err) {
+            return { err: true, message: "Error occur while updating status, try after some time" };
+        }
+        return { err: false, data: sqlData.result };
+    }
+    catch (error) {
+        return { err: false, message: "Server error, please contact admin" };
+    }
+});

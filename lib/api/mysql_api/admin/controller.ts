@@ -26,4 +26,26 @@ export class AdminController {
 
         return successResponse(familyList.data, familyList.message, res);
     }
+
+    public getAllFamilyTransfers = async (req: Request, res: Response) => {
+        const dsDivisionId = parseInt(req.params.divisionId);
+        const transferList = await Admin.getAllFamilyTransfers(dsDivisionId);
+
+        if(transferList.err)
+        {
+            return failureResponse(transferList.message, res);
+        }
+
+        return successResponse(transferList.data, transferList.message, res);
+    }
+
+    public updateFamilyTransferStatus = async (req: Request, res: Response) => {
+        const updatedData = await Admin.transferAcceptOrRejectByDs(req.body);
+        if(updatedData.err)
+        {
+            return failureResponse(updatedData.message,res);
+        }
+
+        return successResponse(updatedData.data, updatedData.message, res);
+    }
 }

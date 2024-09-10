@@ -33,3 +33,19 @@ Admin.getAllFamilies = (divisionId) => __awaiter(void 0, void 0, void 0, functio
     }
     return { err: false, data: sqlData.result[0], message: "Family List Retrieved Successfuly" };
 });
+Admin.getAllFamilyTransfers = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_getAllFamilyTransfersForADsDivision (${divisionId})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: "Error Occur While Getting Family Transfer list" };
+    }
+    return { err: false, data: sqlData.result[0], message: "Family Transfer List Retrieved Successfuly" };
+});
+Admin.transferAcceptOrRejectByDs = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_acceptOrRejectFamilyTransferByDs (${data.id},${data.status})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: "Error Occur While Updating Transfer Status" };
+    }
+    return { err: false, data: sqlData.result[0], message: "Family Transfer Status Updated Successfully" };
+});

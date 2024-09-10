@@ -14,6 +14,12 @@ class AdminRoutes {
         app.post(url + "/family/list", jwt_1.JwtToken.verify, (req, res) => {
             this.adminCtrl.getAllFamilies(req, res);
         });
+        app.get(url + "/family/transfer/list/:divisionId", jwt_1.JwtToken.verify, (req, res) => {
+            this.adminCtrl.getAllFamilyTransfers(req, res);
+        });
+        app.post(url + "/family/transfer/update", jwt_1.JwtToken.verify, (req, res) => {
+            this.adminCtrl.updateFamilyTransferStatus(req, res);
+        });
     }
 }
 exports.AdminRoutes = AdminRoutes;

@@ -41,6 +41,17 @@ class FamilyRoutes {
         app.post(url + "/history/delete/:id", jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.deleteHistory(req, res);
         });
+        app.post(url + "/transfer/request", 
+        // Validation.addMemberValidation,
+        jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.initiateFamilyTransfer(req, res);
+        });
+        app.get(url + "/transfer/list/:divisionId", jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.getAllFamilyTransfersForAGsDivision(req, res);
+        });
+        app.post(url + "/transfer/update", jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.transferAcceptOrRejectByGs(req, res);
+        });
     }
 }
 exports.FamilyRoutes = FamilyRoutes;

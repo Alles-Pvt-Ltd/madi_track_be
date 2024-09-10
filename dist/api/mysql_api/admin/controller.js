@@ -29,6 +29,21 @@ class AdminController {
             }
             return (0, response_1.successResponse)(familyList.data, familyList.message, res);
         });
+        this.getAllFamilyTransfers = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const dsDivisionId = parseInt(req.params.divisionId);
+            const transferList = yield admin_1.Admin.getAllFamilyTransfers(dsDivisionId);
+            if (transferList.err) {
+                return (0, response_1.failureResponse)(transferList.message, res);
+            }
+            return (0, response_1.successResponse)(transferList.data, transferList.message, res);
+        });
+        this.updateFamilyTransferStatus = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const updatedData = yield admin_1.Admin.transferAcceptOrRejectByDs(req.body);
+            if (updatedData.err) {
+                return (0, response_1.failureResponse)(updatedData.message, res);
+            }
+            return (0, response_1.successResponse)(updatedData.data, updatedData.message, res);
+        });
     }
 }
 exports.AdminController = AdminController;

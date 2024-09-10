@@ -22,5 +22,21 @@ export class AdminRoutes {
                 this.adminCtrl.getAllFamilies(req, res);
             }
         );
+
+        app.get(
+            url + "/family/transfer/list/:divisionId",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.adminCtrl.getAllFamilyTransfers(req, res);
+            }
+        );
+
+        app.post(
+            url + "/family/transfer/update",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.adminCtrl.updateFamilyTransferStatus(req, res);
+            }
+        );
     }
 }
