@@ -16,8 +16,8 @@ class Family {
 }
 exports.Family = Family;
 _a = Family;
-Family.getDuplicateFamily = (nicNo, cardNumber) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_getFamilyByNicNo ('${nicNo}',${cardNumber})`;
+Family.getDuplicateFamily = (cardNumber) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_getFamilyByNicNo (${cardNumber})`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
@@ -53,9 +53,10 @@ Family.addMember = (memberData) => __awaiter(void 0, void 0, void 0, function* (
     const mobile = memberData.mobile !== null ? `'${memberData.mobile}'` : "NULL";
     const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
     const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
+    const occupation = memberData.occupation !== null ? `${memberData.occupation}` : "NULL";
     const sqlQueryString = `CALL sp_addMember ('${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
-      ${memberData.gender}, ${memberData.role}, '${memberData.dateOfBirth}', ${nicNo}, ${memberData.occupation}, '${memberData.isGovernmentEmployee}',
-      ${memberData.familyId})`;
+      ${memberData.gender}, ${memberData.role}, '${memberData.dateOfBirth}', ${nicNo}, ${occupation}, '${memberData.isGovernmentEmployee}',
+      ${memberData.familyId},'${memberData.religion}','${memberData.isDisabledPerson}')`;
     try {
         const sqlData = yield connection_1.default.connect(sqlQueryString, null);
         if (sqlData.err) {
@@ -71,8 +72,10 @@ Family.updateMemmber = (memberData) => __awaiter(void 0, void 0, void 0, functio
     const mobile = memberData.mobile !== null ? `'${memberData.mobile}'` : "NULL";
     const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
     const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
+    const occupation = memberData.occupation !== null ? `${memberData.occupation}` : "NULL";
     const sqlQueryString = `CALL sp_updateMember ('${memberData.id}', '${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
-      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', ${nicNo}, '${memberData.occupation}', '${memberData.isGovernmentEmployee}')`;
+      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', ${nicNo}, ${occupation}, '${memberData.isGovernmentEmployee}',
+      '${memberData.religion}','${memberData.isDisabledPerson}')`;
     try {
         const sqlData = yield connection_1.default.connect(sqlQueryString, null);
         if (sqlData.err) {

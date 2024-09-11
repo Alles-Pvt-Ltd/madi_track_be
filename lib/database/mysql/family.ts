@@ -4,8 +4,8 @@ import { IFamily, IFamilyTransfer, IHistory, IMember } from "core/interface/comm
 
 export class Family {
 
-    public static getDuplicateFamily = async (nicNo: string,cardNumber: number) => {
-        const sqlQueryString = `CALL sp_getFamilyByNicNo ('${nicNo}',${cardNumber})`;
+    public static getDuplicateFamily = async (cardNumber: number) => {
+        const sqlQueryString = `CALL sp_getFamilyByNicNo (${cardNumber})`;
 
         const sqlData = await Mysql.connect(sqlQueryString, null);
 
@@ -52,10 +52,11 @@ export class Family {
       const mobile = memberData.mobile !== null ? `'${memberData.mobile}'` : "NULL";
       const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
       const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
+      const occupation = memberData.occupation !== null ? `${memberData.occupation}` : "NULL";
 
       const sqlQueryString = `CALL sp_addMember ('${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
-      ${memberData.gender}, ${memberData.role}, '${memberData.dateOfBirth}', ${nicNo}, ${memberData.occupation}, '${memberData.isGovernmentEmployee}',
-      ${memberData.familyId})`;
+      ${memberData.gender}, ${memberData.role}, '${memberData.dateOfBirth}', ${nicNo}, ${occupation}, '${memberData.isGovernmentEmployee}',
+      ${memberData.familyId},'${memberData.religion}','${memberData.isDisabledPerson}')`;
 
       try {
         const sqlData = await Mysql.connect(sqlQueryString, null);
@@ -74,9 +75,11 @@ export class Family {
       const mobile = memberData.mobile !== null ? `'${memberData.mobile}'` : "NULL";
       const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
       const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
+      const occupation = memberData.occupation !== null ? `${memberData.occupation}` : "NULL";
 
       const sqlQueryString = `CALL sp_updateMember ('${memberData.id}', '${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
-      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', ${nicNo}, '${memberData.occupation}', '${memberData.isGovernmentEmployee}')`;
+      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', ${nicNo}, ${occupation}, '${memberData.isGovernmentEmployee}',
+      '${memberData.religion}','${memberData.isDisabledPerson}')`;
 
       try {
         const sqlData = await Mysql.connect(sqlQueryString, null);

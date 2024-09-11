@@ -21,6 +21,8 @@ export interface IMember {
     nicNo?: string;
     occupation: number;
     isGovernmentEmployee: number;
+    religion: string;
+    isDisabledPerson: number;
     familyId: string;
 }
 
