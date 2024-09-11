@@ -63,7 +63,8 @@ class UserController {
                 genderReference: responseData.data[0],
                 familyRoleReference: responseData.data[1],
                 occupationReference: responseData.data[2],
-                gsDivisions: responseData.data[3]
+                gsDivisions: responseData.data[3],
+                religionReference: responseData.data[4]
             };
             return (0, response_1.successResponse)(referenceData, "Successfully retrieved", res);
         });

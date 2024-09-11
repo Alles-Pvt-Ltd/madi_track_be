@@ -1,11 +1,11 @@
 import Mysql from "./connection";
 import { IData } from "../../core/common/constant";
-import { IFamily, IHistory, IMember } from "core/interface/common";
+import { IFamily, IFamilyTransfer, IHistory, IMember } from "core/interface/common";
 
 export class Family {
 
-    public static getDuplicateFamily = async (nicNo: string) => {
-        const sqlQueryString = `CALL sp_getFamilyByNicNo ('${nicNo}')`;
+    public static getDuplicateFamily = async (cardNumber: number) => {
+        const sqlQueryString = `CALL sp_getFamilyByCardNumber ('${cardNumber}')`;
 
         const sqlData = await Mysql.connect(sqlQueryString, null);
 
@@ -52,10 +52,11 @@ export class Family {
       const mobile = memberData.mobile !== null ? `'${memberData.mobile}'` : "NULL";
       const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
       const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
+      const occupation = memberData.occupation !== null ? `${memberData.occupation}` : "NULL";
 
       const sqlQueryString = `CALL sp_addMember ('${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
-      ${memberData.gender}, ${memberData.role}, '${memberData.dateOfBirth}', ${nicNo}, ${memberData.occupation}, '${memberData.isGovernmentEmployee}',
-      ${memberData.familyId})`;
+      ${memberData.gender}, ${memberData.role}, '${memberData.dateOfBirth}', ${nicNo}, ${occupation}, '${memberData.isGovernmentEmployee}',
+      ${memberData.familyId},'${memberData.religion}','${memberData.isDisabledPerson}')`;
 
       try {
         const sqlData = await Mysql.connect(sqlQueryString, null);
@@ -74,9 +75,11 @@ export class Family {
       const mobile = memberData.mobile !== null ? `'${memberData.mobile}'` : "NULL";
       const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
       const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
+      const occupation = memberData.occupation !== null ? `${memberData.occupation}` : "NULL";
 
       const sqlQueryString = `CALL sp_updateMember ('${memberData.id}', '${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
-      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', ${nicNo}, '${memberData.occupation}', '${memberData.isGovernmentEmployee}')`;
+      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', ${nicNo}, ${occupation}, '${memberData.isGovernmentEmployee}',
+      '${memberData.religion}','${memberData.isDisabledPerson}')`;
 
       try {
         const sqlData = await Mysql.connect(sqlQueryString, null);
@@ -162,5 +165,57 @@ export class Family {
           return { err: true, message: sqlData.result } as IData;
       }
       return { err: false, data: sqlData.result } as IData; 
+  }
+
+  public static initiateTransfer = async (transferData: IFamilyTransfer) => {
+    try {
+      const sqlQueryString = `CALL sp_initiateFamilyTransfer (${transferData.familyId}, ${transferData.oldDivision}, ${transferData.newDivision},
+      '${transferData.reason}')`;
+
+      const sqlData = await Mysql.connect(sqlQueryString, null);
+
+      if (sqlData.err) {
+          return { err: true, message: "Error occur while transfer, try after some time" } as IData;
+      }
+      return { err: false, data: sqlData.result } as IData; 
+    }
+    catch (error) {
+      return { err: false, message: "Server error, please contact admin" } as IData;
+    }    
+
+  }
+
+  public static getAllFamilyTransfersForAGsDivision = async (divisionId: number) => {
+    try {
+      const sqlQueryString = `CALL sp_getAllFamilyTransfersForAGsDivision (${divisionId})`;
+
+      const sqlData = await Mysql.connect(sqlQueryString, null);
+
+      if (sqlData.err) {
+          return { err: true, message: "Error occur while getting transfer list, try after some time" } as IData;
+      }
+      return { err: false, data: sqlData.result } as IData; 
+    }
+    catch (error) {
+      return { err: false, message: "Server error, please contact admin" } as IData;
+    }    
+
+  }
+
+  public static transferAcceptOrRejectByGs = async (data: IFamilyTransfer) => {
+    try {
+      const sqlQueryString = `CALL sp_acceptOrRejectFamilyTransferByGs (${data.id},${data.status})`;
+
+      const sqlData = await Mysql.connect(sqlQueryString, null);
+
+      if (sqlData.err) {
+          return { err: true, message: "Error occur while updating status, try after some time" } as IData;
+      }
+      return { err: false, data: sqlData.result } as IData; 
+    }
+    catch (error) {
+      return { err: false, message: "Server error, please contact admin" } as IData;
+    }    
+
   }
 }

@@ -8,7 +8,7 @@ export class AdminRoutes {
     public route(app: Application, url: string) {
 
         app.get(
-            url + "/gslist",
+            url + "/gslist/:divisionId",
             JwtToken.verify,
             (req: Request, res: Response) => {
                 this.adminCtrl.getAllGsList(req, res);
@@ -20,6 +20,22 @@ export class AdminRoutes {
             JwtToken.verify,
             (req: Request, res: Response) => {
                 this.adminCtrl.getAllFamilies(req, res);
+            }
+        );
+
+        app.get(
+            url + "/family/transfer/list/:divisionId",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.adminCtrl.getAllFamilyTransfers(req, res);
+            }
+        );
+
+        app.post(
+            url + "/family/transfer/update",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.adminCtrl.updateFamilyTransferStatus(req, res);
             }
         );
     }

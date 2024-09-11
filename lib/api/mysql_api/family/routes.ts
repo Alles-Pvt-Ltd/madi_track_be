@@ -94,5 +94,30 @@ export class FamilyRoutes {
             }
         );
 
+        app.post(
+            url + "/transfer/request",
+            // Validation.addMemberValidation,
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.userCtrl.initiateFamilyTransfer(req, res);
+            }
+        );
+
+        app.get(
+            url + "/transfer/list/:divisionId",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.userCtrl.getAllFamilyTransfersForAGsDivision(req, res);
+            }
+        );
+
+        app.post(
+            url + "/transfer/update",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.userCtrl.transferAcceptOrRejectByGs(req, res);
+            }
+        );
+
     }
 }

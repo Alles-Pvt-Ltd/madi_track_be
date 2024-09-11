@@ -14,7 +14,7 @@ export class FamilyController {
         }
 
         const body = req.body; 
-        const duplicateFamily = await Family.getDuplicateFamily(body.nicNo);
+        const duplicateFamily = await Family.getDuplicateFamily(body.cardNumber);
         if(duplicateFamily.data.length !== 0)
         {
             return failureResponse("Family Already Exist",res);
@@ -150,4 +150,41 @@ export class FamilyController {
         }
         return successResponse(Helper.memberResponse(memberDetails.data), "member Details Retrieved Successfully", res);
       }
+
+      public initiateFamilyTransfer = async (req: Request, res: Response) => {
+        const transferData = req.body;
+        const transferDetail = await Family.initiateTransfer(transferData);
+
+        if (transferDetail.err) {
+            return failureResponse(transferDetail.message, res);
+        }
+
+        return successResponse(transferDetail.data[0],"Successfully initiated transfer request",res);
+      }
+
+      public getAllFamilyTransfersForAGsDivision = async (req: Request, res: Response) => {
+        const gsDivisionId = parseInt(req.params.divisionId);
+        const transferList = await Family.getAllFamilyTransfersForAGsDivision(gsDivisionId);
+
+        if (transferList.err) {
+            return failureResponse(transferList.message, res);
+        }
+        if(transferList.data[0].length === 0)
+        {
+            return failureResponse("No Pending Transfers", res);
+        }
+        return successResponse(transferList.data[0],"Successfully get all tranfers",res);
+      }
+
+      public transferAcceptOrRejectByGs = async (req: Request, res: Response) => {
+        const transferData = req.body;
+        const updatedDetail = await Family.transferAcceptOrRejectByGs(transferData);
+
+        if (updatedDetail.err) {
+            return failureResponse(updatedDetail.message, res);
+        }
+
+        return successResponse(updatedDetail.data[0],"Successfully updated status",res);
+      }
+
 }

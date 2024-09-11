@@ -24,7 +24,7 @@ class FamilyController {
                 return (0, response_1.badResponse)(errors.array(), res);
             }
             const body = req.body;
-            const duplicateFamily = yield family_1.Family.getDuplicateFamily(body.nicNo);
+            const duplicateFamily = yield family_1.Family.getDuplicateFamily(body.cardNumber);
             if (duplicateFamily.data.length !== 0) {
                 return (0, response_1.failureResponse)("Family Already Exist", res);
             }
@@ -35,11 +35,6 @@ class FamilyController {
             return (0, response_1.successResponse)(addedFamily.data, "Family Added Successfully", res);
         });
         this.getAllFamiliesDetails = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            // const jwtData = JwtToken.get(req);
-            // const userInfo = await User.getUserByCode(jwtData.code);
-            // if (userInfo.err) {
-            //     return failureResponse(userInfo.message, res);
-            // }
             const gsDivisionId = parseInt(req.params.divisionId);
             const familiesDetails = yield family_1.Family.getAllFamiliesDetails(gsDivisionId);
             if (familiesDetails.err) {
@@ -127,6 +122,33 @@ class FamilyController {
                 return (0, response_1.failureResponse)(memberDetails.message, res);
             }
             return (0, response_1.successResponse)(helper_1.default.memberResponse(memberDetails.data), "member Details Retrieved Successfully", res);
+        });
+        this.initiateFamilyTransfer = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const transferData = req.body;
+            const transferDetail = yield family_1.Family.initiateTransfer(transferData);
+            if (transferDetail.err) {
+                return (0, response_1.failureResponse)(transferDetail.message, res);
+            }
+            return (0, response_1.successResponse)(transferDetail.data[0], "Successfully initiated transfer request", res);
+        });
+        this.getAllFamilyTransfersForAGsDivision = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const gsDivisionId = parseInt(req.params.divisionId);
+            const transferList = yield family_1.Family.getAllFamilyTransfersForAGsDivision(gsDivisionId);
+            if (transferList.err) {
+                return (0, response_1.failureResponse)(transferList.message, res);
+            }
+            if (transferList.data[0].length === 0) {
+                return (0, response_1.failureResponse)("No Pending Transfers", res);
+            }
+            return (0, response_1.successResponse)(transferList.data[0], "Successfully get all tranfers", res);
+        });
+        this.transferAcceptOrRejectByGs = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const transferData = req.body;
+            const updatedDetail = yield family_1.Family.transferAcceptOrRejectByGs(transferData);
+            if (updatedDetail.err) {
+                return (0, response_1.failureResponse)(updatedDetail.message, res);
+            }
+            return (0, response_1.successResponse)(updatedDetail.data[0], "Successfully updated status", res);
         });
     }
 }

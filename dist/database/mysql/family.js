@@ -16,8 +16,8 @@ class Family {
 }
 exports.Family = Family;
 _a = Family;
-Family.getDuplicateFamily = (nicNo) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_getFamilyByNicNo ('${nicNo}')`;
+Family.getDuplicateFamily = (cardNumber) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_getFamilyByCardNumber ('${cardNumber}')`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
@@ -53,9 +53,10 @@ Family.addMember = (memberData) => __awaiter(void 0, void 0, void 0, function* (
     const mobile = memberData.mobile !== null ? `'${memberData.mobile}'` : "NULL";
     const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
     const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
+    const occupation = memberData.occupation !== null ? `${memberData.occupation}` : "NULL";
     const sqlQueryString = `CALL sp_addMember ('${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
-      ${memberData.gender}, ${memberData.role}, '${memberData.dateOfBirth}', ${nicNo}, ${memberData.occupation}, '${memberData.isGovernmentEmployee}',
-      ${memberData.familyId})`;
+      ${memberData.gender}, ${memberData.role}, '${memberData.dateOfBirth}', ${nicNo}, ${occupation}, '${memberData.isGovernmentEmployee}',
+      ${memberData.familyId},'${memberData.religion}','${memberData.isDisabledPerson}')`;
     try {
         const sqlData = yield connection_1.default.connect(sqlQueryString, null);
         if (sqlData.err) {
@@ -71,8 +72,10 @@ Family.updateMemmber = (memberData) => __awaiter(void 0, void 0, void 0, functio
     const mobile = memberData.mobile !== null ? `'${memberData.mobile}'` : "NULL";
     const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
     const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
+    const occupation = memberData.occupation !== null ? `${memberData.occupation}` : "NULL";
     const sqlQueryString = `CALL sp_updateMember ('${memberData.id}', '${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
-      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', ${nicNo}, '${memberData.occupation}', '${memberData.isGovernmentEmployee}')`;
+      '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', ${nicNo}, ${occupation}, '${memberData.isGovernmentEmployee}',
+      '${memberData.religion}','${memberData.isDisabledPerson}')`;
     try {
         const sqlData = yield connection_1.default.connect(sqlQueryString, null);
         if (sqlData.err) {
@@ -139,4 +142,44 @@ Family.getMemberById = (id) => __awaiter(void 0, void 0, void 0, function* () {
         return { err: true, message: sqlData.result };
     }
     return { err: false, data: sqlData.result };
+});
+Family.initiateTransfer = (transferData) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const sqlQueryString = `CALL sp_initiateFamilyTransfer (${transferData.familyId}, ${transferData.oldDivision}, ${transferData.newDivision},
+      '${transferData.reason}')`;
+        const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+        if (sqlData.err) {
+            return { err: true, message: "Error occur while transfer, try after some time" };
+        }
+        return { err: false, data: sqlData.result };
+    }
+    catch (error) {
+        return { err: false, message: "Server error, please contact admin" };
+    }
+});
+Family.getAllFamilyTransfersForAGsDivision = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const sqlQueryString = `CALL sp_getAllFamilyTransfersForAGsDivision (${divisionId})`;
+        const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+        if (sqlData.err) {
+            return { err: true, message: "Error occur while getting transfer list, try after some time" };
+        }
+        return { err: false, data: sqlData.result };
+    }
+    catch (error) {
+        return { err: false, message: "Server error, please contact admin" };
+    }
+});
+Family.transferAcceptOrRejectByGs = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const sqlQueryString = `CALL sp_acceptOrRejectFamilyTransferByGs (${data.id},${data.status})`;
+        const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+        if (sqlData.err) {
+            return { err: true, message: "Error occur while updating status, try after some time" };
+        }
+        return { err: false, data: sqlData.result };
+    }
+    catch (error) {
+        return { err: false, message: "Server error, please contact admin" };
+    }
 });

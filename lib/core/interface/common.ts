@@ -21,6 +21,8 @@ export interface IMember {
     nicNo?: string;
     occupation: number;
     isGovernmentEmployee: number;
+    religion: number;
+    isDisabledPerson: number;
     familyId: string;
 }
 
@@ -34,4 +36,14 @@ export interface IHistory {
     createdBy: number;
     updatedDate: string;
     updatedBy: number;
+}
+
+export interface IFamilyTransfer {
+    id: number;
+    familyId: number;
+    oldDivision: number;
+    newDivision: number;
+    reason: string;
+    date: string;
+    status: number;
 }
