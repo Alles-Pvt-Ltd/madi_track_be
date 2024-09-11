@@ -41,6 +41,8 @@ export default class Helper {
       nicNo: data[0][0].nicNo,
       occupation: data[0][0].occupation,
       isGovernmentEmployee: data[0][0].isGovernmentEmployee,
+      religion: data[0][0].religion,
+      isDisabledPerson: data[0][0].isDisabledPerson,
       memberHistory: data[1]
     }
     return memberData;

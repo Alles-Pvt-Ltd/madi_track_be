@@ -25,7 +25,6 @@ class FamilyController {
             }
             const body = req.body;
             const duplicateFamily = yield family_1.Family.getDuplicateFamily(body.cardNumber);
-            console.log(duplicateFamily);
             if (duplicateFamily.data.length !== 0) {
                 return (0, response_1.failureResponse)("Family Already Exist", res);
             }
