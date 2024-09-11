@@ -1,7 +1,7 @@
 
 export interface IFamily {
     id?: number;
-    cardNumber: number;
+    cardNumber: string;
     familyName: string;
     address: string;
     phone: string;
@@ -21,7 +21,7 @@ export interface IMember {
     nicNo?: string;
     occupation: number;
     isGovernmentEmployee: number;
-    religion: string;
+    religion: number;
     isDisabledPerson: number;
     familyId: string;
 }
