@@ -66,7 +66,8 @@ export class UserController {
         genderReference: responseData.data[0],
         familyRoleReference: responseData.data[1],
         occupationReference: responseData.data[2],
-        gsDivisions: responseData.data[3]
+        gsDivisions: responseData.data[3],
+        religionReference: responseData.data[4]
       }
 
       return successResponse(referenceData,"Successfully retrieved",res);
