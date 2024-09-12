@@ -26,7 +26,7 @@ Family.getDuplicateFamily = (cardNumber) => __awaiter(void 0, void 0, void 0, fu
 });
 Family.addFamily = (familyData) => __awaiter(void 0, void 0, void 0, function* () {
     const sqlQueryString = `CALL sp_addFamily ('${familyData.cardNumber}', '${familyData.familyName}', '${familyData.address}',
-        '${familyData.phone}', '${familyData.nicNo}', ${familyData.gsDivisionId})`;
+        '${familyData.phone}', '${familyData.nicNo}', ${familyData.gsDivisionId}, ${familyData.villageId})`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
