@@ -10,18 +10,15 @@ export class DashboardController {
     public dashboardList = async (req: Request, res: Response) => {
         const gsDivisionId = parseInt(req.params.divisionId);
         try {
-            const familiesCount = await Dashboard.getFamiliesCount(gsDivisionId);
-            const childrenCount = await Dashboard.getChildrenCount(gsDivisionId); 
-            const eldersCount = await Dashboard.getEldersCount(gsDivisionId);
-            const governmentEmployeesCount = await Dashboard.getGovernmentEmployeesCount(gsDivisionId);
-            const universityStudentsCount = await Dashboard.getUniversityStudentsCount(gsDivisionId);
-    
+            
+            const dashboardCountData = await Dashboard.getDashboardData(gsDivisionId);
+
             const response = {
-                familyCount: familiesCount.data[0].totalFamilies,
-                childrenCount: childrenCount.data[0].totalChildren,
-                eldersCount: eldersCount.data[0].totalElders,
-                governmentEmployeesCount: governmentEmployeesCount.data[0].totalGovernmentEmployees,
-                universityStudentsCount: universityStudentsCount.data[0].totalUniversityStudents
+                familyCount: dashboardCountData.data[0][0].totalFamilies,
+                childrenCount: dashboardCountData.data[1][0].totalChildren,
+                eldersCount: dashboardCountData.data[2][0].totalElders,
+                governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
+                universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents
             }
     
             return successResponse(Helper.dashboardResponse(response) , "Dashboard Data Got Successfully", res)
