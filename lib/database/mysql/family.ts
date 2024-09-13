@@ -1,6 +1,6 @@
 import Mysql from "./connection";
 import { IData } from "../../core/common/constant";
-import { IFamily, IFamilyTransfer, IHistory, IMember } from "core/interface/common";
+import { IFamily, IFamilyTransfer, IHistory, IMember, IPropertyData } from "core/interface/common";
 
 export class Family {
 
@@ -219,5 +219,17 @@ export class Family {
 
   }
 
-  
+  public static addProperty = async (propertyData: IPropertyData) => {
+    const imageUrls = JSON.stringify(propertyData.images);
+    const sqlQueryString = `CALL sp_addProperty ('${propertyData.description}','${imageUrls}',${propertyData.familyId})`;
+
+    const sqlData = await Mysql.connect(sqlQueryString, null);
+
+    if (sqlData.err) {
+      return { err: true, message: "Error occur while adding property, try after some time" } as IData;
+    }
+    return { err: false, data: sqlData.result } as IData; 
+
+  }
+
 }

@@ -119,5 +119,13 @@ export class FamilyRoutes {
             }
         );
 
+        app.post(
+            url + "/property/add",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.userCtrl.addProperty(req, res);
+            }
+        );
+
     }
 }

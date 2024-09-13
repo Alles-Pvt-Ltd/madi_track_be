@@ -187,4 +187,15 @@ export class FamilyController {
         return successResponse(updatedDetail.data[0],"Successfully updated status",res);
       }
 
+      public addProperty = async (req: Request, res: Response) => {
+        const addedProperty = await Family.addProperty(req.body);
+
+        if(addedProperty.err)
+        {
+            return failureResponse(addedProperty.message, res);
+        }
+
+        return successResponse(addedProperty.data[0],"Property Successfully Added",res);
+      }
+
 }

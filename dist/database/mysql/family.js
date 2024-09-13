@@ -183,3 +183,12 @@ Family.transferAcceptOrRejectByGs = (data) => __awaiter(void 0, void 0, void 0, 
         return { err: false, message: "Server error, please contact admin" };
     }
 });
+Family.addProperty = (propertyData) => __awaiter(void 0, void 0, void 0, function* () {
+    const imageUrls = JSON.stringify(propertyData.images);
+    const sqlQueryString = `CALL sp_addProperty ('${propertyData.description}','${imageUrls}',${propertyData.familyId})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: "Error occur while adding property, try after some time" };
+    }
+    return { err: false, data: sqlData.result };
+});
