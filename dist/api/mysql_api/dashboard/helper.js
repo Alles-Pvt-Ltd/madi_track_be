@@ -35,5 +35,11 @@ Helper.dashboardResponse = (data) => {
         bgColor: "#2FC6FF",
         imageUrl: "https://i.ibb.co/qMGWzCX/graduation-academy-grad-svgrepo-com.png"
     });
+    dashboardResponse.push({
+        title: "Disabled Persons",
+        count: data.disabledPersonsCount,
+        bgColor: "#2FC6FF",
+        imageUrl: "https://i.ibb.co/qMGWzCX/graduation-academy-grad-svgrepo-com.png"
+    });
     return dashboardResponse;
 };

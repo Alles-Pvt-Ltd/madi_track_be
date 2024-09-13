@@ -4,6 +4,7 @@ interface IDashboardHelperData {
     eldersCount?: any;
     governmentEmployeesCount?: any;
     universityStudentsCount?: any;
+    disabledPersonsCount?: any;
   }
   
   export default class Helper {
@@ -48,6 +49,13 @@ interface IDashboardHelperData {
         count:data.universityStudentsCount,
         bgColor:"#2FC6FF",
         imageUrl: "https://i.ibb.co/qMGWzCX/graduation-academy-grad-svgrepo-com.png"
+      })
+
+      dashboardResponse.push({
+        title:"Disabled Persons",
+        count:data.disabledPersonsCount,
+        bgColor:"#FF6600",
+        imageUrl: "https://i.ibb.co/syt0bjf/man-in-motorized-wheelchair-svgrepo-com.png"
       })
   
       return dashboardResponse;
