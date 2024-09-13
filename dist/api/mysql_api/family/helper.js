@@ -19,6 +19,7 @@ Helper.singleFamilyResponse = (familyData, memberData, historyData) => {
         phone: familyData[0].phone,
         nicNo: familyData[0].nicNo,
         divisionName: familyData[0].divisionName,
+        villageName: familyData[0].villageName,
         members: memberData,
         membersCount: memberData.length,
         history: historyData
