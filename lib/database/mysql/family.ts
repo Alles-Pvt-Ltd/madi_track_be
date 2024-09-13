@@ -119,7 +119,7 @@ export class Family {
 
   public static updateFamily = async (familyData: IFamily) => {
     const sqlQueryString = `CALL sp_updateFamily ('${familyData.id}', '${familyData.cardNumber}', '${familyData.familyName}', '${familyData.address}',
-    '${familyData.phone}', '${familyData.nicNo}')`;
+    '${familyData.phone}', '${familyData.nicNo}',${familyData.villageId})`;
 
     try {
       const sqlData = await Mysql.connect(sqlQueryString, null);

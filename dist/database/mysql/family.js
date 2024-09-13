@@ -106,7 +106,7 @@ Family.addHistory = (historyData, createdBy) => __awaiter(void 0, void 0, void 0
 });
 Family.updateFamily = (familyData) => __awaiter(void 0, void 0, void 0, function* () {
     const sqlQueryString = `CALL sp_updateFamily ('${familyData.id}', '${familyData.cardNumber}', '${familyData.familyName}', '${familyData.address}',
-    '${familyData.phone}', '${familyData.nicNo}')`;
+    '${familyData.phone}', '${familyData.nicNo}',${familyData.villageId})`;
     try {
         const sqlData = yield connection_1.default.connect(sqlQueryString, null);
         if (sqlData.err) {
