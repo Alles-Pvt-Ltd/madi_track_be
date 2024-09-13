@@ -46,7 +46,7 @@ class UserController {
             if (user.err) {
                 return (0, response_1.failureResponse)(user.message, res);
             }
-            if (user.data[0].length > 0) {
+            if (user.data.length > 0) {
                 return (0, response_1.failureResponse)("User already exist", res);
             }
             body.code = app_1.AppFunction.uuid();

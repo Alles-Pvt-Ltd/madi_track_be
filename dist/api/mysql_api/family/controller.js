@@ -150,6 +150,13 @@ class FamilyController {
             }
             return (0, response_1.successResponse)(updatedDetail.data[0], "Successfully updated status", res);
         });
+        this.addProperty = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const addedProperty = yield family_1.Family.addProperty(req.body);
+            if (addedProperty.err) {
+                return (0, response_1.failureResponse)(addedProperty.message, res);
+            }
+            return (0, response_1.successResponse)(addedProperty.data[0], "Property Successfully Added", res);
+        });
     }
 }
 exports.FamilyController = FamilyController;

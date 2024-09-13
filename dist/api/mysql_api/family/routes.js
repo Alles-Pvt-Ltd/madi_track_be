@@ -52,6 +52,9 @@ class FamilyRoutes {
         app.post(url + "/transfer/update", jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.transferAcceptOrRejectByGs(req, res);
         });
+        app.post(url + "/property/add", jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.addProperty(req, res);
+        });
     }
 }
 exports.FamilyRoutes = FamilyRoutes;

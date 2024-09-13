@@ -48,3 +48,10 @@ export interface IFamilyTransfer {
     date: string;
     status: number;
 }
+
+export interface IPropertyData {
+    id: number;
+    description: string;
+    images: string;
+    familyId: number;
+}

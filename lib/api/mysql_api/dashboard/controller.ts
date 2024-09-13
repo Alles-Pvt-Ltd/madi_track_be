@@ -18,7 +18,8 @@ export class DashboardController {
                 childrenCount: dashboardCountData.data[1][0].totalChildren,
                 eldersCount: dashboardCountData.data[2][0].totalElders,
                 governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
-                universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents
+                universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents,
+                disabledPersonsCount: dashboardCountData.data[5][0].totalDisabledPersons,
             }
     
             return successResponse(Helper.dashboardResponse(response) , "Dashboard Data Got Successfully", res)
