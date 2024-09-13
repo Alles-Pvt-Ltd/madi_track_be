@@ -16,43 +16,11 @@ class Dashboard {
 }
 exports.Dashboard = Dashboard;
 _a = Dashboard;
-Dashboard.getFamiliesCount = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_getFamiliesCount(${divisionId})`;
+Dashboard.getDashboardData = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_dashboardForMobile(${divisionId})`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
     }
-    return { err: false, data: sqlData.result[0] };
-});
-Dashboard.getChildrenCount = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_getChildrenCount(${divisionId})`;
-    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
-    if (sqlData.err) {
-        return { err: true, message: sqlData.result };
-    }
-    return { err: false, data: sqlData.result[0] };
-});
-Dashboard.getEldersCount = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_getEldersCount(${divisionId})`;
-    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
-    if (sqlData.err) {
-        return { err: true, message: sqlData.result };
-    }
-    return { err: false, data: sqlData.result[0] };
-});
-Dashboard.getGovernmentEmployeesCount = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_getGovernmentEmployeesCount(${divisionId})`;
-    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
-    if (sqlData.err) {
-        return { err: true, message: sqlData.result };
-    }
-    return { err: false, data: sqlData.result[0] };
-});
-Dashboard.getUniversityStudentsCount = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_getUniversityStudentsCount(${divisionId})`;
-    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
-    if (sqlData.err) {
-        return { err: true, message: sqlData.result };
-    }
-    return { err: false, data: sqlData.result[0] };
+    return { err: false, data: sqlData.result };
 });

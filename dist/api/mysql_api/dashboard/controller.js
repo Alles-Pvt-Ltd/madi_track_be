@@ -19,17 +19,13 @@ class DashboardController {
         this.dashboardList = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const gsDivisionId = parseInt(req.params.divisionId);
             try {
-                const familiesCount = yield dashboard_1.Dashboard.getFamiliesCount(gsDivisionId);
-                const childrenCount = yield dashboard_1.Dashboard.getChildrenCount(gsDivisionId);
-                const eldersCount = yield dashboard_1.Dashboard.getEldersCount(gsDivisionId);
-                const governmentEmployeesCount = yield dashboard_1.Dashboard.getGovernmentEmployeesCount(gsDivisionId);
-                const universityStudentsCount = yield dashboard_1.Dashboard.getUniversityStudentsCount(gsDivisionId);
+                const dashboardCountData = yield dashboard_1.Dashboard.getDashboardData(gsDivisionId);
                 const response = {
-                    familyCount: familiesCount.data[0].totalFamilies,
-                    childrenCount: childrenCount.data[0].totalChildren,
-                    eldersCount: eldersCount.data[0].totalElders,
-                    governmentEmployeesCount: governmentEmployeesCount.data[0].totalGovernmentEmployees,
-                    universityStudentsCount: universityStudentsCount.data[0].totalUniversityStudents
+                    familyCount: dashboardCountData.data[0][0].totalFamilies,
+                    childrenCount: dashboardCountData.data[1][0].totalChildren,
+                    eldersCount: dashboardCountData.data[2][0].totalElders,
+                    governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
+                    universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents
                 };
                 return (0, response_1.successResponse)(helper_1.default.dashboardResponse(response), "Dashboard Data Got Successfully", res);
             }

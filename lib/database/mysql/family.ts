@@ -17,7 +17,7 @@ export class Family {
 
     public static addFamily = async (familyData: IFamily) => {
         const sqlQueryString = `CALL sp_addFamily ('${familyData.cardNumber}', '${familyData.familyName}', '${familyData.address}',
-        '${familyData.phone}', '${familyData.nicNo}', ${familyData.gsDivisionId})`;
+        '${familyData.phone}', '${familyData.nicNo}', ${familyData.gsDivisionId}, ${familyData.villageId})`;
 
         const sqlData = await Mysql.connect(sqlQueryString, null);
 
@@ -218,4 +218,6 @@ export class Family {
     }    
 
   }
+
+  
 }

@@ -35,12 +35,20 @@ export default class Helper {
     delete userInfo.password;
     delete userInfo.isDeleted;
     userInfo.divisionIds = [];
+    userInfo.villageIds = [];
 
     userData[1].map((item) => {
       userInfo.divisionIds.push({
         id: item.divisionId,
         name: item.name,
         isDefault: item.isDefault
+      })
+    })
+
+    userData[2].map((item) => {
+      userInfo.villageIds.push({
+        id: item.id,
+        name: item.name
       })
     })
     

@@ -7,6 +7,7 @@ export interface IFamily {
     phone: string;
     nicNo: string;
     gsDivisionId: number;
+    villageId: number
 }
 
 export interface IMember {
