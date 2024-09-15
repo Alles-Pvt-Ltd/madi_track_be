@@ -29,19 +29,19 @@ interface IDashboardHelperData {
       dashboardResponse.push({
         title:"Total member",
         count:data.totalMember,
-        bgColor:"#DC6B19",
+        bgColor:"#f5bf42",
         imageUrl: "https://i.ibb.co/tcxGy2w/employee-worker-svgrepo-com.png"
       });
       dashboardResponse.push({
         title:"Male",
         count:data.totalMale,
-        bgColor:"#DC6B19",
+        bgColor:"#e967f0",
         imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
       });
       dashboardResponse.push({
         title:"Female",
         count:data.totalFemale,
-        bgColor:"#DC6B19",
+        bgColor:"#52d9e3",
         imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
       });
     //Family Related End
