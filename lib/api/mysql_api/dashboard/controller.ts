@@ -8,11 +8,11 @@ import { JwtToken } from "../../../core/jwt";
 const { exec } = require('child_process');
 export class DashboardController {
     public dashboardList = async (req: Request, res: Response) => {
+       
         const gsDivisionId = parseInt(req.params.divisionId);
         try {
             
             const dashboardCountData = await Dashboard.getDashboardData(gsDivisionId);
-
             const response = {
                 familyCount: dashboardCountData.data[0][0].totalFamilies,
                 childrenCount: dashboardCountData.data[1][0].totalChildren,
@@ -20,6 +20,9 @@ export class DashboardController {
                 governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
                 universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents,
                 disabledPersonsCount: dashboardCountData.data[5][0].totalDisabledPersons,
+                totalMember: dashboardCountData.data[6][0].totalMember,
+                totalMale: dashboardCountData.data[7][0].totalMale,
+                totalFemale: dashboardCountData.data[8][0].totalFemale,
             }
     
             return successResponse(Helper.dashboardResponse(response) , "Dashboard Data Got Successfully", res)

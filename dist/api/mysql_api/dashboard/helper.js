@@ -11,6 +11,26 @@ Helper.dashboardResponse = (data) => {
         bgColor: "#DC6B19",
         imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
     });
+    //Family Related Start
+    dashboardResponse.push({
+        title: "Total member",
+        count: data.totalMember,
+        bgColor: "#DC6B19",
+        imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
+    });
+    dashboardResponse.push({
+        title: "Male",
+        count: data.totalMale,
+        bgColor: "#DC6B19",
+        imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
+    });
+    dashboardResponse.push({
+        title: "Female",
+        count: data.totalFemale,
+        bgColor: "#DC6B19",
+        imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
+    });
+    //Family Related End
     dashboardResponse.push({
         title: "Childrens",
         count: data.childrenCount,

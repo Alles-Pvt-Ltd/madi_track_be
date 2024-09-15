@@ -17,9 +17,11 @@ const { exec } = require('child_process');
 class DashboardController {
     constructor() {
         this.dashboardList = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            console.info("-----");
             const gsDivisionId = parseInt(req.params.divisionId);
             try {
                 const dashboardCountData = yield dashboard_1.Dashboard.getDashboardData(gsDivisionId);
+                console.info(dashboardCountData.data[6][0]);
                 const response = {
                     familyCount: dashboardCountData.data[0][0].totalFamilies,
                     childrenCount: dashboardCountData.data[1][0].totalChildren,
@@ -27,6 +29,9 @@ class DashboardController {
                     governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
                     universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents,
                     disabledPersonsCount: dashboardCountData.data[5][0].totalDisabledPersons,
+                    totalMember: dashboardCountData.data[6][0].totalMember,
+                    totalMale: dashboardCountData.data[7][0].totalMale,
+                    totalFemale: dashboardCountData.data[8][0].totalFemale,
                 };
                 return (0, response_1.successResponse)(helper_1.default.dashboardResponse(response), "Dashboard Data Got Successfully", res);
             }
