@@ -30,19 +30,19 @@ interface IDashboardHelperData {
         title:"Total member",
         count:data.totalMember,
         bgColor:"#f5bf42",
-        imageUrl: "https://i.ibb.co/tcxGy2w/employee-worker-svgrepo-com.png"
+        imageUrl: "https://i.ibb.co/HG7nSVh/team.png"
       });
       dashboardResponse.push({
         title:"Male",
         count:data.totalMale,
         bgColor:"#e967f0",
-        imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
+        imageUrl: "https://i.ibb.co/dbrK8Qn/avatar.png"
       });
       dashboardResponse.push({
         title:"Female",
         count:data.totalFemale,
         bgColor:"#52d9e3",
-        imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
+        imageUrl: "https://i.ibb.co/0t4qqyL/woman.png"
       });
     //Family Related End
       dashboardResponse.push({
