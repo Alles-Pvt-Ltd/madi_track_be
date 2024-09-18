@@ -15,20 +15,20 @@ Helper.dashboardResponse = (data) => {
     dashboardResponse.push({
         title: "Total member",
         count: data.totalMember,
-        bgColor: "#DC6B19",
-        imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
+        bgColor: "#f5bf42",
+        imageUrl: "https://i.ibb.co/HG7nSVh/team.png"
     });
     dashboardResponse.push({
         title: "Male",
         count: data.totalMale,
-        bgColor: "#DC6B19",
-        imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
+        bgColor: "#e967f0",
+        imageUrl: "https://i.ibb.co/dbrK8Qn/avatar.png"
     });
     dashboardResponse.push({
         title: "Female",
         count: data.totalFemale,
-        bgColor: "#DC6B19",
-        imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
+        bgColor: "#52d9e3",
+        imageUrl: "https://i.ibb.co/0t4qqyL/woman.png"
     });
     //Family Related End
     dashboardResponse.push({

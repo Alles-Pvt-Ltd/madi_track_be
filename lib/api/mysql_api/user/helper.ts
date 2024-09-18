@@ -35,22 +35,59 @@ export default class Helper {
     delete userInfo.password;
     delete userInfo.isDeleted;
     userInfo.divisionIds = [];
-    userInfo.villageIds = [];
 
-    userData[1].map((item) => {
-      userInfo.divisionIds.push({
-        id: item.divisionId,
-        name: item.name,
-        isDefault: item.isDefault
-      })
-    })
+    userData[1].forEach((item) => {
+      const existingDivision = userInfo.divisionIds.find(div => div.id === item.divisionId);
 
-    userData[2].map((item) => {
-      userInfo.villageIds.push({
-        id: item.id,
-        name: item.name
-      })
-    })
+      if (existingDivision) {
+          existingDivision.villages.push({
+              id: item.villageId,
+              name: item.villageName
+          });
+      } 
+      else {
+          userInfo.divisionIds.push({
+              id: item.divisionId,
+              name: item.name,
+              isDefault: item.isDefault,
+              villages: [{
+                  id: item.villageId,
+                  name: item.villageName
+              }]
+          });
+      }
+    });
+    
+    return userInfo;
+  }
+
+  public static userRes = (userData: any) => {
+    const userInfo = { ...userData[0][0] };
+    delete userInfo.password;
+    delete userInfo.isDeleted;
+    userInfo.divisionIds = [];
+
+
+    userData[1].forEach((item) => {
+      const existingDivision = userInfo.divisionIds.find(div => div.id === item.divisionId);
+
+      if (existingDivision) {
+          existingDivision.villages.push({
+              id: item.villageId,
+              name: item.villageName
+          });
+      } else {
+          userInfo.divisionIds.push({
+              id: item.divisionId,
+              name: item.name,
+              isDefault: item.isDefault,
+              villages: [{
+                  id: item.villageId,
+                  name: item.villageName
+              }]
+          });
+      }
+  });
     
     return userInfo;
   }
