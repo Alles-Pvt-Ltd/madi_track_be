@@ -41,6 +41,16 @@ Admin.getAllFamilyTransfers = (divisionId) => __awaiter(void 0, void 0, void 0, 
     }
     return { err: false, data: sqlData.result[0], message: "Family Transfer List Retrieved Successfuly" };
 });
+Admin.getMembersByFamilyId = (familyId) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_getMembersByFamilyId(${familyId})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    // Log the SQL result to debug the data returned from the database
+    console.log("SQL Data Result: ", sqlData.result); // <-- Add this line
+    if (sqlData.err) {
+        return { err: true, message: "Error Occur While Getting Members List" };
+    }
+    return { err: false, data: sqlData.result[0], message: "Members List Successfully Retrieved" };
+});
 Admin.transferAcceptOrRejectByDs = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const sqlQueryString = `CALL sp_acceptOrRejectFamilyTransferByDs (${data.id},${data.status})`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);

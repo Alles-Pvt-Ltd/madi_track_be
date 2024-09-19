@@ -38,5 +38,15 @@ export class AdminRoutes {
                 this.adminCtrl.updateFamilyTransferStatus(req, res);
             }
         );
+
+        app.get(
+            url + "/members/:familyId",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.adminCtrl.getMembersByFamilyId(req, res);
+            }
+        );
+
     }
 }
+

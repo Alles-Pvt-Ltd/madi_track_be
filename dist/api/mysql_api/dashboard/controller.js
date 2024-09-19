@@ -17,11 +17,9 @@ const { exec } = require('child_process');
 class DashboardController {
     constructor() {
         this.dashboardList = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            console.info("-----");
             const gsDivisionId = parseInt(req.params.divisionId);
             try {
                 const dashboardCountData = yield dashboard_1.Dashboard.getDashboardData(gsDivisionId);
-                console.info(dashboardCountData.data[6][0]);
                 const response = {
                     familyCount: dashboardCountData.data[0][0].totalFamilies,
                     childrenCount: dashboardCountData.data[1][0].totalChildren,
