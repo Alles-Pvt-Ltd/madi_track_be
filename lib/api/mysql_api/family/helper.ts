@@ -2,13 +2,16 @@ import { Request, Response } from "express";
 
 export default class Helper {
 
-  public static familyResponse = (familyData: any, memberData: any) => {
+  public static familyResponse = (familyData: any, memberData: any, villageData: any) => {
     familyData.forEach(family => {
         family.members = memberData.filter(member => member.familyId === family.id);
         family.membersCount = family.members.length;
     });
-
-    return familyData;
+    const finalData = {
+      familyData,
+      villages: villageData
+    }
+    return finalData;
   };
 
   public static singleFamilyResponse = (familyData: any, memberData: any, historyData: any) => {

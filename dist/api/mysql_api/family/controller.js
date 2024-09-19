@@ -40,7 +40,7 @@ class FamilyController {
             if (familiesDetails.err) {
                 return (0, response_1.failureResponse)(familiesDetails.message, res);
             }
-            return (0, response_1.successResponse)(helper_1.default.familyResponse(familiesDetails.data[0], familiesDetails.data[1]), "Families Got Successfully", res);
+            return (0, response_1.successResponse)(helper_1.default.familyResponse(familiesDetails.data[0], familiesDetails.data[1], familiesDetails.data[2]), "Families Got Successfully", res);
         });
         this.addMember = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const body = req.body;
