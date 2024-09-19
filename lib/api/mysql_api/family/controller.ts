@@ -38,7 +38,7 @@ export class FamilyController {
             return failureResponse(familiesDetails.message, res);
         }
 
-        return successResponse(Helper.familyResponse(familiesDetails.data[0],familiesDetails.data[1],familiesDetails.data[2]), "Families Got Successfully", res);
+        return successResponse(Helper.familyResponse(familiesDetails.data[0],familiesDetails.data[1]), "Families Got Successfully", res);
     }
 
     public addMember = async (req: Request, res: Response) => {
