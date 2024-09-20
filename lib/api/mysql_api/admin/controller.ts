@@ -48,4 +48,28 @@ export class AdminController {
 
         return successResponse(updatedData.data, updatedData.message, res);
     }
+    
+
+public getMembersByFamilyId = (req: Request, res: Response) => {
+    const familyId = parseInt(req.params.familyId);
+    console.log("Request received for familyId:", familyId);
+
+    if (isNaN(familyId)) {
+        return failureResponse("Invalid familyId parameter. Please provide a valid family ID.", res);
+    }
+
+    Admin.getMembersByFamilyId(familyId)
+        .then(membersList => {
+            if (membersList.err) {
+                console.error("Error while retrieving members list:", membersList.message);
+                return failureResponse(membersList.message, res);
+            }
+            console.log("Members list successfully retrieved:", membersList.data);
+            return successResponse(membersList.data, membersList.message, res);
+        })
+        .catch(error => {
+            console.error("Unexpected error during members retrieval:", error);
+            return failureResponse("An unexpected error occurred during members retrieval.", res);
+        });
+}
 }

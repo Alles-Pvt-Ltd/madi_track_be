@@ -20,6 +20,9 @@ class AdminRoutes {
         app.post(url + "/family/transfer/update", jwt_1.JwtToken.verify, (req, res) => {
             this.adminCtrl.updateFamilyTransferStatus(req, res);
         });
+        app.get(url + "/members/:familyId", jwt_1.JwtToken.verify, (req, res) => {
+            this.adminCtrl.getMembersByFamilyId(req, res);
+        });
     }
 }
 exports.AdminRoutes = AdminRoutes;
