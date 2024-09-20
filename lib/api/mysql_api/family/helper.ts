@@ -7,7 +7,6 @@ export default class Helper {
         family.members = memberData.filter(member => member.familyId === family.id);
         family.membersCount = family.members.length;
     });
-
     return familyData;
   };
 
