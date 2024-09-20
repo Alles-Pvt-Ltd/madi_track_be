@@ -66,7 +66,7 @@ export class UserController {
         genderReference: responseData.data[0],
         familyRoleReference: responseData.data[1],
         occupationReference: responseData.data[2],
-        gsDivisions: responseData.data[3],
+        gsDivisions: Helper.gsDivisionsResponse(responseData.data[3],responseData.data[5]),
         religionReference: responseData.data[4]
       }
 
