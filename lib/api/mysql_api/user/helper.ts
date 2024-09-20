@@ -69,4 +69,24 @@ export default class Helper {
     return userInfo;
   }
 
+  public static gsDivisionsResponse = (divisionData: any, villageData: any) => {
+    const divisionRes = [];
+    divisionData.forEach((division) => {
+      // Filter villageData for match the gsDivisionId to join every village with each division
+      const villagesForDivision = villageData
+        .filter((village) => village.gsDivisionId === division.id)
+        .map((village) => ({
+          id: village.id,
+          label: village.label
+        }));
+      
+      divisionRes.push({
+        id: division.id,
+        label: division.label,
+        villages: villagesForDivision
+      });
+    });
+    return divisionRes;
+  }
+
 }
