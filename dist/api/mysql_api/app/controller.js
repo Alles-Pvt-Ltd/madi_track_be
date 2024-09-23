@@ -20,7 +20,6 @@ class AppController {
             if (getAppVersion.err) {
                 return (0, response_1.failureResponse)(getAppVersion.message, res);
             }
-            console.log(getAppVersion.data);
             const response = {
                 isAppUpdate: getAppVersion.data.length > 0
             };

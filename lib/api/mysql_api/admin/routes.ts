@@ -47,6 +47,14 @@ export class AdminRoutes {
             }
         );
 
+        app.post(
+            url + "/report",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.adminCtrl.generateReport(req, res);
+            }
+        );
+
     }
 }
 

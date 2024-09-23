@@ -55,3 +55,18 @@ export interface IPropertyData {
     images: string;
     familyId: number;
 }
+
+export interface IReportData {
+    searchText: string;
+    ageFrom: number;
+    ageTo: number;
+    occupationId: number;
+    jobStatusId: number;
+    gsDivisionId: number;
+    villageId: number;
+    genderId: number;
+    isMarried: number;
+    isDeath: number;
+    deathFromDate: string;
+    deathEndDate: string;
+}

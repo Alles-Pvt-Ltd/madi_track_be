@@ -23,6 +23,9 @@ class AdminRoutes {
         app.get(url + "/members/:familyId", jwt_1.JwtToken.verify, (req, res) => {
             this.adminCtrl.getMembersByFamilyId(req, res);
         });
+        app.post(url + "/report", jwt_1.JwtToken.verify, (req, res) => {
+            this.adminCtrl.generateReport(req, res);
+        });
     }
 }
 exports.AdminRoutes = AdminRoutes;
