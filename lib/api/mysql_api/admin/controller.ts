@@ -50,26 +50,41 @@ export class AdminController {
     }
     
 
-public getMembersByFamilyId = (req: Request, res: Response) => {
-    const familyId = parseInt(req.params.familyId);
-    console.log("Request received for familyId:", familyId);
+    public getMembersByFamilyId = (req: Request, res: Response) => {
+        const familyId = parseInt(req.params.familyId);
+        console.log("Request received for familyId:", familyId);
 
-    if (isNaN(familyId)) {
-        return failureResponse("Invalid familyId parameter. Please provide a valid family ID.", res);
+        if (isNaN(familyId)) {
+            return failureResponse("Invalid familyId parameter. Please provide a valid family ID.", res);
+        }
+
+        Admin.getMembersByFamilyId(familyId)
+            .then(membersList => {
+                if (membersList.err) {
+                    console.error("Error while retrieving members list:", membersList.message);
+                    return failureResponse(membersList.message, res);
+                }
+                console.log("Members list successfully retrieved:", membersList.data);
+                return successResponse(membersList.data, membersList.message, res);
+            })
+            .catch(error => {
+                console.error("Unexpected error during members retrieval:", error);
+                return failureResponse("An unexpected error occurred during members retrieval.", res);
+            });
     }
 
-    Admin.getMembersByFamilyId(familyId)
-        .then(membersList => {
-            if (membersList.err) {
-                console.error("Error while retrieving members list:", membersList.message);
-                return failureResponse(membersList.message, res);
+    public generateReport = async (req: Request, res: Response) => {
+        // const reportBody = req.body;
+        try {
+            const reportData = await Admin.generateReport(req.body);
+            if(reportData.err)
+            {
+                throw Error (reportData.message);
             }
-            console.log("Members list successfully retrieved:", membersList.data);
-            return successResponse(membersList.data, membersList.message, res);
-        })
-        .catch(error => {
-            console.error("Unexpected error during members retrieval:", error);
-            return failureResponse("An unexpected error occurred during members retrieval.", res);
-        });
-}
+            return successResponse(reportData.data[0],"Report Generated Successfully",res);
+        }
+        catch (error) {
+            return failureResponse(error.message,res);
+        }
+    }
 }

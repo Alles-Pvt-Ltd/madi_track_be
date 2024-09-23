@@ -1,6 +1,6 @@
 import Mysql from "./connection";
 import { IData } from "../../core/common/constant";
-import { IFamilyTransfer } from "core/interface/common";
+import { IFamilyTransfer, IReportData } from "core/interface/common";
 import { IMember } from "core/interface/common";
 
 export class Admin {
@@ -67,5 +67,30 @@ export class Admin {
         }
     
         return { err: false, data: sqlData.result[0], message: "Family Transfer Status Updated Successfully"}
+    }
+
+    public static generateReport = async (reportData: IReportData) => {
+        const sqlQueryString = `CALL sp_generateReport (
+            ${reportData.searchText !== null ? `'${reportData.searchText}'` : "null"},
+            ${reportData.gsDivisionId}, 
+            ${reportData.villageId}, 
+            ${reportData.ageFrom},
+            ${reportData.ageTo},
+            ${reportData.occupationId}, 
+            ${reportData.jobStatusId}, 
+            ${reportData.genderId}, 
+            ${reportData.isMarried}, 
+            ${reportData.isDeath}, 
+            ${reportData.deathFromDate !== null ? `'${reportData.deathFromDate}'` : "null"}, 
+            ${reportData.deathEndDate !== null ? `'${reportData.deathEndDate}'` : "null"})`;
+            
+        const sqlData = await Mysql.connect(sqlQueryString, null);
+
+        if(sqlData.err)
+        {
+            return { err: true, message : "Error Occur While Getting Report"}
+        }
+
+        return { err: false, data: sqlData.result}
     }
 }

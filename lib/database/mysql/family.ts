@@ -53,10 +53,11 @@ export class Family {
       const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
       const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
       const occupation = memberData.occupation !== null ? `${memberData.occupation}` : "NULL";
+      const dateOfDeath = memberData.dateOfDeath !== null ? `'${memberData.dateOfDeath}'` : "NULL";
 
       const sqlQueryString = `CALL sp_addMember ('${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
       ${memberData.gender}, ${memberData.role}, '${memberData.dateOfBirth}', ${nicNo}, ${occupation}, '${memberData.isGovernmentEmployee}',
-      ${memberData.familyId},'${memberData.religion}','${memberData.isDisabledPerson}')`;
+      ${memberData.familyId},'${memberData.religion}','${memberData.isDisabledPerson}', ${memberData.isMarried}, ${memberData.isDeath}, ${dateOfDeath})`;
 
       try {
         const sqlData = await Mysql.connect(sqlQueryString, null);
@@ -76,10 +77,11 @@ export class Family {
       const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
       const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
       const occupation = memberData.occupation !== null ? `${memberData.occupation}` : "NULL";
+      const dateOfDeath = memberData.dateOfDeath !== null ? `'${memberData.dateOfDeath}'` : "NULL";
 
       const sqlQueryString = `CALL sp_updateMember ('${memberData.id}', '${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
       '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', ${nicNo}, ${occupation}, '${memberData.isGovernmentEmployee}',
-      '${memberData.religion}','${memberData.isDisabledPerson}')`;
+      '${memberData.religion}','${memberData.isDisabledPerson}', ${memberData.isMarried}, ${memberData.isDeath}, ${dateOfDeath})`;
 
       try {
         const sqlData = await Mysql.connect(sqlQueryString, null);

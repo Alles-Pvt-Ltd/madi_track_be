@@ -43,6 +43,9 @@ export default class Helper {
       isGovernmentEmployee: data[0][0].isGovernmentEmployee,
       religion: data[0][0].religion,
       isDisabledPerson: data[0][0].isDisabledPerson,
+      isMarried: data[0][0].isMarried,
+      isDeath: data[0][0].isDeath,
+      dateOfDeath: data[0][0].dateOfDeath,
       memberHistory: data[1]
     }
     return memberData;

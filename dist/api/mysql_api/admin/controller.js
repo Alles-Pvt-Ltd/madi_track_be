@@ -64,6 +64,19 @@ class AdminController {
                 return (0, response_1.failureResponse)("An unexpected error occurred during members retrieval.", res);
             });
         };
+        this.generateReport = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // const reportBody = req.body;
+            try {
+                const reportData = yield admin_1.Admin.generateReport(req.body);
+                if (reportData.err) {
+                    throw Error(reportData.message);
+                }
+                return (0, response_1.successResponse)(reportData.data[0], "Report Generated Successfully", res);
+            }
+            catch (error) {
+                return (0, response_1.failureResponse)(error.message, res);
+            }
+        });
     }
 }
 exports.AdminController = AdminController;

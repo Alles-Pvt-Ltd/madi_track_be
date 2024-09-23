@@ -54,9 +54,10 @@ Family.addMember = (memberData) => __awaiter(void 0, void 0, void 0, function* (
     const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
     const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
     const occupation = memberData.occupation !== null ? `${memberData.occupation}` : "NULL";
+    const dateOfDeath = memberData.dateOfDeath !== null ? `'${memberData.dateOfDeath}'` : "NULL";
     const sqlQueryString = `CALL sp_addMember ('${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
       ${memberData.gender}, ${memberData.role}, '${memberData.dateOfBirth}', ${nicNo}, ${occupation}, '${memberData.isGovernmentEmployee}',
-      ${memberData.familyId},'${memberData.religion}','${memberData.isDisabledPerson}')`;
+      ${memberData.familyId},'${memberData.religion}','${memberData.isDisabledPerson}', ${memberData.isMarried}, ${memberData.isDeath}, ${dateOfDeath})`;
     try {
         const sqlData = yield connection_1.default.connect(sqlQueryString, null);
         if (sqlData.err) {
@@ -73,9 +74,10 @@ Family.updateMemmber = (memberData) => __awaiter(void 0, void 0, void 0, functio
     const email = memberData.email !== null ? `'${memberData.email}'` : "NULL";
     const nicNo = memberData.nicNo !== null ? `'${memberData.nicNo}'` : "NULL";
     const occupation = memberData.occupation !== null ? `${memberData.occupation}` : "NULL";
+    const dateOfDeath = memberData.dateOfDeath !== null ? `'${memberData.dateOfDeath}'` : "NULL";
     const sqlQueryString = `CALL sp_updateMember ('${memberData.id}', '${memberData.firstName}', '${memberData.lastName}', ${mobile}, ${email},
       '${memberData.gender}', '${memberData.role}', '${memberData.dateOfBirth}', ${nicNo}, ${occupation}, '${memberData.isGovernmentEmployee}',
-      '${memberData.religion}','${memberData.isDisabledPerson}')`;
+      '${memberData.religion}','${memberData.isDisabledPerson}', ${memberData.isMarried}, ${memberData.isDeath}, ${dateOfDeath})`;
     try {
         const sqlData = yield connection_1.default.connect(sqlQueryString, null);
         if (sqlData.err) {

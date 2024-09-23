@@ -59,3 +59,23 @@ Admin.transferAcceptOrRejectByDs = (data) => __awaiter(void 0, void 0, void 0, f
     }
     return { err: false, data: sqlData.result[0], message: "Family Transfer Status Updated Successfully" };
 });
+Admin.generateReport = (reportData) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_generateReport (
+            ${reportData.searchText !== null ? `'${reportData.searchText}'` : "null"},
+            ${reportData.gsDivisionId}, 
+            ${reportData.villageId}, 
+            ${reportData.ageFrom},
+            ${reportData.ageTo},
+            ${reportData.occupationId}, 
+            ${reportData.jobStatusId}, 
+            ${reportData.genderId}, 
+            ${reportData.isMarried}, 
+            ${reportData.isDeath}, 
+            ${reportData.deathFromDate !== null ? `'${reportData.deathFromDate}'` : "null"}, 
+            ${reportData.deathEndDate !== null ? `'${reportData.deathEndDate}'` : "null"})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: "Error Occur While Getting Report" };
+    }
+    return { err: false, data: sqlData.result };
+});

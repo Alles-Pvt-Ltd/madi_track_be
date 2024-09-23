@@ -25,6 +25,9 @@ export interface IMember {
     religion: number;
     isDisabledPerson: number;
     familyId: string;
+    isMarried: number;
+    isDeath: number;
+    dateOfDeath: string;
 }
 
 export interface IHistory {
@@ -54,4 +57,19 @@ export interface IPropertyData {
     description: string;
     images: string;
     familyId: number;
+}
+
+export interface IReportData {
+    searchText: string;
+    ageFrom: number;
+    ageTo: number;
+    occupationId: number;
+    jobStatusId: number;
+    gsDivisionId: number;
+    villageId: number;
+    genderId: number;
+    isMarried: number;
+    isDeath: number;
+    deathFromDate: string;
+    deathEndDate: string;
 }
