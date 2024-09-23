@@ -70,6 +70,7 @@ Admin.generateReport = (reportData) => __awaiter(void 0, void 0, void 0, functio
             ${reportData.jobStatusId}, 
             ${reportData.genderId}, 
             ${reportData.isMarried}, 
+            ${reportData.religion},
             ${reportData.isDeath}, 
             ${reportData.deathFromDate !== null ? `'${reportData.deathFromDate}'` : "null"}, 
             ${reportData.deathEndDate !== null ? `'${reportData.deathEndDate}'` : "null"})`;

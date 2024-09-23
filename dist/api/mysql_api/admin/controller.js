@@ -65,7 +65,6 @@ class AdminController {
             });
         };
         this.generateReport = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            // const reportBody = req.body;
             try {
                 const reportData = yield admin_1.Admin.generateReport(req.body);
                 if (reportData.err) {
