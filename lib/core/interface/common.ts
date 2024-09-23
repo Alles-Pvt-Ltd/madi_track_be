@@ -25,6 +25,9 @@ export interface IMember {
     religion: number;
     isDisabledPerson: number;
     familyId: string;
+    isMarried: number;
+    isDeath: number;
+    dateOfDeath: string;
 }
 
 export interface IHistory {
