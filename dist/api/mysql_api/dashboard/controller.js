@@ -37,6 +37,24 @@ class DashboardController {
                 console.error("Error while getting data, Please try after some time");
             }
         });
+        this.webDashboardList = (req, res) => {
+            const dsDivisionId = parseInt(req.params.divisionId);
+            dashboard_1.Dashboard.getWebDashboardData(dsDivisionId).then(dashboardCountData => {
+                if (dashboardCountData.err) {
+                    return (0, response_1.failureResponse)("Error while getting data", res);
+                }
+                const response = helper_1.default.webDashboardResponse({
+                    familyCount: dashboardCountData.data[0][0].totalFamilies,
+                    childrenCount: dashboardCountData.data[1][0].totalChildren,
+                    eldersCount: dashboardCountData.data[2][0].totalElders,
+                    governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
+                    universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents,
+                });
+                return (0, response_1.successResponse)(response, "Web Dashboard Data Got Successfully", res);
+            }).catch(error => {
+                return (0, response_1.failureResponse)("Error while getting data, please try after some time", res);
+            });
+        };
         this.deployment = (req, res) => __awaiter(this, void 0, void 0, function* () {
             exec('sh deploy.sh', (error, stdout, stderr) => {
                 console.log(stdout);
