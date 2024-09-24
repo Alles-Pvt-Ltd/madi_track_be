@@ -69,6 +69,7 @@ export interface IReportData {
     villageId: number;
     genderId: number;
     isMarried: number;
+    religion: number;
     isDeath: number;
     deathFromDate: string;
     deathEndDate: string;

@@ -80,6 +80,7 @@ export class Admin {
             ${reportData.jobStatusId}, 
             ${reportData.genderId}, 
             ${reportData.isMarried}, 
+            ${reportData.religion},
             ${reportData.isDeath}, 
             ${reportData.deathFromDate !== null ? `'${reportData.deathFromDate}'` : "null"}, 
             ${reportData.deathEndDate !== null ? `'${reportData.deathEndDate}'` : "null"})`;
