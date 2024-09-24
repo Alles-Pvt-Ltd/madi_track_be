@@ -12,6 +12,9 @@ class DashboardRoutes {
         app.get(url + "/list/:divisionId", jwt_1.JwtToken.verify, (req, res) => {
             this.dashboardCtlr.dashboardList(req, res);
         });
+        app.get(url + "/weblist/:divisionId", jwt_1.JwtToken.verify, (req, res) => {
+            this.dashboardCtlr.webDashboardList(req, res);
+        });
         // app.post(url + "/deploy", (req: Request, res: Response) => {
         //   this.dashboardCtlr.deployment(req, res);
         // });
