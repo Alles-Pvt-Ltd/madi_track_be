@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const app_1 = require("../../../database/mysql/app");
 const response_1 = require("../../../core/response");
+const fileUpload_1 = require("../../../core/fileUpload");
+const constant_1 = require("../../../core/common/constant");
 class AppController {
     constructor() {
         this.getAppInfo = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -21,9 +23,21 @@ class AppController {
                 return (0, response_1.failureResponse)(getAppVersion.message, res);
             }
             const response = {
-                isAppUpdate: getAppVersion.data.length > 0
+                isAppUpdate: getAppVersion.data.length > 0,
+                mediaBaseUrl: constant_1.MEDIA_SERVER_URL,
+                baseUrl: constant_1.API_BASE_URL
             };
             return (0, response_1.successResponse)(response, "Success", res);
+        });
+        this.uploadImage = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            fileUpload_1.FileUpload.upload(req, res, (err) => {
+                if (err) {
+                    return (0, response_1.failureResponse)(err.message, res);
+                }
+                const documentFile = req.file;
+                //  return successResponse({imageUrl: '/'+documentFile.path },"Success", res);
+                return (0, response_1.successResponse)({ imageUrl: '/' + documentFile.destination + '/' + documentFile.filename }, "Success", res);
+            });
         });
     }
 }
