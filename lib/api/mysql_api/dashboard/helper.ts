@@ -94,14 +94,7 @@ interface IDashboardHelperData {
         { title: "University Students", count: data.universityStudentsCount, bgColor: "#2FC6FF", imageUrl: "https://i.ibb.co/qMGWzCX/graduation-academy-grad-svgrepo-com.png" }
       ];
     
-      const webDashboardResponse = items.map(item => ({
-        title: item.title,
-        count: item.count,
-        bgColor: item.bgColor,
-        imageUrl: item.imageUrl
-      }));
-    
-      return webDashboardResponse;
+      return items;
     }
     
   }
