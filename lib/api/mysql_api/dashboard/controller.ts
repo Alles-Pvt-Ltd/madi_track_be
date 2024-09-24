@@ -6,6 +6,7 @@ import Helper from "./helper";
 import { Dashboard } from "../../../database/mysql/dashboard";
 import { JwtToken } from "../../../core/jwt";
 const { exec } = require('child_process');
+
 export class DashboardController {
     public dashboardList = async (req: Request, res: Response) => {
        
@@ -30,9 +31,33 @@ export class DashboardController {
         catch (error) {
             console.error("Error while getting data, Please try after some time");
         }
-        
+
     }
 
+
+    public webDashboardList = (req: Request, res: Response) => {
+        const dsDivisionId = parseInt(req.params.divisionId);
+        
+        Dashboard.getWebDashboardData(dsDivisionId).then(dashboardCountData => {
+            if (dashboardCountData.err) {
+                return failureResponse("Error while getting data", res);
+            }
+            
+            const response = Helper.webDashboardResponse({
+                familyCount: dashboardCountData.data[0][0].totalFamilies,
+                childrenCount: dashboardCountData.data[1][0].totalChildren,
+                eldersCount: dashboardCountData.data[2][0].totalElders,
+                governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
+                universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents,
+            });
+            
+            return successResponse(response, "Web Dashboard Data Got Successfully", res);
+        }).catch(error => {
+            return failureResponse("Error while getting data, please try after some time", res);
+        });
+    }
+    
+    
     public deployment = async (req: Request, res: Response) => {
         exec('sh deploy.sh',
           (error, stdout, stderr) => {

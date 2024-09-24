@@ -74,7 +74,6 @@ export class AdminController {
     }
 
     public generateReport = async (req: Request, res: Response) => {
-        // const reportBody = req.body;
         try {
             const reportData = await Admin.generateReport(req.body);
             if(reportData.err)
