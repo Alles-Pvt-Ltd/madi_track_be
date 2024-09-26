@@ -10,7 +10,7 @@ Helper.familyResponse = (familyData, memberData) => {
     });
     return familyData;
 };
-Helper.singleFamilyResponse = (familyData, memberData, historyData) => {
+Helper.singleFamilyResponse = (familyData, memberData, historyData, transferHistoryData) => {
     const finalFamilyData = {
         id: familyData[0].id,
         cardNumber: familyData[0].cardNumber,
@@ -22,7 +22,8 @@ Helper.singleFamilyResponse = (familyData, memberData, historyData) => {
         villageName: familyData[0].villageName,
         members: memberData,
         membersCount: memberData.length,
-        history: historyData
+        history: historyData,
+        transferHistory: transferHistoryData
     };
     return finalFamilyData;
 };

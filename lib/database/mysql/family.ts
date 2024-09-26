@@ -98,7 +98,6 @@ export class Family {
 
     public static getFamilyDetailsById = async (familyId: number) => {
       const sqlQueryString = `CALL sp_getFamilyById (${familyId})`;
-
       const sqlData = await Mysql.connect(sqlQueryString, null);
 
       if (sqlData.err) {
