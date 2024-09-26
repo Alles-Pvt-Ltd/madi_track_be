@@ -61,13 +61,14 @@ export class UserController {
 
     public reference  = async (req: Request, res: Response) => {
       const responseData = await User.reference();
-
+      
       const referenceData = {
         genderReference: responseData.data[0],
         familyRoleReference: responseData.data[1],
         occupationReference: responseData.data[2],
         gsDivisions: Helper.gsDivisionsResponse(responseData.data[3],responseData.data[5]),
-        religionReference: responseData.data[4]
+        religionReference: responseData.data[4],
+        transferReason: responseData.data[6]
       }
 
       return successResponse(referenceData,"Successfully retrieved",res);

@@ -159,6 +159,19 @@ Family.initiateTransfer = (transferData) => __awaiter(void 0, void 0, void 0, fu
         return { err: false, message: "Server error, please contact admin" };
     }
 });
+Family.initiateMemberTransfer = (memberId, reasonId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const sqlQueryString = `CALL sp_initiateMemberTransfer (${memberId}, ${reasonId})`;
+        const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+        if (sqlData.err) {
+            return { err: true, message: "Error occur while transfer, try after some time" };
+        }
+        return { err: false, data: sqlData.result };
+    }
+    catch (error) {
+        return { err: false, message: "Server error, please contact admin" };
+    }
+});
 Family.getAllFamilyTransfersForAGsDivision = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const sqlQueryString = `CALL sp_getAllFamilyTransfersForAGsDivision (${divisionId})`;

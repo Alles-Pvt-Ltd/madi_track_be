@@ -103,6 +103,14 @@ export class FamilyRoutes {
             }
         );
 
+        app.post(
+            url + "/transfer/member",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.userCtrl.initiateMemberTransfer(req, res);
+            }
+        );
+
         app.get(
             url + "/transfer/list/:divisionId",
             JwtToken.verify,
