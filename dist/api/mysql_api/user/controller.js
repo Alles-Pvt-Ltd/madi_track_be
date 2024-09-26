@@ -59,12 +59,14 @@ class UserController {
         });
         this.reference = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const responseData = yield user_1.User.reference();
+            console.log(responseData);
             const referenceData = {
                 genderReference: responseData.data[0],
                 familyRoleReference: responseData.data[1],
                 occupationReference: responseData.data[2],
                 gsDivisions: helper_1.default.gsDivisionsResponse(responseData.data[3], responseData.data[5]),
-                religionReference: responseData.data[4]
+                religionReference: responseData.data[4],
+                transferReason: responseData.data[6]
             };
             return (0, response_1.successResponse)(referenceData, "Successfully retrieved", res);
         });
