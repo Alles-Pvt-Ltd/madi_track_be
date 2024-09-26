@@ -59,7 +59,6 @@ class UserController {
         });
         this.reference = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const responseData = yield user_1.User.reference();
-            console.log(responseData);
             const referenceData = {
                 genderReference: responseData.data[0],
                 familyRoleReference: responseData.data[1],

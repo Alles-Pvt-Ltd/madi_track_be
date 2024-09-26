@@ -61,8 +61,7 @@ export class UserController {
 
     public reference  = async (req: Request, res: Response) => {
       const responseData = await User.reference();
-
-      console.log(responseData);
+      
       const referenceData = {
         genderReference: responseData.data[0],
         familyRoleReference: responseData.data[1],

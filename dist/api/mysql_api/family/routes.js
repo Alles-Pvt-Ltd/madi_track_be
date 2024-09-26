@@ -46,6 +46,9 @@ class FamilyRoutes {
         jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.initiateFamilyTransfer(req, res);
         });
+        app.post(url + "/transfer/member", jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.initiateMemberTransfer(req, res);
+        });
         app.get(url + "/transfer/list/:divisionId", jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.getAllFamilyTransfersForAGsDivision(req, res);
         });

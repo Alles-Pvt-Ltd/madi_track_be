@@ -162,6 +162,18 @@ export class FamilyController {
         return successResponse(transferDetail.data[0],"Successfully initiated transfer request",res);
       }
 
+      public initiateMemberTransfer = async (req: Request, res: Response) => {
+        const transferData = req.body;
+        console.log(transferData);
+        const transferDetail = await Family.initiateMemberTransfer(transferData.memberId, transferData.reasonId);
+
+        if (transferDetail.err) {
+            return failureResponse(transferDetail.message, res);
+        }
+
+        return successResponse("Successfully initiated","Success",res);
+      }
+
       public getAllFamilyTransfersForAGsDivision = async (req: Request, res: Response) => {
         const gsDivisionId = parseInt(req.params.divisionId);
         const transferList = await Family.getAllFamilyTransfersForAGsDivision(gsDivisionId);

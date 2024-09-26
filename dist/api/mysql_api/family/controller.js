@@ -131,6 +131,15 @@ class FamilyController {
             }
             return (0, response_1.successResponse)(transferDetail.data[0], "Successfully initiated transfer request", res);
         });
+        this.initiateMemberTransfer = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const transferData = req.body;
+            console.log(transferData);
+            const transferDetail = yield family_1.Family.initiateMemberTransfer(transferData.memberId, transferData.reasonId);
+            if (transferDetail.err) {
+                return (0, response_1.failureResponse)(transferDetail.message, res);
+            }
+            return (0, response_1.successResponse)("Successfully initiated", "Success", res);
+        });
         this.getAllFamilyTransfersForAGsDivision = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const gsDivisionId = parseInt(req.params.divisionId);
             const transferList = yield family_1.Family.getAllFamilyTransfersForAGsDivision(gsDivisionId);
