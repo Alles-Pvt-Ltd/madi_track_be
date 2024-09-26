@@ -68,7 +68,7 @@ class FamilyController {
             if (familyDetails.err) {
                 return (0, response_1.failureResponse)(familyDetails.message, res);
             }
-            const response = helper_1.default.singleFamilyResponse(familyDetails.data[0], familyDetails.data[1], familyDetails.data[2]);
+            const response = helper_1.default.singleFamilyResponse(familyDetails.data[0], familyDetails.data[1], familyDetails.data[2], familyDetails.data[3]);
             return (0, response_1.successResponse)(response, "Family Details Retrieved Successfully", res);
         });
         this.addHistory = (req, res) => __awaiter(this, void 0, void 0, function* () {

@@ -10,7 +10,7 @@ export default class Helper {
     return familyData;
   };
 
-  public static singleFamilyResponse = (familyData: any, memberData: any, historyData: any) => {
+  public static singleFamilyResponse = (familyData: any, memberData: any, historyData: any, transferHistoryData: any) => {
     const finalFamilyData = {
       id: familyData[0].id,
       cardNumber: familyData[0].cardNumber,
@@ -22,7 +22,8 @@ export default class Helper {
       villageName: familyData[0].villageName,
       members: memberData,
       membersCount: memberData.length,
-      history: historyData
+      history: historyData,
+      transferHistory: transferHistoryData
     }
 
     return finalFamilyData;
