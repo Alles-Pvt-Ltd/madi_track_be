@@ -13,7 +13,15 @@ export class DashboardRoutes {
       (req: Request, res: Response) => {
         this.dashboardCtlr.dashboardList(req, res);
       }
-    )
+    );
+
+    app.get(
+      url + "/weblist/:divisionId",
+      JwtToken.verify,
+      (req: Request, res: Response) => {
+        this.dashboardCtlr.webDashboardList(req, res);
+      }
+    );
       // app.post(url + "/deploy", (req: Request, res: Response) => {
       //   this.dashboardCtlr.deployment(req, res);
       // });
