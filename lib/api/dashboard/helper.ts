@@ -23,7 +23,7 @@ export default class Helper {
     });
 
     dashboardResponse.push({
-      title:"Total Childrens",
+      title:"Total Children",
       count:data.childrensCount,
       bgColor:"#FB9AD1",
       imageUrl: "https://i.postimg.cc/wx59vKm2/children.png"
