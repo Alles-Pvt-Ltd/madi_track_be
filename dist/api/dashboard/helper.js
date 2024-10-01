@@ -12,13 +12,13 @@ Helper.dashboardResponse = (data) => {
         imageUrl: "https://bitbucket.org/allespl/images/raw/dfc9664ff1570e729c5073de52fc9f51aaa4b6a7/Pripaid.png"
     });
     dashboardResponse.push({
-        title: "Total Childrens",
+        title: "Total Children",
         count: data.childrensCount,
         bgColor: "#FB9AD1",
         imageUrl: "https://i.postimg.cc/wx59vKm2/children.png"
     });
     dashboardResponse.push({
-        title: "Total SeniorCitizens",
+        title: "Total Senior Citizens",
         count: data.seniorCitizensCount,
         bgColor: "#FA7070",
         imageUrl: "https://i.postimg.cc/52rVGbh4/old-people.png"

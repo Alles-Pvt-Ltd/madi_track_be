@@ -17,6 +17,7 @@ export class UserRoutes {
 
     app.post(
       url + "/register",
+      JwtToken.verify,
       Validation.registerValidation,
       (req: Request, res: Response) => {
         this.userCtrl.register(req, res);
@@ -25,6 +26,7 @@ export class UserRoutes {
 
     app.get(
       url + "/reference",
+      JwtToken.verify,
       (req: Request, res: Response) => {
         this.userCtrl.reference(req, res);
       }

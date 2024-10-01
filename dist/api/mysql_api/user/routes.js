@@ -12,10 +12,10 @@ class UserRoutes {
         app.post(url + "/login", class_1.Validation.loginValidation, (req, res) => {
             this.userCtrl.login(req, res);
         });
-        app.post(url + "/register", class_1.Validation.registerValidation, (req, res) => {
+        app.post(url + "/register", jwt_1.JwtToken.verify, class_1.Validation.registerValidation, (req, res) => {
             this.userCtrl.register(req, res);
         });
-        app.get(url + "/reference", (req, res) => {
+        app.get(url + "/reference", jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.reference(req, res);
         });
         app.post(url + "/change_password", class_1.Validation.changePasswordValidation, jwt_1.JwtToken.verify, (req, res) => {

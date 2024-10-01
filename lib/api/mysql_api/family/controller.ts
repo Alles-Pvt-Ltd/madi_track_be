@@ -14,7 +14,7 @@ export class FamilyController {
         }
 
         const body = req.body; 
-        const duplicateFamily = await Family.getDuplicateFamily(body.cardNumber);
+        const duplicateFamily = await Family.getDuplicateFamily(body.cardNumber, body.gsDivisionId);
         if(duplicateFamily.data.length !== 0)
         {
             return failureResponse("Family Already Exist",res);
