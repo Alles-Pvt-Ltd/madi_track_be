@@ -17,6 +17,7 @@ export class UserRoutes {
 
     app.post(
       url + "/register",
+      JwtToken.verify,
       Validation.registerValidation,
       (req: Request, res: Response) => {
         this.userCtrl.register(req, res);
