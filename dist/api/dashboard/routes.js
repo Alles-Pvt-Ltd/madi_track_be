@@ -2,20 +2,22 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DashboardRoutes = void 0;
 const controller_1 = require("./controller");
-const verify_token_1 = require("../../app/verify_token");
+const jwt_1 = require("../../core/jwt");
+// import { Validation } from "./class";
 class DashboardRoutes {
     constructor() {
-        this.dashboardController = new controller_1.DashboardController();
-        this.verify = new verify_token_1.Verify();
+        this.dashboardCtlr = new controller_1.DashboardController();
     }
     route(app, url) {
-        //Get dashbord data
-        app.get(url + '/:gsDivisionId', this.verify.verify, (req, res) => {
-            this.dashboardController.dashboardList(req, res);
+        app.get(url + "/list/:divisionId", jwt_1.JwtToken.verify, (req, res) => {
+            this.dashboardCtlr.dashboardList(req, res);
         });
-        app.post(url + "/deploy", (req, res) => {
-            this.dashboardController.deployment(req, res);
+        app.get(url + "/weblist/:divisionId", jwt_1.JwtToken.verify, (req, res) => {
+            this.dashboardCtlr.webDashboardList(req, res);
         });
+        // app.post(url + "/deploy", (req: Request, res: Response) => {
+        //   this.dashboardCtlr.deployment(req, res);
+        // });
     }
 }
 exports.DashboardRoutes = DashboardRoutes;

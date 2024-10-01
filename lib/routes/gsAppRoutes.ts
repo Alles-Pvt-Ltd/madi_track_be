@@ -1,11 +1,11 @@
-import { UserRoutes } from "../api/mysql_api/user/routes";
+import { UserRoutes } from "../api/user/routes";
 import  AppConstant from "../config/constant";
 import { Application, Request, Response } from 'express';
 import { Verify } from "../app/verify_token";
-import { FamilyRoutes } from "../api/mysql_api/family/routes";
-import { DashboardRoutes } from "../api/mysql_api/dashboard/routes";
-import { AdminRoutes } from "../api/mysql_api/admin/routes";
-import { AppRoute } from "../api/mysql_api/app/routes";
+import { FamilyRoutes } from "../api/family/routes";
+import { DashboardRoutes } from "../api/dashboard/routes";
+import { AdminRoutes } from "../api/admin/routes";
+import { AppRoute } from "../api/app/routes";
 
 export class GsAppRoutes {
     private userRoutes: UserRoutes = new UserRoutes();

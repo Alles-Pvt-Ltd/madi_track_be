@@ -1,7 +1,7 @@
 import { Application, Request, Response } from "express";
 import { UserController } from "./controller";
 import { Validation } from "./class";
-import { JwtToken } from "../../../core/jwt";
+import { JwtToken } from "../../core/jwt";
 
 export class UserRoutes {
   private userCtrl: UserController = new UserController();

@@ -1,80 +1,72 @@
-import { Request, Response } from 'express';
-import { successResponse, failureResponse } from '../../modules/common/service';
-import Helper from './helper';
-import {Service} from '../../database/mongodb/service'
+import { Request, Response } from "express";
+import { Family } from "../../database/mysql/family";
+import { badResponse, failureResponse, successResponse } from "../../core/response";
+import { validationResult } from "express-validator";
+import Helper from "./helper";
+import { Dashboard } from "../../database/mysql/dashboard";
+import { JwtToken } from "../../core/jwt";
 const { exec } = require('child_process');
+
 export class DashboardController {
-
-    // private helper: Helper = new Helper();
-    private service: Service = new Service();
-
-    public dashboardList = async (req:Request, res:Response) => {
+    public dashboardList = async (req: Request, res: Response) => {
+       
+        const gsDivisionId = parseInt(req.params.divisionId);
         try {
-            const { gsDivisionId } = req.params
-            const response:any = {}
-
-            const getFamilyCount = await this.service.getFamilyCount(req,res)
-            if(!getFamilyCount.err)
-            {
-                response.familyCount = getFamilyCount.data
-            }
             
-            const getChildrensCount:any = await this.service.getChildrensCount(req,res)
-            if(!getChildrensCount.err)
-            {
-                response.childrensCount = getChildrensCount.data
-            }
-
-            const getSeniorCitizensCount:any = await this.service.getSeniorCitizensCount(req, res)
-            if(!getSeniorCitizensCount.err)
-            {
-                response.seniorCitizensCount = getSeniorCitizensCount.data
-            }
-
-            const getGovernmentEmployeesCount:any = await this.service.getGovernmentEmployeesCount(req,res)
-            if(!getGovernmentEmployeesCount.err)
-            {
-                response.governmentEmployeesCount = getGovernmentEmployeesCount.data
-            }
-
-            const getUniversityStudentsCount:any = await this.service.getUniversityStudentsCount(req,res)
-            if(!getUniversityStudentsCount.err)
-            {
-                response.universityStudentsCount  = getUniversityStudentsCount.data
+            const dashboardCountData = await Dashboard.getDashboardData(gsDivisionId);
+            const response = {
+                familyCount: dashboardCountData.data[0][0].totalFamilies,
+                childrenCount: dashboardCountData.data[1][0].totalChildren,
+                eldersCount: dashboardCountData.data[2][0].totalElders,
+                governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
+                universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents,
+                disabledPersonsCount: dashboardCountData.data[5][0].totalDisabledPersons,
+                totalMember: dashboardCountData.data[6][0].totalMember,
+                totalMale: dashboardCountData.data[7][0].totalMale,
+                totalFemale: dashboardCountData.data[8][0].totalFemale,
             }
     
-            if (Object.keys(response).length === 0) {
-                return failureResponse("No data available for dashboard", null, res);
-            }
-            const responseData = Helper.dashboardResponse(response)
-                // {
-                // familyCount: getFamilyCount.data,
-                // childrensCount: getChildrensCount.data,
-                // seniorCitizensCount: getSeniorCitizensCount.data,
-                // governmentEmployeesCount: getGovernmentEmployeesCount.data,
-                // universityStudentsCount: getUniversityStudentsCount.data
+            return successResponse(Helper.dashboardResponse(response) , "Dashboard Data Got Successfully", res)
+        }
+        catch (error) {
+            console.error("Error while getting data, Please try after some time");
+        }
 
-            // });
-            return successResponse('Dashboard Data Get Successfully',responseData,res)
-        }
-        catch(err) {
-            return failureResponse('Error fetching dashboard data', err.message, res);
-        }
-        
     }
 
+
+    public webDashboardList = (req: Request, res: Response) => {
+        const dsDivisionId = parseInt(req.params.divisionId);
+        
+        Dashboard.getWebDashboardData(dsDivisionId).then(dashboardCountData => {
+            if (dashboardCountData.err) {
+                return failureResponse("Error while getting data", res);
+            }
+            
+            const response = Helper.webDashboardResponse({
+                familyCount: dashboardCountData.data[0][0].totalFamilies,
+                childrenCount: dashboardCountData.data[1][0].totalChildren,
+                eldersCount: dashboardCountData.data[2][0].totalElders,
+                governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
+                universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents,
+            });
+            
+            return successResponse(response, "Web Dashboard Data Got Successfully", res);
+        }).catch(error => {
+            return failureResponse("Error while getting data, please try after some time", res);
+        });
+    }
+    
+    
     public deployment = async (req: Request, res: Response) => {
         exec('sh deploy.sh',
           (error, stdout, stderr) => {
               console.log(stdout);
               console.log(stderr);
               if (error !== null) {
-                return failureResponse('Error fetching dashboard data',error.message, res);
+                return failureResponse(error.message, res);
               }
-              return successResponse("Deployment done...", {},res);
+              return successResponse({message:"Deployment done..."},"",res);
           });
       };
-    
 }
-
-    
