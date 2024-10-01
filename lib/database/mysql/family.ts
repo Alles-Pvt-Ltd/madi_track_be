@@ -4,8 +4,8 @@ import { IFamily, IFamilyTransfer, IHistory, IMember, IPropertyData } from "core
 
 export class Family {
 
-    public static getDuplicateFamily = async (cardNumber: number) => {
-        const sqlQueryString = `CALL sp_getFamilyByCardNumber ('${cardNumber}')`;
+    public static getDuplicateFamily = async (cardNumber: string, gsDivisionId: number ) => {
+        const sqlQueryString = `CALL sp_getFamilyByCardNumber ('${cardNumber}', '${gsDivisionId}')`;
 
         const sqlData = await Mysql.connect(sqlQueryString, null);
 
