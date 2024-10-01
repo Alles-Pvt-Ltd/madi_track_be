@@ -18,7 +18,7 @@ Helper.dashboardResponse = (data) => {
         imageUrl: "https://i.postimg.cc/wx59vKm2/children.png"
     });
     dashboardResponse.push({
-        title: "Total SeniorCitizens",
+        title: "Total Senior Citizens",
         count: data.seniorCitizensCount,
         bgColor: "#FA7070",
         imageUrl: "https://i.postimg.cc/52rVGbh4/old-people.png"
