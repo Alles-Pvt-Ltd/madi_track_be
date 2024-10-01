@@ -25,6 +25,7 @@ export class UserRoutes {
 
     app.get(
       url + "/reference",
+      JwtToken.verify,
       (req: Request, res: Response) => {
         this.userCtrl.reference(req, res);
       }
