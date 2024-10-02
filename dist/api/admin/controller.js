@@ -19,6 +19,10 @@ class AdminController {
         this.getAllGsList = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const jwtData = jwt_1.JwtToken.get(req);
             var userData = user_1.User.getUserByCode(jwtData.code);
+            console.log((yield userData).data[0]);
+            if (!(yield userData).data[0]) {
+                return (0, response_1.failureResponse)("Please provide valid token", res);
+            }
             const gsList = yield admin_1.Admin.getAllGsList((yield userData).data[0].gsDivisionId);
             if (gsList.err) {
                 return (0, response_1.failureResponse)(gsList.message, res);

@@ -10,6 +10,11 @@ export class AdminController {
     public getAllGsList = async (req: Request, res: Response) => {
         const jwtData = JwtToken.get(req);
         var userData = User.getUserByCode(jwtData.code);
+        
+        if(!(await userData).data[0])
+        {
+            return failureResponse("Please provide valid token", res);
+        }
         const gsList = await Admin.getAllGsList((await userData).data[0].gsDivisionId);
         if(gsList.err)
         {
