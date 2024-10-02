@@ -107,8 +107,9 @@ export class UserController {
     public userInfo = async (req: Request, res: Response) => {
       const jwtData = JwtToken.get(req);
       const userInfo = await User.getUserByCode(jwtData.code);
-      if (userInfo.err) {
-        return failureResponse(userInfo.message, res);
+      
+      if (userInfo.err || userInfo.data.length < 1) {
+        return failureResponse(userInfo.message ? userInfo.message : "Cannot find user. Please login again", res);
       }
 
       const userDetail = await User.userInfo(userInfo.data[0].id);
