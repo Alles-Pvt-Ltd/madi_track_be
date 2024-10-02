@@ -6,34 +6,70 @@ exports.default = Helper;
 Helper.dashboardResponse = (data) => {
     const dashboardResponse = [];
     dashboardResponse.push({
-        title: "Total Families",
+        title: "Families",
         count: data.familyCount,
         bgColor: "#DC6B19",
-        imageUrl: "https://bitbucket.org/allespl/images/raw/dfc9664ff1570e729c5073de52fc9f51aaa4b6a7/Pripaid.png"
+        imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png"
+    });
+    //Family Related Start
+    dashboardResponse.push({
+        title: "Total member",
+        count: data.totalMember,
+        bgColor: "#f5bf42",
+        imageUrl: "https://i.ibb.co/HG7nSVh/team.png"
     });
     dashboardResponse.push({
-        title: "Total Children",
-        count: data.childrensCount,
+        title: "Male",
+        count: data.totalMale,
+        bgColor: "#e967f0",
+        imageUrl: "https://i.ibb.co/dbrK8Qn/avatar.png"
+    });
+    dashboardResponse.push({
+        title: "Female",
+        count: data.totalFemale,
+        bgColor: "#52d9e3",
+        imageUrl: "https://i.ibb.co/0t4qqyL/woman.png"
+    });
+    //Family Related End
+    dashboardResponse.push({
+        title: "Childrens",
+        count: data.childrenCount,
         bgColor: "#FB9AD1",
-        imageUrl: "https://i.postimg.cc/wx59vKm2/children.png"
+        imageUrl: "https://i.ibb.co/yhrVz14/children-movement-svgrepo-com.png"
     });
     dashboardResponse.push({
-        title: "Total Senior Citizens",
-        count: data.seniorCitizensCount,
+        title: "Senior Citizens",
+        count: data.eldersCount,
         bgColor: "#FA7070",
         imageUrl: "https://i.postimg.cc/52rVGbh4/old-people.png"
     });
     dashboardResponse.push({
-        title: "Total Government Employees",
+        title: "Government Employees",
         count: data.governmentEmployeesCount,
         bgColor: "#4CCD99",
-        imageUrl: "https://i.postimg.cc/KvZx3972/governmentemployee.png"
+        imageUrl: "https://i.ibb.co/tcxGy2w/employee-worker-svgrepo-com.png"
     });
     dashboardResponse.push({
-        title: "Total University Students",
+        title: "University Students",
         count: data.universityStudentsCount,
         bgColor: "#2FC6FF",
-        imageUrl: "https://i.postimg.cc/GmtRqHSg/university-student.png"
+        imageUrl: "https://i.ibb.co/qMGWzCX/graduation-academy-grad-svgrepo-com.png"
+    });
+    dashboardResponse.push({
+        title: "Disabled Persons",
+        count: data.disabledPersonsCount,
+        bgColor: "#FF6600",
+        imageUrl: "https://i.ibb.co/syt0bjf/man-in-motorized-wheelchair-svgrepo-com.png"
     });
     return dashboardResponse;
+};
+Helper.webDashboardResponse = (data) => {
+    const items = [
+        { title: "Families", count: data.familyCount, bgColor: "#DC6B19", imageUrl: "https://i.ibb.co/1Gj209r/family-of-3-upper-body-svgrepo-com.png" },
+        { title: "Children", count: data.childrenCount, bgColor: "#FB9AD1", imageUrl: "https://i.ibb.co/yhrVz14/children-movement-svgrepo-com.png" },
+        { title: "Senior Citizens", count: data.eldersCount, bgColor: "#FA7070", imageUrl: "https://i.postimg.cc/52rVGbh4/old-people.png" },
+        { title: "Government Employees", count: data.governmentEmployeesCount, bgColor: "#4CCD99", imageUrl: "https://i.ibb.co/tcxGy2w/employee-worker-svgrepo-com.png" },
+        { title: "University Students", count: data.universityStudentsCount, bgColor: "#2FC6FF", imageUrl: "https://i.ibb.co/qMGWzCX/graduation-academy-grad-svgrepo-com.png" }
+    ];
+    return items;
 };

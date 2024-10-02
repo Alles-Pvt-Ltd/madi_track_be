@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { badResponse, failureResponse, successResponse } from "../../../core/response";
+import { badResponse, failureResponse, successResponse } from "../../core/response";
 import { validationResult } from "express-validator";
-import { Admin } from "../../../database/mysql/admin";
-import { JwtToken } from "../../../core/jwt";
-import { User } from "../../../database/mysql/user"
+import { Admin } from "../../database/mysql/admin";
+import { JwtToken } from "../../core/jwt";
+import { User } from "../../database/mysql/user"
 
 export class AdminController {
     public getAllGsList = async (req: Request, res: Response) => {

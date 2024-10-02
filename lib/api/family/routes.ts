@@ -1,6 +1,6 @@
 import { Application, Request, Response } from "express";
 import { FamilyController } from "./controller";
-import { JwtToken } from "../../../core/jwt";
+import { JwtToken } from "../../core/jwt";
 import { Validation } from "./class";
 
 export class FamilyRoutes {

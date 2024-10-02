@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { User } from "../../../database/mysql/user";
-import { badResponse, failureResponse, successResponse } from "../../../core/response";
-import { AppFunction } from "../../../core/app";
+import { User } from "../../database/mysql/user";
+import { badResponse, failureResponse, successResponse } from "../../core/response";
+import { AppFunction } from "../../core/app";
 import Helper from "./helper";
-import { StringConstant } from "../../../config/constant";
-import {IUser} from "../../../core/interface/user"
+import { StringConstant } from "../../config/constant";
+import {IUser} from "../../core/interface/user"
 import { validationResult } from "express-validator";
-import { JwtToken } from "../../../core/jwt";
+import { JwtToken } from "../../core/jwt";
 
 export class UserController {
     public login = async (req: Request, res: Response) => {
@@ -107,8 +107,9 @@ export class UserController {
     public userInfo = async (req: Request, res: Response) => {
       const jwtData = JwtToken.get(req);
       const userInfo = await User.getUserByCode(jwtData.code);
-      if (userInfo.err) {
-        return failureResponse(userInfo.message, res);
+      
+      if (userInfo.err || userInfo.data.length < 1) {
+        return failureResponse(userInfo.message ? userInfo.message : "Cannot find user. Please login again", res);
       }
 
       const userDetail = await User.userInfo(userInfo.data[0].id);

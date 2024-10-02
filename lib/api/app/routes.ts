@@ -1,6 +1,6 @@
 import { Application, Request, Response } from "express";
 import { AppController } from "./controller";
-import { JwtToken } from "../../../core/jwt";
+import { JwtToken } from "../../core/jwt";
 
 export class AppRoute {
   private appCtrl: AppController = new AppController();

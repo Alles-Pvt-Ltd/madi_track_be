@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { Family } from "../../../database/mysql/family";
-import { badResponse, failureResponse, successResponse } from "../../../core/response";
+import { Family } from "../../database/mysql/family";
+import { badResponse, failureResponse, successResponse } from "../../core/response";
 import { validationResult } from "express-validator";
 import Helper from "./helper";
-import { User } from "../../../database/mysql/user";
-import { JwtToken } from "../../../core/jwt";
+import { User } from "../../database/mysql/user";
+import { JwtToken } from "../../core/jwt";
 
 export class FamilyController {
     public addFamily = async (req: Request, res: Response) => {

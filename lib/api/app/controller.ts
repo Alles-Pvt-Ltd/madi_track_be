@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { App } from "../../../database/mysql/app";
-import { failureResponse, successResponse } from "../../../core/response";
-import { FileUpload } from "../../../core/fileUpload";
-import { API_BASE_URL, MEDIA_SERVER_URL } from "../../../core/common/constant";
+import { App } from "../../database/mysql/app";
+import { failureResponse, successResponse } from "../../core/response";
+import { FileUpload } from "../../core/fileUpload";
+import { API_BASE_URL, MEDIA_SERVER_URL } from "../../core/common/constant";
 
 interface MulterRequest extends Request {
     file: any;

@@ -10,63 +10,59 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DashboardController = void 0;
-const service_1 = require("../../modules/common/service");
+const response_1 = require("../../core/response");
 const helper_1 = require("./helper");
-const service_2 = require("../../database/mongodb/service");
+const dashboard_1 = require("../../database/mysql/dashboard");
 const { exec } = require('child_process');
 class DashboardController {
     constructor() {
-        // private helper: Helper = new Helper();
-        this.service = new service_2.Service();
         this.dashboardList = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const gsDivisionId = parseInt(req.params.divisionId);
             try {
-                const { gsDivisionId } = req.params;
-                const response = {};
-                const getFamilyCount = yield this.service.getFamilyCount(req, res);
-                if (!getFamilyCount.err) {
-                    response.familyCount = getFamilyCount.data;
-                }
-                const getChildrensCount = yield this.service.getChildrensCount(req, res);
-                if (!getChildrensCount.err) {
-                    response.childrensCount = getChildrensCount.data;
-                }
-                const getSeniorCitizensCount = yield this.service.getSeniorCitizensCount(req, res);
-                if (!getSeniorCitizensCount.err) {
-                    response.seniorCitizensCount = getSeniorCitizensCount.data;
-                }
-                const getGovernmentEmployeesCount = yield this.service.getGovernmentEmployeesCount(req, res);
-                if (!getGovernmentEmployeesCount.err) {
-                    response.governmentEmployeesCount = getGovernmentEmployeesCount.data;
-                }
-                const getUniversityStudentsCount = yield this.service.getUniversityStudentsCount(req, res);
-                if (!getUniversityStudentsCount.err) {
-                    response.universityStudentsCount = getUniversityStudentsCount.data;
-                }
-                if (Object.keys(response).length === 0) {
-                    return (0, service_1.failureResponse)("No data available for dashboard", null, res);
-                }
-                const responseData = helper_1.default.dashboardResponse(response);
-                // {
-                // familyCount: getFamilyCount.data,
-                // childrensCount: getChildrensCount.data,
-                // seniorCitizensCount: getSeniorCitizensCount.data,
-                // governmentEmployeesCount: getGovernmentEmployeesCount.data,
-                // universityStudentsCount: getUniversityStudentsCount.data
-                // });
-                return (0, service_1.successResponse)('Dashboard Data Get Successfully', responseData, res);
+                const dashboardCountData = yield dashboard_1.Dashboard.getDashboardData(gsDivisionId);
+                const response = {
+                    familyCount: dashboardCountData.data[0][0].totalFamilies,
+                    childrenCount: dashboardCountData.data[1][0].totalChildren,
+                    eldersCount: dashboardCountData.data[2][0].totalElders,
+                    governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
+                    universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents,
+                    disabledPersonsCount: dashboardCountData.data[5][0].totalDisabledPersons,
+                    totalMember: dashboardCountData.data[6][0].totalMember,
+                    totalMale: dashboardCountData.data[7][0].totalMale,
+                    totalFemale: dashboardCountData.data[8][0].totalFemale,
+                };
+                return (0, response_1.successResponse)(helper_1.default.dashboardResponse(response), "Dashboard Data Got Successfully", res);
             }
-            catch (err) {
-                return (0, service_1.failureResponse)('Error fetching dashboard data', err.message, res);
+            catch (error) {
+                console.error("Error while getting data, Please try after some time");
             }
         });
+        this.webDashboardList = (req, res) => {
+            const dsDivisionId = parseInt(req.params.divisionId);
+            dashboard_1.Dashboard.getWebDashboardData(dsDivisionId).then(dashboardCountData => {
+                if (dashboardCountData.err) {
+                    return (0, response_1.failureResponse)("Error while getting data", res);
+                }
+                const response = helper_1.default.webDashboardResponse({
+                    familyCount: dashboardCountData.data[0][0].totalFamilies,
+                    childrenCount: dashboardCountData.data[1][0].totalChildren,
+                    eldersCount: dashboardCountData.data[2][0].totalElders,
+                    governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
+                    universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents,
+                });
+                return (0, response_1.successResponse)(response, "Web Dashboard Data Got Successfully", res);
+            }).catch(error => {
+                return (0, response_1.failureResponse)("Error while getting data, please try after some time", res);
+            });
+        };
         this.deployment = (req, res) => __awaiter(this, void 0, void 0, function* () {
             exec('sh deploy.sh', (error, stdout, stderr) => {
                 console.log(stdout);
                 console.log(stderr);
                 if (error !== null) {
-                    return (0, service_1.failureResponse)('Error fetching dashboard data', error.message, res);
+                    return (0, response_1.failureResponse)(error.message, res);
                 }
-                return (0, service_1.successResponse)("Deployment done...", {}, res);
+                return (0, response_1.successResponse)({ message: "Deployment done..." }, "", res);
             });
         });
     }

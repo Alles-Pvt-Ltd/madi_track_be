@@ -1,23 +1,29 @@
-import { Application, Request, Response } from 'express';
-import { DashboardController } from './controller';
-import { Verify } from "../../app/verify_token";
+import { Application, Request, Response } from "express";
+import { DashboardController } from "./controller";
+import { JwtToken } from "../../core/jwt";
+// import { Validation } from "./class";
 
 export class DashboardRoutes {
+  private dashboardCtlr: DashboardController = new DashboardController();
 
-    private dashboardController: DashboardController = new DashboardController();
-    private verify:Verify=new Verify();
+  public route(app: Application, url: string) {
+    app.get(
+      url + "/list/:divisionId",
+      JwtToken.verify,
+      (req: Request, res: Response) => {
+        this.dashboardCtlr.dashboardList(req, res);
+      }
+    );
 
-    public route(app: Application, url:string) {
-        //Get dashbord data
-        app.get(url+'/:gsDivisionId', this.verify.verify,(req: Request, res: Response) => {
-            this.dashboardController.dashboardList(req, res);
-        });
-
-        app.post(
-            url + "/deploy",
-            (req: Request, res: Response) => {
-              this.dashboardController.deployment(req, res);
-            }
-          );
-    }
+    app.get(
+      url + "/weblist/:divisionId",
+      JwtToken.verify,
+      (req: Request, res: Response) => {
+        this.dashboardCtlr.webDashboardList(req, res);
+      }
+    );
+      // app.post(url + "/deploy", (req: Request, res: Response) => {
+      //   this.dashboardCtlr.deployment(req, res);
+      // });
+  }
 }

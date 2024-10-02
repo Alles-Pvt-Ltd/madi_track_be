@@ -1,6 +1,6 @@
 import { Application, Request, Response } from "express";
 import { AdminController } from "./controller";
-import { JwtToken } from "../../../core/jwt";
+import { JwtToken } from "../../core/jwt";
 
 export class AdminRoutes {
     private adminCtrl: AdminController = new AdminController();
