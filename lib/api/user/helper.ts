@@ -36,34 +36,30 @@ export default class Helper {
     delete userInfo.isDeleted;
     userInfo.divisionIds = [];
 
-    // userData[1].map((item) => {
-    //       userInfo.divisionIds.push({
-    //         id: item.divisionId,
-    //         name: item.name,
-    //         isDefault: item.isDefault
-    //       })
-    //     })
 
-    userData[1].forEach((item) => {
-      const existingDivision = userInfo.divisionIds.find(div => div.id === item.divisionId);
+    userData[2].forEach((item) => {
 
-      if (existingDivision) {
-          existingDivision.villages.push({
-              id: item.villageId,
-              name: item.villageName
-          });
-      } 
-      else {
+      var vilages = [];
+
+      userData[1].forEach((village) => {
+       
+        if (village.id == item.id){
+        vilages.push( {
+          id: village.villageId,
+          name: village.villageName            
+        });
+      }
+  });
+
+
+       
           userInfo.divisionIds.push({
-              id: item.divisionId,
+              id: item.id,
               name: item.name,
               isDefault: item.isDefault,
-              villages: [{
-                  id: item.villageId,
-                  name: item.villageName
-              }]
-          });
-      }
+              villages: vilages
+          });         
+       
     });
     
     return userInfo;
