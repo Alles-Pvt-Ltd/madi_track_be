@@ -9,9 +9,8 @@ import { log } from "console";
 export class AdminController {
     public getAllGsList = async (req: Request, res: Response) => {
         const jwtData = JwtToken.get(req);
-        console.log(jwtData);
-        const divisionId = parseInt(req.params.divisionId)
-        const gsList = await Admin.getAllGsList(divisionId);
+        var userData = User.getUserByCode(jwtData.code);
+        const gsList = await Admin.getAllGsList((await userData).data[0].gsDivisionId);
         if(gsList.err)
         {
             return failureResponse(gsList.message, res);
