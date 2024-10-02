@@ -37,13 +37,13 @@ Helper.userResponse = (userData) => {
             if (village.id == item.id) {
                 vilages.push({
                     id: village.villageId,
-                    name: village.villageName
+                    label: village.villageName
                 });
             }
         });
         userInfo.divisionIds.push({
             id: item.id,
-            name: item.name,
+            label: item.name,
             isDefault: item.isDefault,
             villages: vilages
         });

@@ -4,9 +4,12 @@ import { validationResult } from "express-validator";
 import { Admin } from "../../database/mysql/admin";
 import { JwtToken } from "../../core/jwt";
 import { User } from "../../database/mysql/user"
+import { log } from "console";
 
 export class AdminController {
     public getAllGsList = async (req: Request, res: Response) => {
+        const jwtData = JwtToken.get(req);
+        console.log(jwtData);
         const divisionId = parseInt(req.params.divisionId)
         const gsList = await Admin.getAllGsList(divisionId);
         if(gsList.err)

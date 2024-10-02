@@ -46,7 +46,7 @@ export default class Helper {
         if (village.id == item.id){
         vilages.push( {
           id: village.villageId,
-          name: village.villageName            
+          label: village.villageName            
         });
       }
   });
@@ -55,7 +55,7 @@ export default class Helper {
        
           userInfo.divisionIds.push({
               id: item.id,
-              name: item.name,
+              label: item.name,
               isDefault: item.isDefault,
               villages: vilages
           });         

@@ -12,9 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminController = void 0;
 const response_1 = require("../../core/response");
 const admin_1 = require("../../database/mysql/admin");
+const jwt_1 = require("../../core/jwt");
 class AdminController {
     constructor() {
         this.getAllGsList = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const jwtData = jwt_1.JwtToken.get(req);
+            console.log(jwtData);
             const divisionId = parseInt(req.params.divisionId);
             const gsList = yield admin_1.Admin.getAllGsList(divisionId);
             if (gsList.err) {
