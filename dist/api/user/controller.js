@@ -91,7 +91,6 @@ class UserController {
         this.userInfo = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const jwtData = jwt_1.JwtToken.get(req);
             const userInfo = yield user_1.User.getUserByCode(jwtData.code);
-            console.log(userInfo);
             if (userInfo.err || userInfo.data.length < 1) {
                 return (0, response_1.failureResponse)(userInfo.message ? userInfo.message : "Cannot find user. Please login again", res);
             }
