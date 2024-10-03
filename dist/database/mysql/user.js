@@ -25,7 +25,7 @@ User.findUserByUsername = (userName) => __awaiter(void 0, void 0, void 0, functi
     return { err: false, data: sqlData.result[0] };
 });
 User.register = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const insertUser = `CALL sp_register ('${data.code}','${data.firstName}', '${data.lastName}', '${data.userName}', '${data.password}', '${data.role}',${data.gsDivisionId})`;
+    const insertUser = `CALL sp_register ('${data.id}', '${data.code}','${data.firstName}', '${data.lastName}', '${data.userName}', '${data.password}', '${data.role}',${data.gsDivisionId})`;
     const sqlData = yield connection_1.default.connect(insertUser, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };

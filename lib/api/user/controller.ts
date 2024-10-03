@@ -46,12 +46,16 @@ export class UserController {
       if (user.err) {
         return failureResponse(user.message, res);
       }
-      if(user.data.length > 0)
+      if(!body.id && user.data.length > 0)
       {
         return failureResponse("User already exist", res);
       }
-      body.code = AppFunction.uuid();
-      body.password = AppFunction.encryptPassword(body.password);
+
+      if(!body.id){
+        body.id = 0;
+        body.code = AppFunction.uuid();
+        body.password = AppFunction.encryptPassword(body.password);
+      }
 
       const register = await User.register(body);
       if(register.err)

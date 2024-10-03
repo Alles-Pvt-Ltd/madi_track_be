@@ -15,7 +15,7 @@ export class User {
     };
 
     public static register = async (data: IUser) => {
-      const insertUser = `CALL sp_register ('${data.code}','${data.firstName}', '${data.lastName}', '${data.userName}', '${data.password}', '${data.role}',${data.gsDivisionId})`;
+      const insertUser = `CALL sp_register ('${data.id}', '${data.code}','${data.firstName}', '${data.lastName}', '${data.userName}', '${data.password}', '${data.role}',${data.gsDivisionId})`;
       const sqlData = await Mysql.connect(insertUser, null);
 
       if (sqlData.err) {

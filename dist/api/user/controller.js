@@ -49,11 +49,14 @@ class UserController {
             if (user.err) {
                 return (0, response_1.failureResponse)(user.message, res);
             }
-            if (user.data.length > 0) {
+            if (!body.id && user.data.length > 0) {
                 return (0, response_1.failureResponse)("User already exist", res);
             }
-            body.code = app_1.AppFunction.uuid();
-            body.password = app_1.AppFunction.encryptPassword(body.password);
+            if (!body.id) {
+                body.id = 0;
+                body.code = app_1.AppFunction.uuid();
+                body.password = app_1.AppFunction.encryptPassword(body.password);
+            }
             const register = yield user_1.User.register(body);
             if (register.err) {
                 return (0, response_1.failureResponse)(register.message, res);
