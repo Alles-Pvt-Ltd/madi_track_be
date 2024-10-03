@@ -16,7 +16,7 @@ export class DashboardRoutes {
     );
 
     app.get(
-      url + "/weblist/:divisionId",
+      url + "/info",
       JwtToken.verify,
       (req: Request, res: Response) => {
         this.dashboardCtlr.webDashboardList(req, res);
