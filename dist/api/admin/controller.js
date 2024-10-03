@@ -36,8 +36,8 @@ class AdminController {
             return (0, response_1.successResponse)(familyList.data, familyList.message, res);
         });
         this.getAllFamilyTransfers = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const dsDivisionId = parseInt(req.params.divisionId);
-            const transferList = yield admin_1.Admin.getAllFamilyTransfers(dsDivisionId);
+            //const dsDivisionId = parseInt(req.params.divisionId);
+            const transferList = yield admin_1.Admin.getAllFamilyTransfers();
             if (transferList.err) {
                 return (0, response_1.failureResponse)(transferList.message, res);
             }

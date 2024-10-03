@@ -35,8 +35,8 @@ export class AdminController {
     }
 
     public getAllFamilyTransfers = async (req: Request, res: Response) => {
-        const dsDivisionId = parseInt(req.params.divisionId);
-        const transferList = await Admin.getAllFamilyTransfers(dsDivisionId);
+        //const dsDivisionId = parseInt(req.params.divisionId);
+        const transferList = await Admin.getAllFamilyTransfers();
 
         if(transferList.err)
         {

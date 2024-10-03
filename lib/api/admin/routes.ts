@@ -24,7 +24,7 @@ export class AdminRoutes {
         );
 
         app.get(
-            url + "/family/transfer/list/:divisionId",
+            url + "/family/transfer/list/",
             JwtToken.verify,
             (req: Request, res: Response) => {
                 this.adminCtrl.getAllFamilyTransfers(req, res);

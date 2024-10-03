@@ -28,8 +28,8 @@ export class Admin {
         return { err: false, data: sqlData.result[0], message: "Family List Retrieved Successfuly"}
     }
 
-    public static getAllFamilyTransfers = async (divisionId: number) => {
-        const sqlQueryString = `CALL sp_getAllFamilyTransfersForADsDivision (${divisionId})`;
+    public static getAllFamilyTransfers = async () => {
+        const sqlQueryString = `CALL sp_getAllFamilyTransfersForADsDivision ()`;
 
         const sqlData = await Mysql.connect(sqlQueryString, null);
         if(sqlData.err)
