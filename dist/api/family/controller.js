@@ -156,11 +156,11 @@ class FamilyController {
         });
         this.transferAcceptOrRejectByGs = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const transferData = req.body;
-            const updatedDetail = yield family_1.Family.transferAcceptOrRejectByGs(transferData);
+            const updatedDetail = yield family_1.Family.familyTransferStatusUpdate(transferData);
             if (updatedDetail.err) {
                 return (0, response_1.failureResponse)(updatedDetail.message, res);
             }
-            return (0, response_1.successResponse)(updatedDetail.data[0], "Successfully updated status", res);
+            return (0, response_1.successResponse)("Updated successfully.", "Successfully updated status", res);
         });
         this.addProperty = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const addedProperty = yield family_1.Family.addProperty(req.body);

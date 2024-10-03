@@ -43,13 +43,14 @@ class AdminController {
             }
             return (0, response_1.successResponse)(transferList.data, transferList.message, res);
         });
-        this.updateFamilyTransferStatus = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const updatedData = yield admin_1.Admin.transferAcceptOrRejectByDs(req.body);
-            if (updatedData.err) {
-                return (0, response_1.failureResponse)(updatedData.message, res);
-            }
-            return (0, response_1.successResponse)(updatedData.data, updatedData.message, res);
-        });
+        // public updateFamilyTransferStatus = async (req: Request, res: Response) => {
+        //     const updatedData = await Admin.transferAcceptOrRejectByDs(req.body);
+        //     if(updatedData.err)
+        //     {
+        //         return failureResponse(updatedData.message,res);
+        //     }
+        //     return successResponse(updatedData.data, updatedData.message, res);
+        // }
         this.getMembersByFamilyId = (req, res) => {
             const familyId = parseInt(req.params.familyId);
             console.log("Request received for familyId:", familyId);

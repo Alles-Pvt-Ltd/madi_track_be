@@ -193,13 +193,13 @@ export class FamilyController {
 
       public transferAcceptOrRejectByGs = async (req: Request, res: Response) => {
         const transferData = req.body;
-        const updatedDetail = await Family.transferAcceptOrRejectByGs(transferData);
+        const updatedDetail = await Family.familyTransferStatusUpdate(transferData);
 
         if (updatedDetail.err) {
             return failureResponse(updatedDetail.message, res);
         }
 
-        return successResponse(updatedDetail.data[0],"Successfully updated status",res);
+        return successResponse("Updated successfully.","Successfully updated status",res);
       }
 
       public addProperty = async (req: Request, res: Response) => {

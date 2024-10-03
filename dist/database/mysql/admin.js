@@ -51,14 +51,15 @@ Admin.getMembersByFamilyId = (familyId) => __awaiter(void 0, void 0, void 0, fun
     }
     return { err: false, data: sqlData.result[0], message: "Members List Successfully Retrieved" };
 });
-Admin.transferAcceptOrRejectByDs = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_acceptOrRejectFamilyTransferByDs (${data.id},${data.status})`;
-    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
-    if (sqlData.err) {
-        return { err: true, message: "Error Occur While Updating Transfer Status" };
-    }
-    return { err: false, data: sqlData.result[0], message: "Family Transfer Status Updated Successfully" };
-});
+// public static transferAcceptOrRejectByDs = async (data: IFamilyTransfer) => {
+//     const sqlQueryString = `CALL sp_acceptOrRejectFamilyTransferByDs (${data.id},${data.status})`;
+//     const sqlData = await Mysql.connect(sqlQueryString, null);
+//     if(sqlData.err)
+//     {
+//         return { err: true, message : "Error Occur While Updating Transfer Status"}
+//     }
+//     return { err: false, data: sqlData.result[0], message: "Family Transfer Status Updated Successfully"}
+// }
 Admin.generateReport = (reportData) => __awaiter(void 0, void 0, void 0, function* () {
     const sqlQueryString = `CALL sp_generateReport (
             ${reportData.searchText !== null ? `'${reportData.searchText}'` : "null"},

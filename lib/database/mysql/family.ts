@@ -221,9 +221,9 @@ export class Family {
 
   }
 
-  public static transferAcceptOrRejectByGs = async (data: IFamilyTransfer) => {
+  public static familyTransferStatusUpdate = async (data: IFamilyTransfer) => {
     try {
-      const sqlQueryString = `CALL sp_acceptOrRejectFamilyTransferByGs (${data.id},${data.status})`;
+      const sqlQueryString = `CALL sp_familyTransfer(${data.id},${data.status})`;
 
       const sqlData = await Mysql.connect(sqlQueryString, null);
 

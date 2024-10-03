@@ -46,15 +46,15 @@ export class AdminController {
         return successResponse(transferList.data, transferList.message, res);
     }
 
-    public updateFamilyTransferStatus = async (req: Request, res: Response) => {
-        const updatedData = await Admin.transferAcceptOrRejectByDs(req.body);
-        if(updatedData.err)
-        {
-            return failureResponse(updatedData.message,res);
-        }
+    // public updateFamilyTransferStatus = async (req: Request, res: Response) => {
+    //     const updatedData = await Admin.transferAcceptOrRejectByDs(req.body);
+    //     if(updatedData.err)
+    //     {
+    //         return failureResponse(updatedData.message,res);
+    //     }
 
-        return successResponse(updatedData.data, updatedData.message, res);
-    }
+    //     return successResponse(updatedData.data, updatedData.message, res);
+    // }
     
 
     public getMembersByFamilyId = (req: Request, res: Response) => {

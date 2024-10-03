@@ -31,13 +31,13 @@ export class AdminRoutes {
             }
         );
 
-        app.post(
-            url + "/family/transfer/update",
-            JwtToken.verify,
-            (req: Request, res: Response) => {
-                this.adminCtrl.updateFamilyTransferStatus(req, res);
-            }
-        );
+        // app.post(
+        //     url + "/family/transfer/update",
+        //     JwtToken.verify,
+        //     (req: Request, res: Response) => {
+        //         this.adminCtrl.updateFamilyTransferStatus(req, res);
+        //     }
+        // );
 
         app.get(
             url + "/members/:familyId",

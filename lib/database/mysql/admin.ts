@@ -57,17 +57,17 @@ export class Admin {
     
     
     
-    public static transferAcceptOrRejectByDs = async (data: IFamilyTransfer) => {
-        const sqlQueryString = `CALL sp_acceptOrRejectFamilyTransferByDs (${data.id},${data.status})`;
+    // public static transferAcceptOrRejectByDs = async (data: IFamilyTransfer) => {
+    //     const sqlQueryString = `CALL sp_acceptOrRejectFamilyTransferByDs (${data.id},${data.status})`;
 
-        const sqlData = await Mysql.connect(sqlQueryString, null);
-        if(sqlData.err)
-        {
-            return { err: true, message : "Error Occur While Updating Transfer Status"}
-        }
+    //     const sqlData = await Mysql.connect(sqlQueryString, null);
+    //     if(sqlData.err)
+    //     {
+    //         return { err: true, message : "Error Occur While Updating Transfer Status"}
+    //     }
     
-        return { err: false, data: sqlData.result[0], message: "Family Transfer Status Updated Successfully"}
-    }
+    //     return { err: false, data: sqlData.result[0], message: "Family Transfer Status Updated Successfully"}
+    // }
 
     public static generateReport = async (reportData: IReportData) => {
         const sqlQueryString = `CALL sp_generateReport (

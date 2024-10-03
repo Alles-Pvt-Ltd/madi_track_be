@@ -185,9 +185,9 @@ Family.getAllFamilyTransfersForAGsDivision = (gsDivisionId) => __awaiter(void 0,
         return { err: false, message: "Server error, please contact admin" };
     }
 });
-Family.transferAcceptOrRejectByGs = (data) => __awaiter(void 0, void 0, void 0, function* () {
+Family.familyTransferStatusUpdate = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const sqlQueryString = `CALL sp_acceptOrRejectFamilyTransferByGs (${data.id},${data.status})`;
+        const sqlQueryString = `CALL sp_familyTransfer(${data.id},${data.status})`;
         const sqlData = yield connection_1.default.connect(sqlQueryString, null);
         if (sqlData.err) {
             return { err: true, message: "Error occur while updating status, try after some time" };
