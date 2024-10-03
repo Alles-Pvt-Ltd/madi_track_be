@@ -13,7 +13,7 @@ Validation.registerValidation = [
     (0, express_validator_1.check)("firstName").notEmpty().withMessage("Firstname is required"),
     (0, express_validator_1.check)("lastName").notEmpty().withMessage("Lastname is required"),
     (0, express_validator_1.check)("userName").notEmpty().withMessage("Username is required"),
-    (0, express_validator_1.check)("password").notEmpty().withMessage("Password is required"),
+    //check("password").notEmpty().withMessage("Password is required"),
     (0, express_validator_1.check)("role").notEmpty().withMessage("Role is required"),
     (0, express_validator_1.check)("gsDivisionId").notEmpty().withMessage("Gs division is required")
 ];

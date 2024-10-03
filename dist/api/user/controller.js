@@ -42,6 +42,9 @@ class UserController {
                 return (0, response_1.badResponse)(errors.array(), res);
             }
             const body = req.body;
+            if (body.id && (body.password || body.password == '')) {
+                return (0, response_1.failureResponse)("Password cannot be empty!", res);
+            }
             const user = yield user_1.User.findUserByUsername(body.userName);
             if (user.err) {
                 return (0, response_1.failureResponse)(user.message, res);

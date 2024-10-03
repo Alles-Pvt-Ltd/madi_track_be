@@ -38,6 +38,10 @@ export class UserController {
 
       const body = req.body as IUser;
 
+      if(body.id && (body.password || body.password == '')){
+        return failureResponse("Password cannot be empty!", res);
+      }
+
       const user = await User.findUserByUsername(body.userName);
       if (user.err) {
         return failureResponse(user.message, res);
