@@ -24,8 +24,7 @@ class FamilyRoutes {
         app.put(url + "/member/update", class_1.Validation.updateMemberValidation, jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.updateMember(req, res);
         });
-        app.get(url + "/view/:familyId", jwt_1.JwtToken.verify, // Adding JWT verification for consistency
-        (req, res) => {
+        app.get(url + "/view/:familyId", jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.getFamilyDetailsById(req, res);
         });
         app.post(url + "/history/add", class_1.Validation.familyHistoryValidation, jwt_1.JwtToken.verify, (req, res) => {

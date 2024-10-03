@@ -52,7 +52,7 @@ export class FamilyRoutes {
 
         app.get(
             url + "/view/:familyId",
-            JwtToken.verify,  // Adding JWT verification for consistency
+            JwtToken.verify,
             (req: Request, res: Response) => {
                 this.userCtrl.getFamilyDetailsById(req, res);
             }

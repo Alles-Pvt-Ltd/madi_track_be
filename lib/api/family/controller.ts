@@ -77,9 +77,11 @@ export class FamilyController {
         if (familyDetails.err) {
             return failureResponse(familyDetails.message, res);
         }
+        if (!familyDetails.data[0][0]) {
+            return failureResponse("Cannot find family Details", res);
+        }
 
-        const response = Helper.singleFamilyResponse(familyDetails.data[0], familyDetails.data[1], 
-            familyDetails.data[2], familyDetails.data[3]);
+        const response = Helper.singleFamilyResponse(familyDetails.data[0], familyDetails.data[1], familyDetails.data[2], familyDetails.data[3]);
         return successResponse(response, "Family Details Retrieved Successfully", res);
     }
 
