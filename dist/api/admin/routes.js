@@ -14,7 +14,7 @@ class AdminRoutes {
         app.post(url + "/family/list", jwt_1.JwtToken.verify, (req, res) => {
             this.adminCtrl.getAllFamilies(req, res);
         });
-        app.get(url + "/family/transfer/list/", jwt_1.JwtToken.verify, (req, res) => {
+        app.get(url + "/family/transfer/list", jwt_1.JwtToken.verify, (req, res) => {
             this.adminCtrl.getAllFamilyTransfers(req, res);
         });
         // app.post(
