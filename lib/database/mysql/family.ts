@@ -204,9 +204,9 @@ export class Family {
 
   }
 
-  public static getAllFamilyTransfersForAGsDivision = async () => {
+  public static getAllFamilyTransfersForAGsDivision = async (gsDivisionId: number) => {
     try {
-      const sqlQueryString = `CALL sp_getAllFamilyTransfersForAGsDivision ()`;
+      const sqlQueryString = `CALL sp_getAllFamilyTransfersForAGsDivision (${gsDivisionId})`;
 
       const sqlData = await Mysql.connect(sqlQueryString, null);
 
