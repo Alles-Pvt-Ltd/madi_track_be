@@ -57,6 +57,28 @@ export class DashboardController {
         });
     }
     
+    public dashboardInfo = (req: Request, res: Response) => {
+        const divisionId = Number(req.query.divisionId); 
+  
+        if (!divisionId) {
+            return failureResponse("Invalid divisionId provided", res);
+        }
+    
+        Dashboard.getDashboardInfo(divisionId)
+            .then(dashboardData => {
+                if (dashboardData.err) {
+                    return failureResponse("Error retrieving dashboard info", res);
+                }
+    
+                const [gsDivisionData, genderData, totalFamiliesData] = dashboardData.data;
+    
+                const response = Helper.graphDashboardResponse(gsDivisionData, genderData, totalFamiliesData);
+                return successResponse(response, "Dashboard Info Retrieved Successfully", res);
+            })
+            .catch(error => {
+                return failureResponse("Error while retrieving dashboard info, please try after some time", res);
+            });
+    }
     
     public deployment = async (req: Request, res: Response) => {
         exec('sh deploy.sh',

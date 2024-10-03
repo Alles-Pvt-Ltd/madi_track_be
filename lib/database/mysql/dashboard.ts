@@ -24,4 +24,14 @@ export class Dashboard {
     return { err: false, data: sqlData.result } as IData;
 }
 
+public static getDashboardInfo =  async(divisionId: number) => {
+  const sqlQueryString = `CALL sp_dashboardInfo(${divisionId})`;
+  const sqlData = await Mysql.connect(sqlQueryString, null);
+
+  if (sqlData.err) {
+      return { err: true, message: sqlData.result } as IData;
+  }
+
+  return { err: false, data: sqlData.result } as IData;
+}
 }

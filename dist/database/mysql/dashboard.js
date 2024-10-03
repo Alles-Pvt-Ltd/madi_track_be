@@ -32,3 +32,11 @@ Dashboard.getWebDashboardData = (divisionId) => __awaiter(void 0, void 0, void 0
     }
     return { err: false, data: sqlData.result };
 });
+Dashboard.getDashboardInfo = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_dashboardInfo(${divisionId})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
+    }
+    return { err: false, data: sqlData.result };
+});

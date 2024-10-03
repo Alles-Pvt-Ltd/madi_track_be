@@ -15,6 +15,9 @@ class DashboardRoutes {
         app.get(url + "/info", jwt_1.JwtToken.verify, (req, res) => {
             this.dashboardCtlr.webDashboardList(req, res);
         });
+        app.get(url + "/admin/graphDashboard", jwt_1.JwtToken.verify, (req, res) => {
+            this.dashboardCtlr.dashboardInfo(req, res);
+        });
         // app.post(url + "/deploy", (req: Request, res: Response) => {
         //   this.dashboardCtlr.deployment(req, res);
         // });

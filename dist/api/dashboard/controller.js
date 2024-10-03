@@ -55,6 +55,24 @@ class DashboardController {
                 return (0, response_1.failureResponse)("Error while getting data, please try after some time", res);
             });
         };
+        this.dashboardInfo = (req, res) => {
+            const divisionId = Number(req.query.divisionId);
+            if (!divisionId) {
+                return (0, response_1.failureResponse)("Invalid divisionId provided", res);
+            }
+            dashboard_1.Dashboard.getDashboardInfo(divisionId)
+                .then(dashboardData => {
+                if (dashboardData.err) {
+                    return (0, response_1.failureResponse)("Error retrieving dashboard info", res);
+                }
+                const [gsDivisionData, genderData, totalFamiliesData] = dashboardData.data;
+                const response = helper_1.default.graphDashboardResponse(gsDivisionData, genderData, totalFamiliesData);
+                return (0, response_1.successResponse)(response, "Dashboard Info Retrieved Successfully", res);
+            })
+                .catch(error => {
+                return (0, response_1.failureResponse)("Error while retrieving dashboard info, please try after some time", res);
+            });
+        };
         this.deployment = (req, res) => __awaiter(this, void 0, void 0, function* () {
             exec('sh deploy.sh', (error, stdout, stderr) => {
                 console.log(stdout);
