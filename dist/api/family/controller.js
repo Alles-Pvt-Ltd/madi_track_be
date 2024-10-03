@@ -141,8 +141,8 @@ class FamilyController {
             return (0, response_1.successResponse)("Successfully initiated", "Success", res);
         });
         this.getAllFamilyTransfersForAGsDivision = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const gsDivisionId = parseInt(req.params.divisionId);
-            const transferList = yield family_1.Family.getAllFamilyTransfersForAGsDivision(gsDivisionId);
+            //const gsDivisionId = parseInt(req.params.divisionId);
+            const transferList = yield family_1.Family.getAllFamilyTransfersForAGsDivision();
             if (transferList.err) {
                 return (0, response_1.failureResponse)(transferList.message, res);
             }

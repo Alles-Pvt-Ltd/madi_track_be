@@ -112,7 +112,7 @@ export class FamilyRoutes {
         );
 
         app.get(
-            url + "/transfer/list/:divisionId",
+            url + "/transfer/list",
             JwtToken.verify,
             (req: Request, res: Response) => {
                 this.userCtrl.getAllFamilyTransfersForAGsDivision(req, res);

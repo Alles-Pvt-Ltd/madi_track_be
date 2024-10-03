@@ -176,8 +176,8 @@ export class FamilyController {
       }
 
       public getAllFamilyTransfersForAGsDivision = async (req: Request, res: Response) => {
-        const gsDivisionId = parseInt(req.params.divisionId);
-        const transferList = await Family.getAllFamilyTransfersForAGsDivision(gsDivisionId);
+        //const gsDivisionId = parseInt(req.params.divisionId);
+        const transferList = await Family.getAllFamilyTransfersForAGsDivision();
 
         if (transferList.err) {
             return failureResponse(transferList.message, res);
