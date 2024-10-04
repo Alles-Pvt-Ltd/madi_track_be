@@ -172,19 +172,19 @@ Family.initiateMemberTransfer = (memberId, reasonId) => __awaiter(void 0, void 0
         return { err: false, message: "Server error, please contact admin" };
     }
 });
-// public static getAllFamilyTransfersForAGsDivision = async (gsDivisionId: number) => {
-//   try {
-//     const sqlQueryString = `CALL sp_getAllFamilyTransfersForAGsDivision (${gsDivisionId})`;
-//     const sqlData = await Mysql.connect(sqlQueryString, null);
-//     if (sqlData.err) {
-//         return { err: true, message: "Error occur while getting transfer list, try after some time" } as IData;
-//     }
-//     return { err: false, data: sqlData.result } as IData; 
-//   }
-//   catch (error) {
-//     return { err: false, message: "Server error, please contact admin" } as IData;
-//   }    
-// }
+Family.getAllFamilyTransfersForAGsDivision = (gsDivisionId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const sqlQueryString = `CALL sp_getAllFamilyTransfersForAGsDivision (${gsDivisionId})`;
+        const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+        if (sqlData.err) {
+            return { err: true, message: "Error occur while getting transfer list, try after some time" };
+        }
+        return { err: false, data: sqlData.result };
+    }
+    catch (error) {
+        return { err: false, message: "Server error, please contact admin" };
+    }
+});
 Family.familyTransferStatusUpdate = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const sqlQueryString = `CALL sp_familyTransfer(${data.id},${data.status})`;

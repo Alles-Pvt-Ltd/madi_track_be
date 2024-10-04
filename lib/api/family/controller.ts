@@ -177,19 +177,19 @@ export class FamilyController {
         return successResponse("Successfully initiated","Success",res);
       }
 
-    //   public getAllFamilyTransfersForAGsDivision = async (req: Request, res: Response) => {
-    //     const gsDivisionId = parseInt(req.params.divisionId);
-    //     const transferList = await Family.getAllFamilyTransfersForAGsDivision(gsDivisionId);
+      public getAllFamilyTransfersForAGsDivision = async (req: Request, res: Response) => {
+        const gsDivisionId = parseInt(req.params.divisionId);
+        const transferList = await Family.getAllFamilyTransfersForAGsDivision(gsDivisionId);
 
-    //     if (transferList.err) {
-    //         return failureResponse(transferList.message, res);
-    //     }
-    //     if(transferList.data[0].length === 0)
-    //     {
-    //         return failureResponse("No Pending Transfers", res);
-    //     }
-    //     return successResponse(transferList.data[0],"Successfully get all tranfers",res);
-    //   }
+        if (transferList.err) {
+            return failureResponse(transferList.message, res);
+        }
+        if(transferList.data[0].length === 0)
+        {
+            return failureResponse("No Pending Transfers", res);
+        }
+        return successResponse(transferList.data[0],"Successfully get all tranfers",res);
+      }
 
       public transferAcceptOrRejectByGs = async (req: Request, res: Response) => {
         const transferData = req.body;
