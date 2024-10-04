@@ -1,17 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Helper {
-    static graphData(gsDivisionData, genderData, totalFamiliesData) {
-        var _a, _b, _c;
-        const division = ((_a = gsDivisionData[0]) === null || _a === void 0 ? void 0 : _a.gsDivisionName) || "";
-        const count = ((_b = gsDivisionData[0]) === null || _b === void 0 ? void 0 : _b.total) || 0;
-        const maleData = genderData.find(g => g.gender === 3) || { count: 0 };
-        const femaleData = genderData.find(g => g.gender === 4) || { count: 0 };
-        const maleCount = maleData.count || 0;
-        const femaleCount = femaleData.count || 0;
-        const totalFamiliesCount = ((_c = totalFamiliesData[0]) === null || _c === void 0 ? void 0 : _c.totalFamilies) || 0;
+    static graphData(gsDivisionData, genderCount, totalFamiliesData) {
+        var _a;
+        const gsDivisionGraphData = gsDivisionData.map(item => ({
+            division: item.gsDivisionName,
+            count: item.total
+        }));
+        const maleCount = genderCount.male || 0;
+        const femaleCount = genderCount.female || 0;
+        const totalFamiliesCount = ((_a = totalFamiliesData[0]) === null || _a === void 0 ? void 0 : _a.totalFamilies) || 0;
         return {
-            gsDivisionGraphData: [{ division, count }],
+            gsDivisionGraphData,
             genderGraphData: [
                 { label: "Male", value: maleCount },
                 { label: "Female", value: femaleCount }
@@ -19,8 +19,8 @@ class Helper {
             familiesGraphData: [{ division: "Total", count: totalFamiliesCount }],
         };
     }
-    static graphDashboardResponse(gsDivisionData, genderData, totalFamiliesData) {
-        const graphData = this.graphData(gsDivisionData, genderData, totalFamiliesData);
+    static graphDashboardResponse(gsDivisionData, genderCount, totalFamiliesData) {
+        const graphData = this.graphData(gsDivisionData, genderCount, totalFamiliesData);
         return {
             graphTitle: "Dashboard Information",
             charts: [

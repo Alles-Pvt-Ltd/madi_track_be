@@ -58,8 +58,8 @@ export class DashboardController {
     }
     
     public dashboardInfo = (req: Request, res: Response) => {
-        const divisionId = Number(req.query.divisionId); 
-  
+        const divisionId = Number(req.query.divisionId);
+    
         if (!divisionId) {
             return failureResponse("Invalid divisionId provided", res);
         }
@@ -72,7 +72,12 @@ export class DashboardController {
     
                 const [gsDivisionData, genderData, totalFamiliesData] = dashboardData.data;
     
-                const response = Helper.graphDashboardResponse(gsDivisionData, genderData, totalFamiliesData);
+                const maleData = genderData.find(item => item.gender === 3) || { COUNT: 0 };
+                const femaleData = genderData.find(item => item.gender === 4) || { COUNT: 0 };
+    
+                const genderCount = { male: maleData.COUNT, female: femaleData.COUNT };
+    
+                const response = Helper.graphDashboardResponse(gsDivisionData, genderCount, totalFamiliesData);
                 return successResponse(response, "Dashboard Info Retrieved Successfully", res);
             })
             .catch(error => {

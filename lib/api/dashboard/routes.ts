@@ -24,7 +24,7 @@ export class DashboardRoutes {
     );
 
     app.get(
-      url + "/admin/graphDashboard",  
+      url + "/graph",  
       JwtToken.verify,
       (req: Request, res: Response) => {
           this.dashboardCtlr.dashboardInfo(req, res);

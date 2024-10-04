@@ -66,7 +66,11 @@ class DashboardController {
                     return (0, response_1.failureResponse)("Error retrieving dashboard info", res);
                 }
                 const [gsDivisionData, genderData, totalFamiliesData] = dashboardData.data;
-                const response = helper_1.default.graphDashboardResponse(gsDivisionData, genderData, totalFamiliesData);
+                // Directly access gender counts
+                const maleData = genderData.find(item => item.gender === 3) || { COUNT: 0 };
+                const femaleData = genderData.find(item => item.gender === 4) || { COUNT: 0 };
+                const genderCount = { male: maleData.COUNT, female: femaleData.COUNT };
+                const response = helper_1.default.graphDashboardResponse(gsDivisionData, genderCount, totalFamiliesData);
                 return (0, response_1.successResponse)(response, "Dashboard Info Retrieved Successfully", res);
             })
                 .catch(error => {
@@ -75,8 +79,6 @@ class DashboardController {
         };
         this.deployment = (req, res) => __awaiter(this, void 0, void 0, function* () {
             exec('sh deploy.sh', (error, stdout, stderr) => {
-                console.log(stdout);
-                console.log(stderr);
                 if (error !== null) {
                     return (0, response_1.failureResponse)(error.message, res);
                 }

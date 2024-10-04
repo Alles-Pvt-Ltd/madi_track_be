@@ -96,58 +96,61 @@ interface IDashboardHelperData {
     
       return items;
     }
-    
-    
-    public static graphData(gsDivisionData, genderData, totalFamiliesData) {
-      const division = gsDivisionData[0]?.gsDivisionName || ""; 
-      const count = gsDivisionData[0]?.total || 0;
 
-      const maleData = genderData.find(g => g.gender === 3) || { count: 0 };
-      const femaleData = genderData.find(g => g.gender === 4) || { count: 0 };
   
-      const maleCount = maleData.count || 0;
-      const femaleCount = femaleData.count || 0;
+      public static graphData(gsDivisionData, genderCount, totalFamiliesData) {
+          const gsDivisionGraphData = gsDivisionData.map(item => ({
+              division: item.gsDivisionName,
+              count: item.total
+          }));
   
-      const totalFamiliesCount = totalFamiliesData[0]?.totalFamilies || 0;
+          const maleCount = genderCount.male || 0;
+          const femaleCount = genderCount.female || 0;
   
-      return {
-          gsDivisionGraphData: [{ division, count }],
-          genderGraphData: [
-              { label: "Male", value: maleCount }, 
-              { label: "Female", value: femaleCount }
-          ],
-          familiesGraphData: [{ division: "Total", count: totalFamiliesCount }],
-      };
+          const totalFamiliesCount = totalFamiliesData[0]?.totalFamilies || 0;
+  
+          return {
+              gsDivisionGraphData,
+              genderGraphData: [
+                  { label: "Male", value: maleCount }, 
+                  { label: "Female", value: femaleCount }
+              ],
+              familiesGraphData: [{ division: "Total", count: totalFamiliesCount }],
+          };
+      }
+  
+      public static graphDashboardResponse(gsDivisionData, genderCount, totalFamiliesData) {
+          const graphData = this.graphData(gsDivisionData, genderCount, totalFamiliesData);
+  
+          return {
+              graphTitle: "Dashboard Information",
+              charts: [
+                  {
+                      chartType: "line",
+                      name: "GS Division Wise Count",
+                      xAxis: "GS Division",
+                      yAxis: "Number of People",
+                      data: graphData.gsDivisionGraphData,
+                  },
+                  {
+                      chartType: "bar",
+                      name: "Gender Distribution",
+                      xAxis: "Gender",
+                      yAxis: "Number of People",
+                      data: graphData.genderGraphData,
+                  },
+                  {
+                      chartType: "pie",
+                      name: "Total Families Count",
+                      data: graphData.familiesGraphData,
+                  },
+              ]
+          };
+      }
   }
   
-  public static graphDashboardResponse(gsDivisionData, genderData, totalFamiliesData) {
-      const graphData = this.graphData(gsDivisionData, genderData, totalFamiliesData);
   
-      return {
-          graphTitle: "Dashboard Information",
-          charts: [
-              {
-                  chartType: "line",
-                  name: "GS Division Wise Count",
-                  xAxis: "GS Division",
-                  yAxis: "Number of People",
-                  data: graphData.gsDivisionGraphData,
-              },
-              {
-                  chartType: "bar",
-                  name: "Gender Distribution",
-                  xAxis: "Gender",
-                  yAxis: "Number of People",
-                  data: graphData.genderGraphData,
-              },
-              {
-                  chartType: "pie",
-                  name: "Total Families Count",
-                  data: graphData.familiesGraphData,
-              },
-          ]
-      };
-  }
   
-  }
+    
+  
   
