@@ -38,47 +38,53 @@ class DashboardController {
             }
         });
         this.webDashboardList = (req, res) => {
-            const dsDivisionId = parseInt(req.params.divisionId);
-            dashboard_1.Dashboard.getWebDashboardData(dsDivisionId).then(dashboardCountData => {
-                if (dashboardCountData.err) {
-                    return (0, response_1.failureResponse)("Error while getting data", res);
-                }
-                const response = helper_1.default.webDashboardResponse({
+            //Dashboard.getWebDashboardData(dsDivisionId).then(dashboardCountData => {
+            dashboard_1.Dashboard.getWebDashboardData().then(dashboardCountData => {
+                console.log(dashboardCountData);
+                const response = {
                     familyCount: dashboardCountData.data[0][0].totalFamilies,
                     childrenCount: dashboardCountData.data[1][0].totalChildren,
                     eldersCount: dashboardCountData.data[2][0].totalElders,
                     governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
                     universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents,
-                });
-                return (0, response_1.successResponse)(response, "Web Dashboard Data Got Successfully", res);
+                    disabledPersonsCount: dashboardCountData.data[5][0].totalDisabledPersons,
+                    totalMember: dashboardCountData.data[6][0].totalMember,
+                    totalMale: dashboardCountData.data[7][0].totalMale,
+                    totalFemale: dashboardCountData.data[8][0].totalFemale,
+                };
+                return (0, response_1.successResponse)(helper_1.default.dashboardResponse(response), "Dashboard Data Got Successfully", res);
             }).catch(error => {
                 return (0, response_1.failureResponse)("Error while getting data, please try after some time", res);
             });
         };
         this.dashboardInfo = (req, res) => {
-            const divisionId = Number(req.query.divisionId);
-            if (!divisionId) {
-                return (0, response_1.failureResponse)("Invalid divisionId provided", res);
-            }
-            dashboard_1.Dashboard.getDashboardInfo(divisionId)
+            // const divisionId = Number(req.query.divisionId);
+            // if (!divisionId) {
+            //     return failureResponse("Invalid divisionId provided", res);
+            // }
+            dashboard_1.Dashboard.getDashboardInfo()
                 .then(dashboardData => {
                 if (dashboardData.err) {
                     return (0, response_1.failureResponse)("Error retrieving dashboard info", res);
                 }
-                const [gsDivisionData, genderData, totalFamiliesData] = dashboardData.data;
-                // Directly access gender counts
-                const maleData = genderData.find(item => item.gender === 3) || { COUNT: 0 };
-                const femaleData = genderData.find(item => item.gender === 4) || { COUNT: 0 };
+                const [gsDivisionData, maleGenderData, femaleGenderCount] = dashboardData.data;
+                console.log(gsDivisionData);
+                console.log(maleGenderData);
+                console.log(femaleGenderCount);
+                const maleData = maleGenderData.find(item => item.gender === 3) || { COUNT: 0 };
+                const femaleData = femaleGenderCount.find(item => item.gender === 4) || { COUNT: 0 };
                 const genderCount = { male: maleData.COUNT, female: femaleData.COUNT };
-                const response = helper_1.default.graphDashboardResponse(gsDivisionData, genderCount, totalFamiliesData);
+                const response = helper_1.default.graphDashboardResponse(gsDivisionData, genderCount, null);
                 return (0, response_1.successResponse)(response, "Dashboard Info Retrieved Successfully", res);
             })
                 .catch(error => {
-                return (0, response_1.failureResponse)("Error while retrieving dashboard info, please try after some time", res);
+                return (0, response_1.failureResponse)("Error while retrieving dashboard info", res);
             });
         };
         this.deployment = (req, res) => __awaiter(this, void 0, void 0, function* () {
             exec('sh deploy.sh', (error, stdout, stderr) => {
+                console.log(stdout);
+                console.log(stderr);
                 if (error !== null) {
                     return (0, response_1.failureResponse)(error.message, res);
                 }
