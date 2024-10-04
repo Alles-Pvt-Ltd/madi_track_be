@@ -16,12 +16,30 @@ export class DashboardRoutes {
     );
 
     app.get(
+      url + "/info11",
+      JwtToken.verify,
+      (req: Request, res: Response) => {
+        this.dashboardCtlr.webDashboardList(req, res);
+      }
+    );
+
+    app.get(
       url + "/info",
       JwtToken.verify,
       (req: Request, res: Response) => {
         this.dashboardCtlr.webDashboardList(req, res);
       }
     );
+
+
+  //   app.get(
+  //     url + "/info",  
+  //     JwtToken.verify,
+  //     (req: Request, res: Response) => {
+  //         this.dashboardCtlr.dashboardInfo(req, res);
+  //     }
+  // );
+
       // app.post(url + "/deploy", (req: Request, res: Response) => {
       //   this.dashboardCtlr.deployment(req, res);
       // });

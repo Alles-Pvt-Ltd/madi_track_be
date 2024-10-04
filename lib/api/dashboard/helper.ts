@@ -96,6 +96,61 @@ interface IDashboardHelperData {
     
       return items;
     }
-    
+
+  
+      public static graphData(gsDivisionData, genderCount, totalFamiliesData) {
+          const gsDivisionGraphData = gsDivisionData.map(item => ({
+              division: item.gsDivisionName,
+              count: item.total
+          }));
+  
+          const maleCount = genderCount.male || 0;
+          const femaleCount = genderCount.female || 0;
+  
+          const totalFamiliesCount = totalFamiliesData[0]?.totalFamilies || 0;
+  
+          return {
+              gsDivisionGraphData,
+              genderGraphData: [
+                  { label: "Male", value: maleCount }, 
+                  { label: "Female", value: femaleCount }
+              ],
+              familiesGraphData: [{ division: "Total", count: totalFamiliesCount }],
+          };
+      }
+  
+      public static graphDashboardResponse(gsDivisionData, genderCount, totalFamiliesData) {
+          const graphData = this.graphData(gsDivisionData, genderCount, totalFamiliesData);
+  
+          return {
+              graphTitle: "Dashboard Information",
+              charts: [
+                  {
+                      chartType: "line",
+                      name: "GS Division Wise Count",
+                      xAxis: "GS Division",
+                      yAxis: "Number of People",
+                      data: graphData.gsDivisionGraphData,
+                  },
+                  {
+                      chartType: "bar",
+                      name: "Gender Distribution",
+                      xAxis: "Gender",
+                      yAxis: "Number of People",
+                      data: graphData.genderGraphData,
+                  },
+                  {
+                      chartType: "pie",
+                      name: "Total Families Count",
+                      data: graphData.familiesGraphData,
+                  },
+              ]
+          };
+      }
   }
+  
+  
+  
+    
+  
   

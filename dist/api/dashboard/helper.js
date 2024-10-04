@@ -1,6 +1,51 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Helper {
+    static graphData(gsDivisionData, genderCount, totalFamiliesData) {
+        var _a;
+        const gsDivisionGraphData = gsDivisionData.map(item => ({
+            division: item.gsDivisionName,
+            count: item.total
+        }));
+        const maleCount = genderCount.male || 0;
+        const femaleCount = genderCount.female || 0;
+        const totalFamiliesCount = ((_a = totalFamiliesData[0]) === null || _a === void 0 ? void 0 : _a.totalFamilies) || 0;
+        return {
+            gsDivisionGraphData,
+            genderGraphData: [
+                { label: "Male", value: maleCount },
+                { label: "Female", value: femaleCount }
+            ],
+            familiesGraphData: [{ division: "Total", count: totalFamiliesCount }],
+        };
+    }
+    static graphDashboardResponse(gsDivisionData, genderCount, totalFamiliesData) {
+        const graphData = this.graphData(gsDivisionData, genderCount, totalFamiliesData);
+        return {
+            graphTitle: "Dashboard Information",
+            charts: [
+                {
+                    chartType: "line",
+                    name: "GS Division Wise Count",
+                    xAxis: "GS Division",
+                    yAxis: "Number of People",
+                    data: graphData.gsDivisionGraphData,
+                },
+                {
+                    chartType: "bar",
+                    name: "Gender Distribution",
+                    xAxis: "Gender",
+                    yAxis: "Number of People",
+                    data: graphData.genderGraphData,
+                },
+                {
+                    chartType: "pie",
+                    name: "Total Families Count",
+                    data: graphData.familiesGraphData,
+                },
+            ]
+        };
+    }
 }
 exports.default = Helper;
 Helper.dashboardResponse = (data) => {
