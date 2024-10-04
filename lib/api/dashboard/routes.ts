@@ -15,13 +15,13 @@ export class DashboardRoutes {
       }
     );
 
-    app.get(
-      url + "/info11",
-      JwtToken.verify,
-      (req: Request, res: Response) => {
-        this.dashboardCtlr.webDashboardList(req, res);
-      }
-    );
+    // app.get(
+    //   url + "/info11",
+    //   JwtToken.verify,
+    //   (req: Request, res: Response) => {
+    //     this.dashboardCtlr.webDashboardList(req, res);
+    //   }
+    // );
 
     app.get(
       url + "/info",

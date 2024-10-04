@@ -12,9 +12,13 @@ class DashboardRoutes {
         app.get(url + "/list/:divisionId", jwt_1.JwtToken.verify, (req, res) => {
             this.dashboardCtlr.dashboardList(req, res);
         });
-        app.get(url + "/info11", jwt_1.JwtToken.verify, (req, res) => {
-            this.dashboardCtlr.webDashboardList(req, res);
-        });
+        // app.get(
+        //   url + "/info11",
+        //   JwtToken.verify,
+        //   (req: Request, res: Response) => {
+        //     this.dashboardCtlr.webDashboardList(req, res);
+        //   }
+        // );
         app.get(url + "/info", jwt_1.JwtToken.verify, (req, res) => {
             this.dashboardCtlr.webDashboardList(req, res);
         });
