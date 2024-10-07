@@ -40,7 +40,6 @@ export class DashboardController {
         //Dashboard.getWebDashboardData(dsDivisionId).then(dashboardCountData => {
             Dashboard.getWebDashboardData().then(dashboardCountData => {
 
-            console.log(dashboardCountData);
             const response = {
                 familyCount: dashboardCountData.data[0][0].totalFamilies,
                 childrenCount: dashboardCountData.data[1][0].totalChildren,
@@ -74,9 +73,6 @@ export class DashboardController {
     
                 const [gsDivisionData, maleGenderData, femaleGenderCount] = dashboardData.data;
     
-                console.log(gsDivisionData);
-                console.log(maleGenderData);
-                console.log(femaleGenderCount);
 
                 const maleData = maleGenderData.find(item => item.gender === 3) || { COUNT: 0 };
                 const femaleData = femaleGenderCount.find(item => item.gender === 4) || { COUNT: 0 };

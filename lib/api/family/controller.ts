@@ -167,7 +167,6 @@ export class FamilyController {
 
       public initiateMemberTransfer = async (req: Request, res: Response) => {
         const transferData = req.body;
-        console.log(transferData);
         const transferDetail = await Family.initiateMemberTransfer(transferData.memberId, transferData.reasonId);
 
         if (transferDetail.err) {

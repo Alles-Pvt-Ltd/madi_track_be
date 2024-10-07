@@ -136,7 +136,6 @@ class FamilyController {
         });
         this.initiateMemberTransfer = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const transferData = req.body;
-            console.log(transferData);
             const transferDetail = yield family_1.Family.initiateMemberTransfer(transferData.memberId, transferData.reasonId);
             if (transferDetail.err) {
                 return (0, response_1.failureResponse)(transferDetail.message, res);

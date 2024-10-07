@@ -44,10 +44,7 @@ export class Admin {
     public static getMembersByFamilyId = async (familyId: number) => {
         const sqlQueryString = `CALL sp_getMembersByFamilyId(${familyId})`;
     
-        const sqlData = await Mysql.connect(sqlQueryString, null);
-    
-        // Log the SQL result to debug the data returned from the database
-        console.log("SQL Data Result: ", sqlData.result);  // <-- Add this line
+        const sqlData = await Mysql.connect(sqlQueryString, null);    
     
         if (sqlData.err) {
             return { err: true, message: "Error Occur While Getting Members List" };

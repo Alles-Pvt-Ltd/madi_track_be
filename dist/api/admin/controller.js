@@ -47,8 +47,14 @@ class AdminController {
                 return (0, response_1.failureResponse)("Error Occur, UserDetails Not Found", res);
             }
             var userInfoData = helper_1.default.userResponse(userDetail.data);
-            console.log(jwtData.code, userInfoData);
-            const transferList = yield admin_1.Admin.getAllFamilyTransfers(0);
+            var transferList;
+            if (userInfoData.role == 1) {
+                var defaultDivisionId = userInfoData.divisionIds.find(d => d.isDefault == 1).id;
+                transferList = yield admin_1.Admin.getAllFamilyTransfers(defaultDivisionId);
+            }
+            else {
+                transferList = yield admin_1.Admin.getAllFamilyTransfers(0);
+            }
             if (transferList.err) {
                 return (0, response_1.failureResponse)(transferList.message, res);
             }
@@ -64,7 +70,6 @@ class AdminController {
         // }
         this.getMembersByFamilyId = (req, res) => {
             const familyId = parseInt(req.params.familyId);
-            console.log("Request received for familyId:", familyId);
             if (isNaN(familyId)) {
                 return (0, response_1.failureResponse)("Invalid familyId parameter. Please provide a valid family ID.", res);
             }
@@ -74,7 +79,6 @@ class AdminController {
                     console.error("Error while retrieving members list:", membersList.message);
                     return (0, response_1.failureResponse)(membersList.message, res);
                 }
-                console.log("Members list successfully retrieved:", membersList.data);
                 return (0, response_1.successResponse)(membersList.data, membersList.message, res);
             })
                 .catch(error => {
