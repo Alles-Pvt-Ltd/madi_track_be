@@ -35,59 +35,58 @@ export class DashboardController {
     }
 
     public dashboardInfo = (req: Request, res: Response) => {
-    Dashboard.getDashboardInfo()
-        .then(({ err, data }) => {
-            if (err) return failureResponse("Error retrieving dashboard info", res);
-
-            const [gsDivisionData, maleGenderData, femaleGenderData, employmentData] = data;
-            
-            
-            const maleCount = maleGenderData?.[0]?.totalChildren || 0;
-            const femaleCount = femaleGenderData?.[0]?.totalElders || 0;
-
-            let governmentEmployeesCount = 0;
-            let nonGovernmentEmployeesCount = 0;
-
-           
-            if (employmentData && Array.isArray(employmentData)) {
-                employmentData.forEach(({ isGovernmentEmployee, total_employees }) => {
-                    if (isGovernmentEmployee === 1) {
-                        governmentEmployeesCount += total_employees;
-                    } else if (isGovernmentEmployee === 0) {
-                        nonGovernmentEmployeesCount += total_employees;
-                    }
-                });
-            }
-
-            const genderCount = { male: maleCount, female: femaleCount };
-
-          
-            Dashboard.getDashboardInfo()
-                .then((webDashboardData) => {
-                    if (webDashboardData.err) return failureResponse("Error retrieving web dashboard data", res);
-
-                    const webDashboardResponse = Helper.webDashboardResponse({
-                        ...webDashboardData.data,
-                        governmentEmployeesCount,
-                        nonGovernmentEmployeesCount,
-                        totalMale: maleCount,
-                        totalFemale: femaleCount
-                    });
-
-                    return successResponse({
-                        gsDivisionData,
-                        genderCount,
-                        governmentEmployeesCount,
-                        nonGovernmentEmployeesCount,
-                        webDashboardResponse
-                    }, "Dashboard Info Retrieved Successfully", res);
-                })
-                .catch(() => failureResponse("Error retrieving web dashboard data", res));
-
-        })
-        .catch(() => failureResponse("Error retrieving dashboard info", res));
-};
-
+        Dashboard.getDashboardInfo()
+            .then(({ err, data }) => {
+                if (err) return failureResponse("Error retrieving dashboard info", res);
+    
+                const [gsDivisionData, maleGenderData, femaleGenderData, employmentData] = data;
+                const maleCount = maleGenderData?.[0]?.totalChildren || 0;
+                const femaleCount = femaleGenderData?.[0]?.totalElders || 0;
+    
+                let governmentEmployeesCount = 0;
+                let nonGovernmentEmployeesCount = 0;
+    
+                console.log("Employment Data:", employmentData);
+    
+                if (employmentData && Array.isArray(employmentData)) {
+                    const governmentEmployeeData = employmentData.find(
+                        (item) => item.totalGovernmentEmployees !== undefined
+                    );
+                    governmentEmployeesCount = governmentEmployeeData?.totalGovernmentEmployees || 0;
+    
+                                   const nonGovernmentEmployeeData = employmentData.find(
+                        (item) => item.totalNonGovernmentEmployees !== undefined
+                    );
+                    nonGovernmentEmployeesCount = nonGovernmentEmployeeData?.totalNonGovernmentEmployees || 0;
+                }
+    
+                const genderCount = { male: maleCount, female: femaleCount };
+    
+                Dashboard.getDashboardInfo()
+                    .then((webDashboardData) => {
+                        if (webDashboardData.err) return failureResponse("Error retrieving web dashboard data", res);
+    
+                        const webDashboardResponse = Helper.webDashboardResponse({
+                            ...webDashboardData.data,
+                            governmentEmployeesCount,
+                            nonGovernmentEmployeesCount,
+                            totalMale: maleCount,
+                            totalFemale: femaleCount
+                        });
+    
+                        return successResponse({
+                            gsDivisionData,
+                            genderCount,
+                            governmentEmployeesCount,
+                            nonGovernmentEmployeesCount,
+                            webDashboardResponse
+                        }, "Dashboard Info Retrieved Successfully", res);
+                    })
+                    .catch(() => failureResponse("Error retrieving web dashboard data", res));
+            })
+            .catch(() => failureResponse("Error retrieving dashboard info", res));
+    };
+    
    
     public deployment = async (req: Request, res: Response) => {
         exec('sh deploy.sh',

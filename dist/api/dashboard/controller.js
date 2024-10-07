@@ -48,15 +48,12 @@ class DashboardController {
                 const femaleCount = ((_b = femaleGenderData === null || femaleGenderData === void 0 ? void 0 : femaleGenderData[0]) === null || _b === void 0 ? void 0 : _b.totalElders) || 0;
                 let governmentEmployeesCount = 0;
                 let nonGovernmentEmployeesCount = 0;
+                console.log("Employment Data:", employmentData);
                 if (employmentData && Array.isArray(employmentData)) {
-                    employmentData.forEach(({ isGovernmentEmployee, total_employees }) => {
-                        if (isGovernmentEmployee === 1) {
-                            governmentEmployeesCount += total_employees;
-                        }
-                        else if (isGovernmentEmployee === 0) {
-                            nonGovernmentEmployeesCount += total_employees;
-                        }
-                    });
+                    const governmentEmployeeData = employmentData.find((item) => item.totalGovernmentEmployees !== undefined);
+                    governmentEmployeesCount = (governmentEmployeeData === null || governmentEmployeeData === void 0 ? void 0 : governmentEmployeeData.totalGovernmentEmployees) || 0;
+                    const nonGovernmentEmployeeData = employmentData.find((item) => item.totalNonGovernmentEmployees !== undefined);
+                    nonGovernmentEmployeesCount = (nonGovernmentEmployeeData === null || nonGovernmentEmployeeData === void 0 ? void 0 : nonGovernmentEmployeeData.totalNonGovernmentEmployees) || 0;
                 }
                 const genderCount = { male: maleCount, female: femaleCount };
                 dashboard_1.Dashboard.getDashboardInfo()
