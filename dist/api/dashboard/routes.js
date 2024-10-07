@@ -20,7 +20,7 @@ class DashboardRoutes {
         //   }
         // );
         app.get(url + "/info", jwt_1.JwtToken.verify, (req, res) => {
-            this.dashboardCtlr.webDashboardList(req, res);
+            this.dashboardCtlr.dashboardInfo(req, res);
         });
         //   app.get(
         //     url + "/info",  

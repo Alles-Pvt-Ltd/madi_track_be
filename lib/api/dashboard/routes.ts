@@ -25,12 +25,11 @@ export class DashboardRoutes {
 
     app.get(
       url + "/info",
-      JwtToken.verify,
+      JwtToken.verify, 
       (req: Request, res: Response) => {
-        this.dashboardCtlr.webDashboardList(req, res);
+        this.dashboardCtlr.dashboardInfo(req, res); 
       }
     );
-
 
   //   app.get(
   //     url + "/info",  
