@@ -29,7 +29,7 @@ export class Admin {
     }
 
     public static getAllFamilyTransfers = async (divisionId: number) => {
-        const sqlQueryString = `CALL sp_getAllFamilyTransfersForADsDivision (${divisionId})`;
+        const sqlQueryString = `CALL sp_getAllFamilyTransfers (${divisionId})`;
 
         const sqlData = await Mysql.connect(sqlQueryString, null);
         if(sqlData.err)

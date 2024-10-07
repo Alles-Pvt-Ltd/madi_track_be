@@ -34,7 +34,7 @@ Admin.getAllFamilies = (divisionId) => __awaiter(void 0, void 0, void 0, functio
     return { err: false, data: sqlData.result[0], message: "Family List Retrieved Successfuly" };
 });
 Admin.getAllFamilyTransfers = (divisionId) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_getAllFamilyTransfersForADsDivision (${divisionId})`;
+    const sqlQueryString = `CALL sp_getAllFamilyTransfers (${divisionId})`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
         return { err: true, message: "Error Occur While Getting Family Transfer list" };
