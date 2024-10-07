@@ -104,7 +104,8 @@ class UserController {
             if (userDetail.err) {
                 return (0, response_1.failureResponse)("Error Occur, UserDetails Not Found", res);
             }
-            return (0, response_1.successResponse)(helper_1.default.userResponse(userDetail.data), userDetail.message, res);
+            var responseDate = helper_1.default.userResponse(userDetail.data);
+            return (0, response_1.successResponse)(responseDate, userDetail.message, res);
         });
     }
 }

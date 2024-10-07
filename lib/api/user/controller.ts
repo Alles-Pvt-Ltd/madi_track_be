@@ -125,6 +125,7 @@ export class UserController {
       {
         return failureResponse("Error Occur, UserDetails Not Found", res)
       }
-      return successResponse(Helper.userResponse(userDetail.data), userDetail.message, res);
+      var responseDate = Helper.userResponse(userDetail.data);
+      return successResponse(responseDate, userDetail.message, res);
     }
 }

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { badResponse, failureResponse, successResponse } from "../../core/response";
+import userHelper from "../user/helper";
 import { validationResult } from "express-validator";
 import { Admin } from "../../database/mysql/admin";
 import { JwtToken } from "../../core/jwt";
@@ -35,8 +36,22 @@ export class AdminController {
     }
 
     public getAllFamilyTransfers = async (req: Request, res: Response) => {
-        //const dsDivisionId = parseInt(req.params.divisionId);
-        const transferList = await Admin.getAllFamilyTransfers();
+        const jwtData = JwtToken.get(req);
+        const userInfo = await User.getUserByCode(jwtData.code);
+      
+        if (userInfo.err || userInfo.data.length < 1) {
+            return failureResponse(userInfo.message ? userInfo.message : "Cannot find user. Please login again", res);
+        }
+
+        const userDetail = await User.userInfo(userInfo.data[0].id);
+        if(userDetail.err)
+        {
+            return failureResponse("Error Occur, UserDetails Not Found", res)
+        }
+        var userInfoData = userHelper.userResponse(userDetail.data);
+
+        console.log(jwtData.code , userInfoData);
+        const transferList = await Admin.getAllFamilyTransfers(0);
 
         if(transferList.err)
         {

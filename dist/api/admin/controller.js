@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminController = void 0;
 const response_1 = require("../../core/response");
+const helper_1 = require("../user/helper");
 const admin_1 = require("../../database/mysql/admin");
 const jwt_1 = require("../../core/jwt");
 const user_1 = require("../../database/mysql/user");
@@ -36,8 +37,18 @@ class AdminController {
             return (0, response_1.successResponse)(familyList.data, familyList.message, res);
         });
         this.getAllFamilyTransfers = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            //const dsDivisionId = parseInt(req.params.divisionId);
-            const transferList = yield admin_1.Admin.getAllFamilyTransfers();
+            const jwtData = jwt_1.JwtToken.get(req);
+            const userInfo = yield user_1.User.getUserByCode(jwtData.code);
+            if (userInfo.err || userInfo.data.length < 1) {
+                return (0, response_1.failureResponse)(userInfo.message ? userInfo.message : "Cannot find user. Please login again", res);
+            }
+            const userDetail = yield user_1.User.userInfo(userInfo.data[0].id);
+            if (userDetail.err) {
+                return (0, response_1.failureResponse)("Error Occur, UserDetails Not Found", res);
+            }
+            var userInfoData = helper_1.default.userResponse(userDetail.data);
+            console.log(jwtData.code, userInfoData);
+            const transferList = yield admin_1.Admin.getAllFamilyTransfers(0);
             if (transferList.err) {
                 return (0, response_1.failureResponse)(transferList.message, res);
             }
