@@ -105,7 +105,12 @@ export class AdminController {
             {
                 throw Error (reportData.message);
             }
-            return successResponse(reportData.data[0],"Report Generated Successfully",res);
+            //console.log(req.body.gsDivisionId);
+            var response = {
+                families : reportData.data[0],
+                divisionCountDetails :  req.body.gsDivisionId == 0 ? reportData.data[1] : []
+            }
+            return successResponse(response, "Success", res);
         }
         catch (error) {
             return failureResponse(error.message,res);

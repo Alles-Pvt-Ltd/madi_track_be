@@ -92,7 +92,12 @@ class AdminController {
                 if (reportData.err) {
                     throw Error(reportData.message);
                 }
-                return (0, response_1.successResponse)(reportData.data[0], "Report Generated Successfully", res);
+                //console.log(req.body.gsDivisionId);
+                var response = {
+                    families: reportData.data[0],
+                    divisionCountDetails: req.body.gsDivisionId == 0 ? reportData.data[1] : []
+                };
+                return (0, response_1.successResponse)(response, "Success", res);
             }
             catch (error) {
                 return (0, response_1.failureResponse)(error.message, res);
