@@ -71,7 +71,8 @@ class UserController {
                 occupationReference: responseData.data[2],
                 gsDivisions: helper_1.default.gsDivisionsResponse(responseData.data[3], responseData.data[5]),
                 religionReference: responseData.data[4],
-                transferReason: responseData.data[6]
+                transferReason: responseData.data[6],
+                deathReason: responseData.data[7]
             };
             return (0, response_1.successResponse)(referenceData, "Successfully retrieved", res);
         });
