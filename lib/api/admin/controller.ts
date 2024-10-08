@@ -110,7 +110,7 @@ export class AdminController {
                 families : reportData.data[0],
                 additionalDetails :  [
                     {
-                        haderText: "Division wise count",
+                        headerText: "Division wise count",
                         data: req.body.gsDivisionId == 0 ? reportData.data[1] : []
                     }
                 ]
