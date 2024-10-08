@@ -37,45 +37,42 @@ class DashboardController {
                 console.error("Error while getting data, Please try after some time");
             }
         });
-        this.webDashboardList = (req, res) => {
-            //Dashboard.getWebDashboardData(dsDivisionId).then(dashboardCountData => {
-            dashboard_1.Dashboard.getWebDashboardData().then(dashboardCountData => {
-                const response = {
-                    familyCount: dashboardCountData.data[0][0].totalFamilies,
-                    childrenCount: dashboardCountData.data[1][0].totalChildren,
-                    eldersCount: dashboardCountData.data[2][0].totalElders,
-                    governmentEmployeesCount: dashboardCountData.data[3][0].totalGovernmentEmployees,
-                    universityStudentsCount: dashboardCountData.data[4][0].totalUniversityStudents,
-                    disabledPersonsCount: dashboardCountData.data[5][0].totalDisabledPersons,
-                    totalMember: dashboardCountData.data[6][0].totalMember,
-                    totalMale: dashboardCountData.data[7][0].totalMale,
-                    totalFemale: dashboardCountData.data[8][0].totalFemale,
-                };
-                return (0, response_1.successResponse)(helper_1.default.dashboardResponse(response), "Dashboard Data Got Successfully", res);
-            }).catch(error => {
-                return (0, response_1.failureResponse)("Error while getting data, please try after some time", res);
-            });
-        };
         this.dashboardInfo = (req, res) => {
-            // const divisionId = Number(req.query.divisionId);
-            // if (!divisionId) {
-            //     return failureResponse("Invalid divisionId provided", res);
-            // }
             dashboard_1.Dashboard.getDashboardInfo()
-                .then(dashboardData => {
-                if (dashboardData.err) {
+                .then(({ err, data }) => {
+                var _a, _b;
+                if (err)
                     return (0, response_1.failureResponse)("Error retrieving dashboard info", res);
+                const [gsDivisionData, maleGenderData, femaleGenderData, employmentData] = data;
+                const maleCount = ((_a = maleGenderData === null || maleGenderData === void 0 ? void 0 : maleGenderData[0]) === null || _a === void 0 ? void 0 : _a.totalChildren) || 0;
+                const femaleCount = ((_b = femaleGenderData === null || femaleGenderData === void 0 ? void 0 : femaleGenderData[0]) === null || _b === void 0 ? void 0 : _b.totalElders) || 0;
+                let governmentEmployeesCount = 0;
+                let nonGovernmentEmployeesCount = 0;
+                console.log("Employment Data:", employmentData);
+                if (employmentData && Array.isArray(employmentData)) {
+                    const governmentEmployeeData = employmentData.find((item) => item.totalGovernmentEmployees !== undefined);
+                    governmentEmployeesCount = (governmentEmployeeData === null || governmentEmployeeData === void 0 ? void 0 : governmentEmployeeData.totalGovernmentEmployees) || 0;
+                    const nonGovernmentEmployeeData = employmentData.find((item) => item.totalNonGovernmentEmployees !== undefined);
+                    nonGovernmentEmployeesCount = (nonGovernmentEmployeeData === null || nonGovernmentEmployeeData === void 0 ? void 0 : nonGovernmentEmployeeData.totalNonGovernmentEmployees) || 0;
                 }
-                const [gsDivisionData, maleGenderData, femaleGenderCount] = dashboardData.data;
-                const maleData = maleGenderData.find(item => item.gender === 3) || { COUNT: 0 };
-                const femaleData = femaleGenderCount.find(item => item.gender === 4) || { COUNT: 0 };
-                const genderCount = { male: maleData.COUNT, female: femaleData.COUNT };
-                const response = helper_1.default.graphDashboardResponse(gsDivisionData, genderCount, null);
-                return (0, response_1.successResponse)(response, "Dashboard Info Retrieved Successfully", res);
+                const genderCount = { male: maleCount, female: femaleCount };
+                dashboard_1.Dashboard.getDashboardInfo()
+                    .then((webDashboardData) => {
+                    if (webDashboardData.err)
+                        return (0, response_1.failureResponse)("Error retrieving web dashboard data", res);
+                    const webDashboardResponse = helper_1.default.webDashboardResponse(Object.assign(Object.assign({}, webDashboardData.data), { governmentEmployeesCount,
+                        nonGovernmentEmployeesCount, totalMale: maleCount, totalFemale: femaleCount }));
+                    return (0, response_1.successResponse)({
+                        gsDivisionData,
+                        genderCount,
+                        governmentEmployeesCount,
+                        nonGovernmentEmployeesCount,
+                        webDashboardResponse
+                    }, "Dashboard Info Retrieved Successfully", res);
+                })
+                    .catch(() => (0, response_1.failureResponse)("Error retrieving web dashboard data", res));
             })
-                .catch(error => {
-                return (0, response_1.failureResponse)("Error while retrieving dashboard info", res);
-            });
+                .catch(() => (0, response_1.failureResponse)("Error retrieving dashboard info", res));
         };
         this.deployment = (req, res) => __awaiter(this, void 0, void 0, function* () {
             exec('sh deploy.sh', (error, stdout, stderr) => {
