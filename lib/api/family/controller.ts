@@ -62,7 +62,6 @@ export class FamilyController {
     public updateMember = async (req: Request, res: Response) => {
         const body = req.body;
         const updatedData = await Family.updateMemmber(body);
-
         if(updatedData.err)
         {
             return failureResponse(updatedData.message, res);

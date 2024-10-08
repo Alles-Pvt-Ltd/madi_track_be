@@ -28,6 +28,9 @@ export interface IMember {
     isMarried: number;
     isDeath: number;
     dateOfDeath: string;
+    totalIncome?: number;
+    deathRemark?: string;
+    remark?: string;
 }
 
 export interface IHistory {
