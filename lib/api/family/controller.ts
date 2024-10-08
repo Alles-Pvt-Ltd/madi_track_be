@@ -150,7 +150,8 @@ export class FamilyController {
         if (memberDetails.err) {
             return failureResponse(memberDetails.message, res);
         }
-        return successResponse(Helper.memberResponse(memberDetails.data), "member Details Retrieved Successfully", res);
+        var response = Helper.memberResponse(memberDetails.data);
+        return successResponse(response, "member Details Retrieved Successfully", res);
       }
 
       public initiateFamilyTransfer = async (req: Request, res: Response) => {

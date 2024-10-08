@@ -124,7 +124,8 @@ class FamilyController {
             if (memberDetails.err) {
                 return (0, response_1.failureResponse)(memberDetails.message, res);
             }
-            return (0, response_1.successResponse)(helper_1.default.memberResponse(memberDetails.data), "member Details Retrieved Successfully", res);
+            var response = helper_1.default.memberResponse(memberDetails.data);
+            return (0, response_1.successResponse)(response, "member Details Retrieved Successfully", res);
         });
         this.initiateFamilyTransfer = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const transferData = req.body;

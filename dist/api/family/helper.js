@@ -45,7 +45,10 @@ Helper.memberResponse = (data) => {
         isMarried: data[0][0].isMarried,
         isDeath: data[0][0].isDeath,
         dateOfDeath: data[0][0].dateOfDeath,
-        memberHistory: data[1]
+        memberHistory: data[1],
+        totalIncome: data[0][0].totalIncome,
+        remark: data[0][0].remark,
+        deathRemark: data[0][0].deathRemark
     };
     return memberData;
 };
