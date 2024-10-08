@@ -95,7 +95,12 @@ class AdminController {
                 //console.log(req.body.gsDivisionId);
                 var response = {
                     families: reportData.data[0],
-                    divisionCountDetails: req.body.gsDivisionId == 0 ? reportData.data[1] : []
+                    additionalDetails: [
+                        {
+                            HeaderText: "Division wise count",
+                            data: req.body.gsDivisionId == 0 ? reportData.data[1] : []
+                        }
+                    ]
                 };
                 return (0, response_1.successResponse)(response, "Success", res);
             }
