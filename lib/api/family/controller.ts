@@ -20,7 +20,6 @@ export class FamilyController {
             return failureResponse("Family Already Exist",res);
         }
         const addedFamily = await Family.addFamily(body);
-
         if(addedFamily.err)
         {
             return failureResponse(addedFamily.message,res);

@@ -20,11 +20,11 @@ export class Family {
         '${familyData.phone}', '${familyData.nicNo}', ${familyData.gsDivisionId}, ${familyData.villageId})`;
 
         const sqlData = await Mysql.connect(sqlQueryString, null);
-
         if (sqlData.err) {
             return { err: true, message: sqlData.result } as IData;
-          }
-        return { err: false, data: sqlData.result } as IData;
+        }
+        var response = sqlData.result[0][0];
+        return { err: false, data: response } as IData;
     }
 
     public static getAllFamiliesDetails = async (divisionId: number) => {
