@@ -210,23 +210,6 @@ export class Family {
 
   }
 
-  // public static getAllFamilyTransfersForAGsDivision = async (gsDivisionId: number) => {
-  //   try {
-  //     const sqlQueryString = `CALL sp_getAllFamilyTransfersForAGsDivision (${gsDivisionId})`;
-
-  //     const sqlData = await Mysql.connect(sqlQueryString, null);
-
-  //     if (sqlData.err) {
-  //         return { err: true, message: "Error occur while getting transfer list, try after some time" } as IData;
-  //     }
-  //     return { err: false, data: sqlData.result } as IData; 
-  //   }
-  //   catch (error) {
-  //     return { err: false, message: "Server error, please contact admin" } as IData;
-  //   }    
-
-  // }
-
   public static familyTransferStatusUpdate = async (data: IFamilyTransfer) => {
     try {
       const sqlQueryString = `CALL sp_familyTransfer(${data.id},${data.status})`;

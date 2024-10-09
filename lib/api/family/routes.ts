@@ -111,14 +111,6 @@ export class FamilyRoutes {
             }
         );
 
-        // app.get(
-        //     url + "/transfer/list/:divisionId",
-        //     JwtToken.verify,
-        //     (req: Request, res: Response) => {
-        //         this.userCtrl.getAllFamilyTransfersForAGsDivision(req, res);
-        //     }
-        // );
-
         app.post(
             url + "/transfer/update",
             JwtToken.verify,
