@@ -48,7 +48,8 @@ Helper.memberResponse = (data) => {
         memberHistory: data[1],
         totalIncome: data[0][0].totalIncome,
         remark: data[0][0].remark,
-        deathRemark: data[0][0].deathRemark
+        deathRemark: data[0][0].deathRemark,
+        deathRemarkText: data[0][0].deathRemarkText
     };
     return memberData;
 };

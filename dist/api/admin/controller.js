@@ -60,14 +60,6 @@ class AdminController {
             }
             return (0, response_1.successResponse)(transferList.data, transferList.message, res);
         });
-        // public updateFamilyTransferStatus = async (req: Request, res: Response) => {
-        //     const updatedData = await Admin.transferAcceptOrRejectByDs(req.body);
-        //     if(updatedData.err)
-        //     {
-        //         return failureResponse(updatedData.message,res);
-        //     }
-        //     return successResponse(updatedData.data, updatedData.message, res);
-        // }
         this.getMembersByFamilyId = (req, res) => {
             const familyId = parseInt(req.params.familyId);
             if (isNaN(familyId)) {
