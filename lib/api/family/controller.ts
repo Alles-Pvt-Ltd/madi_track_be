@@ -79,7 +79,7 @@ export class FamilyController {
             return failureResponse("Cannot find family Details", res);
         }
 
-        const response = Helper.singleFamilyResponse(familyDetails.data[0], familyDetails.data[1], familyDetails.data[2], familyDetails.data[3]);
+        const response = Helper.singleFamilyResponse(familyDetails.data[0], familyDetails.data[1], familyDetails.data[2], familyDetails.data[3], familyDetails.data[4]);
         return successResponse(response, "Family Details Retrieved Successfully", res);
     }
 
