@@ -89,7 +89,6 @@ export class FamilyController {
         if (userInfo.err) {
             return failureResponse(userInfo.message, res);
         }
-
         const addedHistory = await Family.addHistory(req.body, userInfo.data[0].id);
         if(addedHistory.err)
         {

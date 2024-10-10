@@ -114,10 +114,9 @@ export class Family {
 
   public static addHistory = async (historyData: IHistory, createdBy: number) => {
     const sqlQueryString = `CALL sp_addHistory ('${historyData.date}', '${historyData.description}', '${historyData.organization}',
-    '${historyData.familyId}', NOW(), ${createdBy})`;
+    '${historyData.familyId}', ${createdBy})`;
 
     const sqlData = await Mysql.connect(sqlQueryString, null);
-
     if (sqlData.err) {
         return { err: true, message: sqlData.result } as IData;
       }
