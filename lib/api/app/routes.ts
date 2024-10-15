@@ -21,5 +21,13 @@ export class AppRoute {
       }
     );
 
+    app.post(
+      url + "/send-message",
+      JwtToken.verify,
+      (req: Request, res: Response) => {
+        this.appCtrl.sendMessage(req, res);
+      }
+    );
+
   }
 }

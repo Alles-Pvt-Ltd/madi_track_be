@@ -3,6 +3,7 @@ import { App } from "../../database/mysql/app";
 import { failureResponse, successResponse } from "../../core/response";
 import { FileUpload } from "../../core/fileUpload";
 import { API_BASE_URL, MEDIA_SERVER_URL } from "../../core/common/constant";
+import {  sendMessage } from "../../external/notification";
 
 interface MulterRequest extends Request {
     file: any;
@@ -44,4 +45,12 @@ export class AppController {
         return successResponse({imageUrl: '/'+documentFile.destination+'/'+documentFile.filename },"Success", res);
        });
      };
+
+
+
+     public sendMessage = async (req: Request, res: Response) => {   
+      await   sendMessage("0777355075", `gs Division id : ${req.body.gsDivisionId} village id: ${req.body.villageId}, and message: ${req.body.message}`);
+      await   sendMessage("0775014901", `gs Division id : ${req.body.gsDivisionId} village id: ${req.body.villageId}, and message: ${req.body.message}`);
+      return successResponse("Success","Success", res);
+   };
 }

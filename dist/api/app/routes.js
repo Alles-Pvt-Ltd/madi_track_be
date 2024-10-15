@@ -14,6 +14,9 @@ class AppRoute {
         app.post(url + "/upload", jwt_1.JwtToken.verify, (req, res) => {
             this.appCtrl.uploadImage(req, res);
         });
+        app.post(url + "/send-message", jwt_1.JwtToken.verify, (req, res) => {
+            this.appCtrl.sendMessage(req, res);
+        });
     }
 }
 exports.AppRoute = AppRoute;

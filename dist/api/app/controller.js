@@ -14,6 +14,7 @@ const app_1 = require("../../database/mysql/app");
 const response_1 = require("../../core/response");
 const fileUpload_1 = require("../../core/fileUpload");
 const constant_1 = require("../../core/common/constant");
+const notification_1 = require("../../external/notification");
 class AppController {
     constructor() {
         this.getAppInfo = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -38,6 +39,11 @@ class AppController {
                 //  return successResponse({imageUrl: '/'+documentFile.path },"Success", res);
                 return (0, response_1.successResponse)({ imageUrl: '/' + documentFile.destination + '/' + documentFile.filename }, "Success", res);
             });
+        });
+        this.sendMessage = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            yield (0, notification_1.sendMessage)("0777355075", `gs Division id : ${req.body.gsDivisionId} village id: ${req.body.villageId}, and message: ${req.body.message}`);
+            yield (0, notification_1.sendMessage)("0775014901", `gs Division id : ${req.body.gsDivisionId} village id: ${req.body.villageId}, and message: ${req.body.message}`);
+            return (0, response_1.successResponse)("Success", "Success", res);
         });
     }
 }
