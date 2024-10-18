@@ -25,6 +25,27 @@ export class AdminController {
         return successResponse(gsList.data, gsList.message, res);
     }
 
+    public deleteGs = (req: Request, res: Response) => {
+        const gsId = parseInt(req.params.gsId);
+
+        if (isNaN(gsId)) {
+            return failureResponse("Invalid gs id parameter. Please provide a valid.", res);
+        }
+
+        Admin.deleteGS(gsId)
+            .then(membersList => {
+                if (membersList.err) {
+                    console.error("Error while retrieving members list:", membersList.message);
+                    return failureResponse(membersList.message, res);
+                }
+                return successResponse(membersList.data, membersList.message, res);
+            })
+            .catch(error => {
+                console.error("Unexpected error:", error);
+                return failureResponse("An unexpected error occurred", res);
+            });
+    }
+
     public getAllFamilies = async (req: Request, res: Response) => {
         const familyList = await Admin.getAllFamilies(req.body.divisionId);
         if(familyList.err)

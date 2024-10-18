@@ -52,6 +52,16 @@ export class Admin {
         return { err: false, data: sqlData.result[0], message: "Members List Successfully Retrieved" };
     }
     
+    public static deleteGS = async (gsId: number) => {
+        const sqlQueryString = `CALL sp_deleteGS(${gsId})`;
+    
+        const sqlData = await Mysql.connect(sqlQueryString, null);    
+    
+        if (sqlData.err) {
+            return { err: true, message: "Error Occur While deleting gs" };
+        }
+        return { err: false, data: "Deleted successfully.", message: "Deleted successfully." };
+    }
     
     
     // public static transferAcceptOrRejectByDs = async (data: IFamilyTransfer) => {

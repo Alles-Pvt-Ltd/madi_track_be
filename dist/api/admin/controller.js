@@ -29,6 +29,24 @@ class AdminController {
             }
             return (0, response_1.successResponse)(gsList.data, gsList.message, res);
         });
+        this.deleteGs = (req, res) => {
+            const gsId = parseInt(req.params.gsId);
+            if (isNaN(gsId)) {
+                return (0, response_1.failureResponse)("Invalid gs id parameter. Please provide a valid.", res);
+            }
+            admin_1.Admin.deleteGS(gsId)
+                .then(membersList => {
+                if (membersList.err) {
+                    console.error("Error while retrieving members list:", membersList.message);
+                    return (0, response_1.failureResponse)(membersList.message, res);
+                }
+                return (0, response_1.successResponse)(membersList.data, membersList.message, res);
+            })
+                .catch(error => {
+                console.error("Unexpected error:", error);
+                return (0, response_1.failureResponse)("An unexpected error occurred", res);
+            });
+        };
         this.getAllFamilies = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const familyList = yield admin_1.Admin.getAllFamilies(req.body.divisionId);
             if (familyList.err) {

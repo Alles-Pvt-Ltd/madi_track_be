@@ -11,6 +11,9 @@ class AdminRoutes {
         app.get(url + "/gslist", jwt_1.JwtToken.verify, (req, res) => {
             this.adminCtrl.getAllGsList(req, res);
         });
+        app.get(url + "/delete-gs/:gsId", jwt_1.JwtToken.verify, (req, res) => {
+            this.adminCtrl.deleteGs(req, res);
+        });
         app.post(url + "/family/list", jwt_1.JwtToken.verify, (req, res) => {
             this.adminCtrl.getAllFamilies(req, res);
         });

@@ -14,6 +14,14 @@ export class AdminRoutes {
                 this.adminCtrl.getAllGsList(req, res);
             }
         );
+        
+        app.get(
+            url + "/delete-gs/:gsId",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.adminCtrl.deleteGs(req, res);
+            }
+        );
 
         app.post(
             url + "/family/list",

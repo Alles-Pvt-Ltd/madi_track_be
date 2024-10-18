@@ -49,6 +49,14 @@ Admin.getMembersByFamilyId = (familyId) => __awaiter(void 0, void 0, void 0, fun
     }
     return { err: false, data: sqlData.result[0], message: "Members List Successfully Retrieved" };
 });
+Admin.deleteGS = (gsId) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_deleteGS(${gsId})`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: "Error Occur While deleting gs" };
+    }
+    return { err: false, data: "Deleted successfully.", message: "Deleted successfully." };
+});
 // public static transferAcceptOrRejectByDs = async (data: IFamilyTransfer) => {
 //     const sqlQueryString = `CALL sp_acceptOrRejectFamilyTransferByDs (${data.id},${data.status})`;
 //     const sqlData = await Mysql.connect(sqlQueryString, null);
