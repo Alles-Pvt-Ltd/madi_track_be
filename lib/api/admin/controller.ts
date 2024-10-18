@@ -55,6 +55,16 @@ export class AdminController {
 
         return successResponse(familyList.data, familyList.message, res);
     }
+    
+    public asignTempGS = async (req: Request, res: Response) => {
+        const response = await Admin.asignTempGS(req.body.divisionId, req.body.userId, req.body.startDate, req.body.endDate);
+        if(response.err)
+        {
+            return failureResponse(response.message, res);
+        }
+
+        return successResponse(response.data, response.message, res);
+    }
 
     public getAllFamilyTransfers = async (req: Request, res: Response) => {
         const jwtData = JwtToken.get(req);

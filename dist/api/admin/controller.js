@@ -54,6 +54,13 @@ class AdminController {
             }
             return (0, response_1.successResponse)(familyList.data, familyList.message, res);
         });
+        this.asignTempGS = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const response = yield admin_1.Admin.asignTempGS(req.body.divisionId, req.body.userId, req.body.startDate, req.body.endDate);
+            if (response.err) {
+                return (0, response_1.failureResponse)(response.message, res);
+            }
+            return (0, response_1.successResponse)(response.data, response.message, res);
+        });
         this.getAllFamilyTransfers = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const jwtData = jwt_1.JwtToken.get(req);
             const userInfo = yield user_1.User.getUserByCode(jwtData.code);

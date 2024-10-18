@@ -31,6 +31,14 @@ export class AdminRoutes {
             }
         );
 
+        app.post(
+            url + "/asign-temp-gs",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.adminCtrl.asignTempGS(req, res);
+            }
+        );
+
         app.get(
             url + "/family/transfer/list",
             JwtToken.verify,

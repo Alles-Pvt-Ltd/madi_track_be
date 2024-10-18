@@ -28,6 +28,19 @@ export class Admin {
         return { err: false, data: sqlData.result[0], message: "Family List Retrieved Successfuly"}
     }
 
+    public static asignTempGS = async (divisionId: number, userId: number, startDate: any, endDate: any) => {
+         const sqlQueryString = `CALL sp_asignTempGS (${divisionId}, ${userId}, '${startDate}', '${endDate}')`;
+
+        const sqlData = await Mysql.connect(sqlQueryString, null);
+        if(sqlData.err)
+        {
+            return { err: true, message : "Error Occurred: " + sqlData.result}
+        }
+
+        return { err: false, data: "Successfuly asigned", message: "Successfully asigned"}
+    }
+
+
     public static getAllFamilyTransfers = async (divisionId: number) => {
         const sqlQueryString = `CALL sp_getAllFamilyTransfers (${divisionId})`;
 
