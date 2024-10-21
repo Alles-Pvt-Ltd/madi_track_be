@@ -39,11 +39,11 @@ export  class AppFunction {
   }
 
   public static jwtVerify(jwtToken: string) {
-    return jwt.verify(jwtToken, "HJOGHJOAHF") as {code:string; role: number;};
+    return jwt.verify(jwtToken, "HJOGHJOAHG") as {code:string; role: number;};
   }
 
   public static createJwtToken(userCode: string, role: number) {
-    return jwt.sign({ code: userCode, role }, "HJOGHJOAHF", {
+    return jwt.sign({ code: userCode, role }, "HJOGHJOAHG", {
       // expiresIn: "2h", //token will expaire after 2 hours
     });
   }

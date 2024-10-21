@@ -36,10 +36,10 @@ class AppFunction {
         return password_hash.verify(pw, db_pw);
     }
     static jwtVerify(jwtToken) {
-        return jwt.verify(jwtToken, "HJOGHJOAHF");
+        return jwt.verify(jwtToken, "HJOGHJOAHG");
     }
     static createJwtToken(userCode, role) {
-        return jwt.sign({ code: userCode, role }, "HJOGHJOAHF", {
+        return jwt.sign({ code: userCode, role }, "HJOGHJOAHG", {
         // expiresIn: "2h", //token will expaire after 2 hours
         });
     }
