@@ -20,7 +20,7 @@ FileUpload.upload = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
             const jwtData = jwt_1.JwtToken.get(req);
-            const filesDir = 'upload/images/' + jwtData.code;
+            const filesDir = 'upload/images/' + jwtData;
             fs.mkdirSync(filesDir, { recursive: true });
             return cb(null, filesDir);
         },

@@ -22,7 +22,7 @@ class Environment {
             return 8083;
         }
         else {
-            return 3000;
+            return 7000;
         }
     }
     getDBName() {
@@ -40,4 +40,6 @@ class Environment {
         }
     }
 }
-exports.default = new Environment(Environments.local_environment);
+// Create an instance for the local environment or other environments as needed
+const environmentInstance = new Environment(Environments.local_environment);
+exports.default = environmentInstance;

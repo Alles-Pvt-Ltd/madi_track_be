@@ -6,18 +6,13 @@ class Validation {
 }
 exports.Validation = Validation;
 Validation.loginValidation = [
-    (0, express_validator_1.check)("userName").notEmpty().withMessage("Username is required"),
+    (0, express_validator_1.check)("username").notEmpty().withMessage("Username is required"),
     (0, express_validator_1.check)("password").notEmpty().withMessage("Password is required")
 ];
 Validation.registerValidation = [
-    (0, express_validator_1.check)("firstName").notEmpty().withMessage("Firstname is required"),
-    (0, express_validator_1.check)("lastName").notEmpty().withMessage("Lastname is required"),
-    (0, express_validator_1.check)("userName").notEmpty().withMessage("Username is required"),
-    //check("password").notEmpty().withMessage("Password is required"),
-    (0, express_validator_1.check)("role").notEmpty().withMessage("Role is required"),
-    (0, express_validator_1.check)("gsDivisionId").notEmpty().withMessage("Gs division is required")
-];
-Validation.changePasswordValidation = [
-    (0, express_validator_1.check)("oldPassword").notEmpty().withMessage("oldPassword is required"),
-    (0, express_validator_1.check)("newPassword").notEmpty().withMessage("newPassword is required"),
+    (0, express_validator_1.check)("username").notEmpty().withMessage("Username is required"),
+    (0, express_validator_1.check)("email").isEmail().withMessage("Valid email is required"),
+    (0, express_validator_1.check)("password").notEmpty().withMessage("Password is required"),
+    (0, express_validator_1.check)("createdBy").notEmpty().withMessage("CreatedBy is required"),
+    (0, express_validator_1.check)("updatedBy").notEmpty().withMessage("UpdatedBy is required")
 ];

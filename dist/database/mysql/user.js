@@ -16,8 +16,8 @@ class User {
 }
 exports.User = User;
 _a = User;
-User.findUserByUsername = (userName) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_findUserByUsername ('${userName}')`;
+User.findUserByUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_findUserByUsername('${username}')`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
@@ -25,46 +25,10 @@ User.findUserByUsername = (userName) => __awaiter(void 0, void 0, void 0, functi
     return { err: false, data: sqlData.result[0] };
 });
 User.register = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const insertUser = `CALL sp_register ('${data.id}', '${data.code}','${data.firstName}', '${data.lastName}', '${data.userName}', '${data.password}', '${data.role}',${data.gsDivisionId})`;
+    const insertUser = `CALL sp_register('${data.id}', '${data.username}', '${data.email}', '${data.password}', '${data.createdBy}', '${data.updatedBy}', '${data.isDeleted ? 1 : 0}')`;
     const sqlData = yield connection_1.default.connect(insertUser, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
     }
     return { err: false, data: sqlData.result };
-});
-User.getUserByCode = (code) => __awaiter(void 0, void 0, void 0, function* () {
-    let relatedQuery = `CALL sp_getUserByCode ('${code}')`;
-    const sqlData = yield connection_1.default.connect(relatedQuery, null);
-    if (sqlData.err) {
-        return { err: true, message: sqlData.result };
-    }
-    return { err: false, data: sqlData.result[0] };
-});
-User.reference = () => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_reference ()`;
-    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
-    if (sqlData.err) {
-        return { err: true, message: sqlData.result };
-    }
-    return { err: false, data: sqlData.result };
-});
-User.changePassword = (code, password) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `UPDATE t_user SET password='${password}' WHERE code='${code}'`;
-    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
-    if (sqlData.err) {
-        return { err: true, message: sqlData.result };
-    }
-    return {
-        err: false,
-        data: sqlData.result,
-        message: "Password changed successfully",
-    };
-});
-User.userInfo = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_userInfo (${userId})`;
-    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
-    if (sqlData.err) {
-        return { err: true, message: sqlData.result };
-    }
-    return { err: false, data: sqlData.result, message: "User Details Got Success" };
 });

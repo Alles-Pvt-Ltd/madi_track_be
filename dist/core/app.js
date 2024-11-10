@@ -38,8 +38,8 @@ class AppFunction {
     static jwtVerify(jwtToken) {
         return jwt.verify(jwtToken, "HJOGHJOAHG");
     }
-    static createJwtToken(userCode, role) {
-        return jwt.sign({ code: userCode, role }, "HJOGHJOAHG", {
+    static createJwtToken(username, email) {
+        return jwt.sign({ name: username, email }, "HJOGHJOAHG", {
         // expiresIn: "2h", //token will expaire after 2 hours
         });
     }

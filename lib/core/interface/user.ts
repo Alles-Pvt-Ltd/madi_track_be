@@ -1,10 +1,9 @@
 export interface IUser {
     id: number;
-    code: string;
-    firstName: string;
-    lastName: string;
-    userName: string;
+    username: string;
+    email: string;
     password: string;
-    role: number;
-    gsDivisionId: number;
+    createdBy: number;
+    updatedBy: number;
+    isDeleted: number;
 }

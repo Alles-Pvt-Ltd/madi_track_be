@@ -6,13 +6,13 @@ enum Environments {
 }
 
 class Environment {
-    private environment: String;
+    private environment: Environments;
 
-    constructor(environment: String) {
+    constructor(environment: Environments) {
         this.environment = environment;
     }
 
-    getPort(): Number {
+    getPort(): number {
         if (this.environment === Environments.prod_environment) {
             return 8081;
         } else if (this.environment === Environments.dev_environment) {
@@ -20,11 +20,11 @@ class Environment {
         } else if (this.environment === Environments.qa_environment) {
             return 8083;
         } else {
-            return 3000;
+            return 7000;
         }
     }
 
-    getDBName(): String {
+    getDBName(): string {
         if (this.environment === Environments.prod_environment) {
             return 'db_test_project_prod';
         } else if (this.environment === Environments.dev_environment) {
@@ -37,4 +37,7 @@ class Environment {
     }
 }
 
-export default new Environment(Environments.local_environment);
+// Create an instance for the local environment or other environments as needed
+const environmentInstance = new Environment(Environments.local_environment);
+
+export default environmentInstance;

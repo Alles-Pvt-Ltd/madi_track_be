@@ -16,7 +16,6 @@ const app_1 = require("../../core/app");
 const helper_1 = require("./helper");
 const constant_1 = require("../../config/constant");
 const express_validator_1 = require("express-validator");
-const jwt_1 = require("../../core/jwt");
 class UserController {
     constructor() {
         this.login = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -24,17 +23,18 @@ class UserController {
             if (!errors.isEmpty()) {
                 return (0, response_1.badResponse)(errors.array(), res);
             }
-            const loginResponse = yield user_1.User.findUserByUsername(req.body.userName);
-            if (loginResponse.err) {
-                return (0, response_1.failureResponse)(loginResponse.message, res);
-            }
-            if (loginResponse.data.length === 0) {
+            const { username, password } = req.body;
+            const loginResponse = yield user_1.User.findUserByUsername(username);
+            if (loginResponse.err || loginResponse.data.length === 0) {
                 return (0, response_1.failureResponse)(constant_1.StringConstant.usernamePasswordMismatch, res);
             }
-            if (!app_1.AppFunction.passwordVerify(req.body.password, loginResponse.data[0].password)) {
+            const user = loginResponse.data[0];
+            if (!app_1.AppFunction.passwordVerify(password, user.password)) {
                 return (0, response_1.failureResponse)(constant_1.StringConstant.usernamePasswordMismatch, res);
             }
-            return (0, response_1.successResponse)(helper_1.default.getToken(loginResponse.data[0].code, loginResponse.data[0].role), "Login successfull", res);
+            // Generate and return JWT token
+            const token = helper_1.default.getToken(user.username, user.id);
+            return (0, response_1.successResponse)({ token }, "Login successful", res);
         });
         this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const errors = (0, express_validator_1.validationResult)(req);
@@ -42,71 +42,20 @@ class UserController {
                 return (0, response_1.badResponse)(errors.array(), res);
             }
             const body = req.body;
-            if (body.id && (body.password || body.password == '')) {
+            if (body.password === '') {
                 return (0, response_1.failureResponse)("Password cannot be empty!", res);
             }
-            const user = yield user_1.User.findUserByUsername(body.userName);
-            if (user.err) {
-                return (0, response_1.failureResponse)(user.message, res);
-            }
+            const user = yield user_1.User.findUserByUsername(body.username);
             if (!body.id && user.data.length > 0) {
-                return (0, response_1.failureResponse)("User already exist", res);
+                return (0, response_1.failureResponse)("User already exists", res);
             }
-            if (!body.id) {
-                body.id = 0;
-                body.code = app_1.AppFunction.uuid();
-                body.password = app_1.AppFunction.encryptPassword(body.password);
+            body.id = body.id || 0;
+            body.password = app_1.AppFunction.encryptPassword(body.password);
+            const registerResponse = yield user_1.User.register(body);
+            if (registerResponse.err) {
+                return (0, response_1.failureResponse)(registerResponse.message, res);
             }
-            const register = yield user_1.User.register(body);
-            if (register.err) {
-                return (0, response_1.failureResponse)(register.message, res);
-            }
-            return (0, response_1.successResponse)(register.data, "User Registered Successfully", res);
-        });
-        this.reference = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const responseData = yield user_1.User.reference();
-            const referenceData = {
-                genderReference: responseData.data[0],
-                familyRoleReference: responseData.data[1],
-                occupationReference: responseData.data[2],
-                gsDivisions: helper_1.default.gsDivisionsResponse(responseData.data[3], responseData.data[5]),
-                religionReference: responseData.data[4],
-                transferReason: responseData.data[6],
-                deathReason: responseData.data[7]
-            };
-            return (0, response_1.successResponse)(referenceData, "Successfully retrieved", res);
-        });
-        this.changePassword = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty()) {
-                return (0, response_1.badResponse)(errors.array(), res);
-            }
-            const jwtData = jwt_1.JwtToken.get(req);
-            const userInfo = yield user_1.User.getUserByCode(jwtData.code);
-            if (userInfo.err) {
-                return (0, response_1.failureResponse)(userInfo.message, res);
-            }
-            if (!app_1.AppFunction.passwordVerify(req.body.oldPassword, userInfo.data[0].password)) {
-                return (0, response_1.failureResponse)("Password not match", res);
-            }
-            const changedPassword = yield user_1.User.changePassword(jwtData.code, app_1.AppFunction.encryptPassword(req.body.newPassword));
-            if (changedPassword.err) {
-                return (0, response_1.failureResponse)(changedPassword.message, res);
-            }
-            return (0, response_1.successResponse)(changedPassword.data, changedPassword.message, res);
-        });
-        this.userInfo = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const jwtData = jwt_1.JwtToken.get(req);
-            const userInfo = yield user_1.User.getUserByCode(jwtData.code);
-            if (userInfo.err || userInfo.data.length < 1) {
-                return (0, response_1.failureResponse)(userInfo.message ? userInfo.message : "Cannot find user. Please login again", res);
-            }
-            const userDetail = yield user_1.User.userInfo(userInfo.data[0].id);
-            if (userDetail.err) {
-                return (0, response_1.failureResponse)("Error Occur, UserDetails Not Found", res);
-            }
-            var responseDate = helper_1.default.userResponse(userDetail.data);
-            return (0, response_1.successResponse)(responseDate, userDetail.message, res);
+            return (0, response_1.successResponse)(registerResponse.data, "User registered successfully", res);
         });
     }
 }

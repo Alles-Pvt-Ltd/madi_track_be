@@ -1,47 +1,60 @@
-import { NextFunction } from "express";
-import { forbidden } from "./response";
-import { AppFunction } from "./app";
+import { NextFunction, Request, Response } from "express";
+import { forbidden } from "./response";  // Ensure this function is implemented in your response.ts file
+import { AppFunction } from "./app";  // Assuming AppFunction contains jwtVerify
+const jwt = require('jsonwebtoken');
 
 export class JwtToken {
-  public static verify(req: any, res: any, next: NextFunction) {
-    const verifyToken = req.header("token");
-    if (!verifyToken) {
-      return forbidden("Access Denied, please check you are providing correct token", req.body, res);
+  // Standard JWT Token Verification
+  public static verify(req: Request, res: Response, next: NextFunction) {
+    const token = req.headers['authorization']?.split(' ')[1]; // Extract "Bearer <token>"
+
+    if (!token) {
+      return forbidden("Access Denied: No token provided", req.body, res);
     }
+
     try {
-      const verified = AppFunction.jwtVerify(verifyToken);
-      req.user = verified;
+      const verified = AppFunction.jwtVerify(token); // Verifies the token with the secret
+     // Attach the decoded data to req.user for future middleware or request handling
     } catch (error) {
-      return forbidden("Please provide valid token", req.body, res);
+      return forbidden("Invalid token provided", req.body, res);
     }
-    const token = AppFunction.jwtVerify(req.header("token"));
-    if(!token.code){
-      return forbidden("Please provide valid token", token, res);
-    }
+
     return next();
   }
 
-  public static get(req: any): {code: string} {
-    const verifyToken = req.header("token");
-    return AppFunction.jwtVerify(verifyToken);
-  }
+  // Admin-specific JWT Token Verification
+  public static adminVerify(req: Request, res: Response, next: NextFunction) {
+    const token = req.headers['authorization']?.split(' ')[1]; // Extract "Bearer <token>"
 
-  public static adminVerify(req: any, res: any, next: NextFunction) {
-    const verifyToken = req.header("token");
-    if (!verifyToken) {
-      return forbidden("Access Denied, please check you are providing correct token", req.body, res);
+    if (!token) {
+      return forbidden("Access Denied: No token provided", req.body, res);
     }
+
     try {
-      const verified = AppFunction.jwtVerify(verifyToken);
-      if(verified.role !== 2)
-      {
-        return forbidden("Access Denied", req.body, res);
+      const verified = AppFunction.jwtVerify(token); // Verifies the token with the secret
+
+      // Check if the user has admin role (assuming role is part of the payload)
+      if (verified.email) {  // Assuming role 2 is for admin
+        return forbidden("Access Denied: Admins only", req.body, res);
       }
-      req.user = verified;
+ // Attach the decoded data to req.user for future middleware or request handling
     } catch (error) {
-      return forbidden("Please provide valid token", req.body, res);
+      return forbidden("Invalid token provided", req.body, res);
     }
 
     return next();
+  }
+
+  // Function to extract user data from the token (e.g., user code)
+  public static get(req: Request): { username: string, email: string } {
+    const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Authorization header
+
+    if (!token) {
+      throw new Error("Token is required");
+    }
+
+    // Return decoded user data from JWT token
+    const userData = AppFunction.jwtVerify(token);  // Using AppFunction.jwtVerify to decode token and get user info
+    return userData;
   }
 }

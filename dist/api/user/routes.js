@@ -15,15 +15,6 @@ class UserRoutes {
         app.post(url + "/register", jwt_1.JwtToken.verify, class_1.Validation.registerValidation, (req, res) => {
             this.userCtrl.register(req, res);
         });
-        app.get(url + "/reference", jwt_1.JwtToken.verify, (req, res) => {
-            this.userCtrl.reference(req, res);
-        });
-        app.post(url + "/change_password", class_1.Validation.changePasswordValidation, jwt_1.JwtToken.verify, (req, res) => {
-            this.userCtrl.changePassword(req, res);
-        });
-        app.get(url + "/info", jwt_1.JwtToken.verify, (req, res) => {
-            this.userCtrl.userInfo(req, res);
-        });
     }
 }
 exports.UserRoutes = UserRoutes;
