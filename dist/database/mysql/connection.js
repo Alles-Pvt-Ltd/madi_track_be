@@ -7,7 +7,7 @@ const db_config = {
     port: 3306,
     user: "gs-app",
     password: "Alles_gs1717",
-    database: "gs_app_db",
+    database: "medi_track_db",
     insecureAuth: true
 };
 const pool = mysql.createPool(db_config);

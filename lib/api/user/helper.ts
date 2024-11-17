@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import { AppFunction } from "../../core/app";
 
 export default class Helper {

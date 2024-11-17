@@ -1,9 +1,11 @@
 export interface IUser {
-    id: number;
+    role : number;
+    firstName: string;
+    lastName: string;
+    address: string;
     username: string;
     email: string;
     password: string;
-    createdBy: number;
-    updatedBy: number;
-    isDeleted: number;
+    createdOn: string;
+    updatedOn: string;
 }

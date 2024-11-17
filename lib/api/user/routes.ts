@@ -7,6 +7,7 @@ export class UserRoutes {
     private userCtrl: UserController = new UserController();
 
     public route(app: Application, url: string) {
+        
         app.post(
             url + "/login",
             Validation.loginValidation,
@@ -17,11 +18,42 @@ export class UserRoutes {
 
         app.post(
             url + "/register",
-            JwtToken.verify,
             Validation.registerValidation,
             (req: Request, res: Response) => {
                 this.userCtrl.register(req, res);
             }
         );
+
+        app.put(
+            url + "/updateUser",  
+            Validation.updateValidation,  
+            (req: Request, res: Response) => {
+                this.userCtrl.updateUser(req, res);  
+            }
+        );
+
+        app.get(
+            url + "/getAllUsers",
+            (req: Request, res: Response) => {
+                this.userCtrl.getAllUsers(req, res);
+            }
+        );
+
+        app.get(
+            url + "/getUserById/:id",
+            (req: Request, res: Response) => {
+                this.userCtrl.getUserById(req, res);
+            }
+        );
+
+        app.delete(
+            url + "/deleteUser/:id",
+            JwtToken.verify,
+            (req: Request, res: Response) => {
+                this.userCtrl.deleteUser(req, res);
+            }
+        );
+        
     }
-}
+ }
+    

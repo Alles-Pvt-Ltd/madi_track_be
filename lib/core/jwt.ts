@@ -1,6 +1,7 @@
-import { NextFunction, Request, Response } from "express";
-import { forbidden } from "./response";  // Ensure this function is implemented in your response.ts file
-import { AppFunction } from "./app";  // Assuming AppFunction contains jwtVerify
+import { Request, Response, NextFunction } from "express";
+import { forbidden } from "./response"; 
+import { AppFunction } from "./app";
+
 const jwt = require('jsonwebtoken');
 
 export class JwtToken {
@@ -13,29 +14,6 @@ export class JwtToken {
 
     try {
       const verified = AppFunction.jwtVerify(token); 
-    } catch (error) {
-      return forbidden("Invalid token provided", req.body, res);
-    }
-
-    return next();
-  }
-
-
-  public static adminVerify(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers['authorization']?.split(' ')[1]; 
-
-    if (!token) {
-      return forbidden("Access Denied: No token provided", req.body, res);
-    }
-
-    try {
-      const verified = AppFunction.jwtVerify(token); 
-
-      
-      if (verified.email) {  
-        return forbidden("Access Denied: Admins only", req.body, res);
-      }
- 
     } catch (error) {
       return forbidden("Invalid token provided", req.body, res);
     }

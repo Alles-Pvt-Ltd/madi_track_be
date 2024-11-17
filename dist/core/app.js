@@ -40,7 +40,7 @@ class AppFunction {
     }
     static createJwtToken(username, email) {
         return jwt.sign({ name: username, email }, "HJOGHJOAHG", {
-        // expiresIn: "2h", //token will expaire after 2 hours
+        // expiresIn: "2h", //token will expire after 2 hours
         });
     }
     static uuid() {

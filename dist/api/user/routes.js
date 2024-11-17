@@ -12,8 +12,20 @@ class UserRoutes {
         app.post(url + "/login", class_1.Validation.loginValidation, (req, res) => {
             this.userCtrl.login(req, res);
         });
-        app.post(url + "/register", jwt_1.JwtToken.verify, class_1.Validation.registerValidation, (req, res) => {
+        app.post(url + "/register", class_1.Validation.registerValidation, (req, res) => {
             this.userCtrl.register(req, res);
+        });
+        app.put(url + "/updateUser", class_1.Validation.updateValidation, (req, res) => {
+            this.userCtrl.updateUser(req, res);
+        });
+        app.get(url + "/getAllUsers", (req, res) => {
+            this.userCtrl.getAllUsers(req, res);
+        });
+        app.get(url + "/getUserById/:id", (req, res) => {
+            this.userCtrl.getUserById(req, res);
+        });
+        app.delete(url + "/deleteUser/:id", jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.deleteUser(req, res);
         });
     }
 }
