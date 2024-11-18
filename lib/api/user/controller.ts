@@ -117,7 +117,7 @@ export class UserController {
 
         let decoded: any;
         try {
-            decoded = AppFunction.jwtVerify(token);  // Use AppFunction.jwtVerify() here
+            decoded = AppFunction.jwtVerify(token);  
         } catch (error) {
             return badResponse([{ msg: "Invalid token" }], res);
         }
