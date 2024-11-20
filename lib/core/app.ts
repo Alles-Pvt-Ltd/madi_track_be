@@ -1,6 +1,5 @@
 import * as password_hash from "password-hash";
 import * as jwt from "jsonwebtoken";
-import * as crypto from "crypto";
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
@@ -42,8 +41,8 @@ export  class AppFunction {
     return jwt.verify(jwtToken, "HJOGHJOAHG") as {username:string; email: string;};
   }
 
-  public static createJwtToken(username: string, email: string) {
-    return jwt.sign({ name: username, email }, "HJOGHJOAHG", {
+  public static createJwtToken(username: string, role: number) {
+    return jwt.sign({ name: username, role}, "HJOGHJOAHG", {
       // expiresIn: "2h", //token will expire after 2 hours
     });
   }

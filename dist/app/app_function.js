@@ -1,58 +1,58 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppFunction = void 0;
-const password_hash = require("password-hash");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const uuid_1 = require("uuid");
 class AppFunction {
     static isInt(n) {
-        n = parseFloat(n);
-        return Number(n) === n && n % 1 !== 0;
+        return Number.isInteger(Number(n));
     }
     static isFloat(n) {
-        n = parseFloat(n);
-        return Number(n) === n && n % 1 !== 0;
+        return !Number.isInteger(Number(n)) && !isNaN(parseFloat(n));
     }
     static isString(s) {
-        if (s.length === 0)
-            return false;
-        return typeof s === "string" || s instanceof String;
+        return typeof s === "string" && s.trim().length > 0;
     }
     static contentType(req) {
         const contentType = req.get("Content-Type");
-        if (contentType === "application/json" || contentType === "application/json; charset=utf-8") {
-            return "json";
-        }
-        else {
-            return "others";
-        }
+        return contentType && contentType.includes("application/json") ? "json" : "others";
     }
     static trimAndLowercase(str) {
         return str.toLowerCase().trim();
     }
-    static encryptPassword(str) {
-        return password_hash.generate(str);
+    static encryptPassword(password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const saltRounds = 10;
+            return bcrypt.hash(password, saltRounds);
+        });
     }
-    static passwordVerify(pw, db_pw) {
-        return password_hash.verify(pw, db_pw);
-    }
-    static jwtVerify(jwtToken) {
-        return jwt.verify(jwtToken, "HJOGHJOAHG");
+    static passwordVerify(inputPassword, storedHash) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return bcrypt.compare(inputPassword, storedHash);
+        });
     }
     static createJwtToken(username, email) {
-        return jwt.sign({ name: username, email }, "HJOGHJOAHG", {});
+        const payload = { username, email };
+        const secret = process.env.JWT_SECRET || "your_jwt_secret";
+        return jwt.sign(payload, secret, { expiresIn: "1h" });
     }
-    static uuid() {
-        return (0, uuid_1.v4)();
-    }
-    static getSignOfNumber(num) {
-        return Math.sign(num);
-    }
-    static convertStringToNumber(num) {
-        return Number(num);
-    }
-    static typeOfVariable(variable) {
-        return typeof variable;
+    static jwtVerify(token) {
+        try {
+            const secret = process.env.JWT_SECRET || "your_jwt_secret";
+            return jwt.verify(token, secret);
+        }
+        catch (error) {
+            return null;
+        }
     }
 }
 exports.AppFunction = AppFunction;

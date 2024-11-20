@@ -1,5 +1,8 @@
 import { Request} from "express";
 
 export interface TokenInterface {
-    code: String;
+    token: string;
+    userId: number;
+    username: string;
 }
+

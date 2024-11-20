@@ -9,11 +9,15 @@ class UserRoutes {
         this.userCtrl = new controller_1.UserController();
     }
     route(app, url) {
-        app.post(url + "/login", class_1.Validation.loginValidation, (req, res) => {
-            this.userCtrl.login(req, res);
+        app.post(url + "/login", // Login route
+        class_1.Validation.registerValidation, // You can adjust validation rules as per your needs
+        (req, res) => {
+            this.userCtrl.login(req, res); // Correcting the function call
         });
-        app.post(url + "/register", class_1.Validation.registerValidation, (req, res) => {
-            this.userCtrl.register(req, res);
+        app.post(url + "/register", // Register route
+        class_1.Validation.registerValidation, // You can adjust validation rules as per your needs
+        (req, res) => {
+            this.userCtrl.register(req, res); // Correcting the function call
         });
         app.put(url + "/updateUser", class_1.Validation.updateValidation, (req, res) => {
             this.userCtrl.updateUser(req, res);

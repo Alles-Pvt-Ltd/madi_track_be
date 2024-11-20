@@ -16,21 +16,13 @@ class User {
 }
 exports.User = User;
 _a = User;
-User.findUserByUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_findUserByUsername('${username}')`;
-    try {
-        const sqlData = yield connection_1.default.connect(sqlQueryString, null);
-        if (sqlData.err) {
-            return { err: true, message: sqlData.result };
-        }
-        if (!sqlData.result || sqlData.result.length === 0) {
-            return { err: false, data: [] };
-        }
-        return { err: false, data: sqlData.result };
+User.findUserByUsername = (userName) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_findUserByUsername ('${userName}')`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
     }
-    catch (error) {
-        return { err: true, message: "Error connecting to the database" };
-    }
+    return { err: false, data: sqlData.result[0] };
 });
 User.register = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const insertUser = `CALL sp_register(NULL, ${data.role}, '${data.firstName}', '${data.lastName}', '${data.address}', '${data.username}', '${data.email}', '${data.password}')`;

@@ -1,66 +1,50 @@
-import * as password_hash from "password-hash";
+import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
-import { v4 as uuidv4 } from "uuid";
-import { Request } from "express";  
+import { Request } from "express";
 
 export class AppFunction {
-  public static isInt(n: any) {
-    n = parseFloat(n);
-    return Number(n) === n && n % 1 !== 0;
+  public static isInt(n: any): boolean {
+    return Number.isInteger(Number(n));
   }
 
-  public static isFloat(n: any) {
-    n = parseFloat(n);
-    return Number(n) === n && n % 1 !== 0;
+  public static isFloat(n: any): boolean {
+    return !Number.isInteger(Number(n)) && !isNaN(parseFloat(n));
   }
 
-  public static isString(s: any) {
-    if (s.length === 0) return false;
-    return typeof s === "string" || s instanceof String;
+  public static isString(s: any): boolean {
+    return typeof s === "string" && s.trim().length > 0;
   }
 
   public static contentType(req: Request): string {
-    const contentType = req.get("Content-Type");  
-    if (contentType === "application/json" || contentType === "application/json; charset=utf-8") {
-        return "json";
-    } else {
-        return "others";
-    }
+    const contentType = req.get("Content-Type");
+    return contentType && contentType.includes("application/json") ? "json" : "others";
   }
 
-  public static trimAndLowercase(str: string) {
+  public static trimAndLowercase(str: string): string {
     return str.toLowerCase().trim();
   }
 
-  public static encryptPassword(str: string) {
-    return password_hash.generate(str);
+  public static async encryptPassword(password: string): Promise<string> {
+    const saltRounds = 10;
+    return bcrypt.hash(password, saltRounds);
   }
 
-  public static passwordVerify(pw: string, db_pw: string) {
-    return password_hash.verify(pw, db_pw);
+  public static async passwordVerify(inputPassword: string, storedHash: string): Promise<boolean> {
+    return bcrypt.compare(inputPassword, storedHash);
   }
 
-  public static jwtVerify(jwtToken: string) {
-    return jwt.verify(jwtToken, "HJOGHJOAHG") as { username: string; email: string; };
+  public static createJwtToken(username: string, email: string): string {
+    const payload = { username, email };
+    const secret = process.env.JWT_SECRET || "your_jwt_secret";
+    return jwt.sign(payload, secret, { expiresIn: "1h" });
   }
 
-  public static createJwtToken(username: string, email: string) {
-    return jwt.sign({ name: username, email }, "HJOGHJOAHG", {});
-  }
-
-  public static uuid() {
-    return uuidv4();
-  }
-
-  public static getSignOfNumber(num: any) {
-    return Math.sign(num);
-  }
-
-  public static convertStringToNumber(num: any) {
-    return Number(num);
-  }
-
-  public static typeOfVariable(variable: any) {
-    return typeof variable;
+  public static jwtVerify(token: string): any {
+    try {
+      const secret = process.env.JWT_SECRET || "your_jwt_secret";
+      return jwt.verify(token, secret);
+    } catch (error) {
+      return null;
+    }
   }
 }

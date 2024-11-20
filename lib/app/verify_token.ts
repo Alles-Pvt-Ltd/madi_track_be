@@ -11,20 +11,18 @@ declare global {
 }
 
 export class Verify {
-  public verify(req: Request, res: Response, next: NextFunction) {
-    const verifyToken = req.header('token'); 
-
-    if (!verifyToken) {
-      return forbidden('Access Denied', req.body, res);
+  public verify(req: Request, res: Response, next: NextFunction): void {
+    const token = req.header("token");
+    if (!token) {
+      return forbidden("Access Denied", req.body, res);
     }
 
-    try {
-      const verified = AppFunction.jwtVerify(verifyToken);
-      req.user = verified;  
-    } catch (error) {
-      return forbidden('Invalid token', req.body, res);
+    const verified = AppFunction.jwtVerify(token);
+    if (!verified) {
+      return forbidden("Invalid token", req.body, res);
     }
 
-    return next();
+    req.user = verified;
+    next();
   }
 }

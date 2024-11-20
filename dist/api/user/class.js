@@ -19,8 +19,8 @@ Validation.registerValidation = [
     (0, express_validator_1.check)("password").notEmpty().withMessage("Password is required")
 ];
 Validation.updateValidation = [
-    (0, express_validator_1.check)("id").isInt().withMessage("User ID is required and must be an integer"),
-    (0, express_validator_1.check)("role").isInt().withMessage("Role is required and must be an integer"),
+    (0, express_validator_1.check)("id").isInt().withMessage("User ID must be an integer"),
+    (0, express_validator_1.check)("role").isInt().withMessage("Role must be an integer"),
     (0, express_validator_1.check)("firstname").notEmpty().withMessage("First name is required"),
     (0, express_validator_1.check)("lastname").notEmpty().withMessage("Last name is required"),
     (0, express_validator_1.check)("address").notEmpty().withMessage("Address is required"),

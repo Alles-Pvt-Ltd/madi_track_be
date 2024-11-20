@@ -1,60 +1,72 @@
 import { Request, Response } from "express";
 import { User } from "../../database/mysql/user";
-import { badResponse, failureResponse, successResponse } from "../../core/response";
+import { successResponse, failureResponse, badResponse } from "../../core/response";
 import { AppFunction } from "../../core/app";
 import { IUser } from "../../core/interface/user";
 import { validationResult } from "express-validator";
 import { StringConstant } from "../../config/constant";
-import { JwtToken } from "../../core/jwt";
+import Helper from "./helper";
 
 export class UserController {
-    public login = async (req: Request, res: Response) => {
+
+    public async login(req: Request, res: Response): Promise<void> {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return badResponse(errors.array(), res);
         }
     
-        const loginResponse = await User.findUserByUsername(req.body.userName);
-        if (loginResponse.err) {
-            return failureResponse(loginResponse.message, res);
-        }
-        if (loginResponse.data.length === 0) {
-            return failureResponse(StringConstant.usernamePasswordMismatch, res);
-        }
-        if (!AppFunction.passwordVerify(req.body.password, loginResponse.data[0].password)) {
-            return failureResponse(StringConstant.usernamePasswordMismatch, res);
+        const { username, password } = req.body;
+        const loginResponse = await User.findUserByUsername(username);
+    
+        if (loginResponse.err || loginResponse.data.length === 0) {
+            return failureResponse("Invalid username or password", res);
         }
     
-        return successResponse(loginResponse.data[0], "Login successful", res);
-    };
+        const isPasswordValid = await AppFunction.passwordVerify(password, loginResponse.data[0].password);
+        if (!isPasswordValid) {
+            return failureResponse("Invalid username or password", res);
+        }
     
-
-    public register = async (req: Request, res: Response) => {
+        const { role } = loginResponse.data[0]; 
+        if (!Number.isInteger(role)) {
+            return failureResponse("User role is invalid", res);
+        }
+    
+        return successResponse(
+            Helper.getToken(username, role),
+            "Login successful",
+            res
+        );
+    }
+    
+    
+      public async register(req: Request, res: Response): Promise<void> {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return badResponse(errors.array(), res);
+          return badResponse(errors.array(), res);
         }
-
+    
         const body: IUser = {
-            role: parseInt(req.body.role, 10) || 0,
-            firstName: req.body.firstname,
-            lastName: req.body.lastname,
-            address: req.body.address,
-            username: req.body.username,
-            email: req.body.email,
-            password: AppFunction.encryptPassword(req.body.password),
-            createdOn: new Date().toISOString(),
-            updatedOn: new Date().toISOString()
+          role: parseInt(req.body.role, 10),
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          address: req.body.address,
+          username: req.body.username,
+          email: req.body.email,
+          password: await AppFunction.encryptPassword(req.body.password),
+          createdOn: new Date().toISOString(),
+          updatedOn: new Date().toISOString(),
         };
-
+    
         const registerResponse = await User.register(body);
+    
         if (registerResponse.err) {
-            return failureResponse(registerResponse.message, res);
+          return failureResponse(registerResponse.message, res);
         }
-
-        return successResponse(registerResponse.data, "User Registered Successfully", res);
-    };
-
+    
+        return successResponse(registerResponse.data, "User registered successfully", res);
+      }
+    
     public updateUser = async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -71,7 +83,7 @@ export class UserController {
             username: email,
             email,
             password: AppFunction.encryptPassword(password),
-            createdOn: "",  
+            createdOn: "",
             updatedOn: new Date().toISOString()
         };
 
@@ -94,33 +106,17 @@ export class UserController {
 
     public getUserById = async (req: Request, res: Response) => {
         const userId = parseInt(req.params.id, 10);
-    
-        if (isNaN(userId)) {
-            return badResponse([{ msg: "Invalid user ID" }], res);
-        }
-    
+
         const userResponse = await User.getUserById(userId);
         if (userResponse.err) {
             return failureResponse(userResponse.message, res);
         }
-    
+
         return successResponse(userResponse.data, "User Retrieved Successfully", res);
     };
-    
+
     public deleteUser = async (req: Request, res: Response) => {
         const userId = parseInt(req.params.id, 10);
-        const token = req.headers.token?.toString();
-
-        if (!token) {
-            return badResponse([{ msg: "No token provided" }], res);
-        }
-
-        let decoded: any;
-        try {
-            decoded = AppFunction.jwtVerify(token);  
-        } catch (error) {
-            return badResponse([{ msg: "Invalid token" }], res);
-        }
 
         const deleteResponse = await User.deleteUser(userId);
         if (deleteResponse.err) {
@@ -129,5 +125,4 @@ export class UserController {
 
         return successResponse(deleteResponse.data, "User Deleted Successfully", res);
     };
-    
 }
