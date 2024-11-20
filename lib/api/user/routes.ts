@@ -46,7 +46,7 @@ export class UserRoutes {
             }
         );
 
-        app.delete(
+        app.get(
             url + "/deleteUser/:id",
             JwtToken.verify,
             (req: Request, res: Response) => {
