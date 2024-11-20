@@ -79,7 +79,7 @@ class UserController {
             if (!isPasswordValid) {
                 return (0, response_1.failureResponse)("Invalid username or password", res);
             }
-            const { role } = loginResponse.data[0]; // Extract role
+            const { role } = loginResponse.data[0];
             if (!Number.isInteger(role)) {
                 return (0, response_1.failureResponse)("User role is invalid", res);
             }

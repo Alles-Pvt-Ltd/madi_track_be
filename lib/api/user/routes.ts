@@ -8,18 +8,18 @@ export class UserRoutes {
 
     public route(app: Application, url: string) {
         app.post(
-            url + "/login",  // Login route
-            Validation.registerValidation,  // You can adjust validation rules as per your needs
+            url + "/login", 
+            Validation.registerValidation,  
             (req: Request, res: Response) => {
-                this.userCtrl.login(req, res);  // Correcting the function call
+                this.userCtrl.login(req, res);  
             }
         );
 
         app.post(
-            url + "/register",  // Register route
-            Validation.registerValidation,  // You can adjust validation rules as per your needs
+            url + "/register",  
+            Validation.registerValidation,  
             (req: Request, res: Response) => {
-                this.userCtrl.register(req, res);  // Correcting the function call
+                this.userCtrl.register(req, res);  
             }
         );
 
@@ -46,7 +46,7 @@ export class UserRoutes {
             }
         );
 
-        app.get(
+        app.delete(
             url + "/deleteUser/:id",
             JwtToken.verify,
             (req: Request, res: Response) => {

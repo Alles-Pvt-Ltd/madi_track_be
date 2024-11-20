@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { ResponseStatusCodes } from "./common/constant";
 
-
 export interface IPage {
   records: any;
   total: number

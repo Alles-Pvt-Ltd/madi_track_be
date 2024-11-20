@@ -28,7 +28,7 @@ class UserRoutes {
         app.get(url + "/getUserById/:id", (req, res) => {
             this.userCtrl.getUserById(req, res);
         });
-        app.delete(url + "/deleteUser/:id", jwt_1.JwtToken.verify, (req, res) => {
+        app.get(url + "/deleteUser/:id", jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.deleteUser(req, res);
         });
     }
