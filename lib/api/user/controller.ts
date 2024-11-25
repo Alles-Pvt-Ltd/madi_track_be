@@ -116,13 +116,23 @@ export class UserController {
     };
 
     public deleteUser = async (req: Request, res: Response) => {
-        const userId = parseInt(req.params.id, 10);
-
-        const deleteResponse = await User.deleteUser(userId);
-        if (deleteResponse.err) {
-            return failureResponse(deleteResponse.message, res);
+        try {
+            const userId = parseInt(req.params.id, 10);
+    
+            if (isNaN(userId)) {
+                return failureResponse("Invalid user ID provided", res);
+            }
+    
+            const deleteResponse = await User.deleteUser(userId);
+    
+            if (deleteResponse.err) {
+                return failureResponse(deleteResponse.message, res);
+            }
+    
+            return successResponse(deleteResponse.data, "User Deleted Successfully", res);
+        } catch (error) {
+            return failureResponse("An unexpected error occurred", res);
         }
-
-        return successResponse(deleteResponse.data, "User Deleted Successfully", res);
     };
+    
 }

@@ -56,12 +56,20 @@ class UserController {
             return (0, response_1.successResponse)(userResponse.data, "User Retrieved Successfully", res);
         });
         this.deleteUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const userId = parseInt(req.params.id, 10);
-            const deleteResponse = yield user_1.User.deleteUser(userId);
-            if (deleteResponse.err) {
-                return (0, response_1.failureResponse)(deleteResponse.message, res);
+            try {
+                const userId = parseInt(req.params.id, 10);
+                if (isNaN(userId)) {
+                    return (0, response_1.failureResponse)("Invalid user ID provided", res);
+                }
+                const deleteResponse = yield user_1.User.deleteUser(userId);
+                if (deleteResponse.err) {
+                    return (0, response_1.failureResponse)(deleteResponse.message, res);
+                }
+                return (0, response_1.successResponse)(deleteResponse.data, "User Deleted Successfully", res);
             }
-            return (0, response_1.successResponse)(deleteResponse.data, "User Deleted Successfully", res);
+            catch (error) {
+                return (0, response_1.failureResponse)("An unexpected error occurred", res);
+            }
         });
     }
     login(req, res) {

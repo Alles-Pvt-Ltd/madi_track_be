@@ -59,14 +59,14 @@ export class User {
     };
 
     public static deleteUser = async (id: number) => {
-        const sqlQuery = `CALL sp_deleteUser(${id})`; 
+        const sqlQuery = `CALL sp_deleteUser(${id})`;
         const sqlData = await Mysql.connect(sqlQuery, null);
-    
+
         if (sqlData.err) {
             return { err: true, message: sqlData.result };
         }
-    
         return { err: false, data: sqlData.result[0] };
     };
+    
     
 }
