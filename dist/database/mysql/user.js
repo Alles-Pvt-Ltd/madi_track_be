@@ -25,7 +25,7 @@ User.findUserByUsername = (userName) => __awaiter(void 0, void 0, void 0, functi
     return { err: false, data: sqlData.result[0] };
 });
 User.register = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const insertUser = `CALL sp_register(NULL, ${data.role}, '${data.firstName}', '${data.lastName}', '${data.address}', '${data.username}', '${data.email}', '${data.password}')`;
+    const insertUser = `CALL sp_register(0, ${data.role}, '${data.firstname}', '${data.lastname}', '${data.address}', '${data.username}', '${data.email}', '${data.password}')`;
     const sqlData = yield connection_1.default.connect(insertUser, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
@@ -35,7 +35,7 @@ User.register = (data) => __awaiter(void 0, void 0, void 0, function* () {
 User.updateUser = (id, data, updatedBy) => __awaiter(void 0, void 0, void 0, function* () {
     const updatedOn = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const updateUserQuery = `
-            CALL sp_updateUser(${data.role}, '${data.firstName}','${data.lastName}','${data.address}', '${data.email}', '${data.password}', ${updatedBy}, '${updatedOn}', ${id} )`;
+            CALL sp_updateUser(${data.role}, '${data.firstname}','${data.lastname}','${data.address}', '${data.email}', '${data.password}', ${updatedBy}, '${updatedOn}', ${id} )`;
     const sqlData = yield connection_1.default.connect(updateUserQuery, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };

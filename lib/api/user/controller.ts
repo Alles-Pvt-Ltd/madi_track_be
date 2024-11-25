@@ -48,8 +48,8 @@ export class UserController {
     
         const body: IUser = {
           role: parseInt(req.body.role, 10),
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
           address: req.body.address,
           username: req.body.username,
           email: req.body.email,
@@ -77,8 +77,8 @@ export class UserController {
 
         const userData: IUser = {
             role,
-            firstName: firstname,
-            lastName: lastname,
+            firstname: firstname,
+            lastname: lastname,
             address,
             username: email,
             email,

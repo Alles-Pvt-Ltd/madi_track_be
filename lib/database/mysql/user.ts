@@ -4,7 +4,7 @@ import { IData } from "../../core/common/constant";
 
 export class User {
     public static findUserByUsername = async (userName: string) => {
-        const sqlQueryString = `CALL sp_findUserByUsername ('${userName}')`;  // Use stored procedures safely.
+        const sqlQueryString = `CALL sp_findUserByUsername ('${userName}')`;  
         const sqlData = await Mysql.connect(sqlQueryString, null);
 
         if (sqlData.err) {
@@ -14,7 +14,7 @@ export class User {
     };
 
     public static register = async (data: IUser) => {
-        const insertUser = `CALL sp_register(NULL, ${data.role}, '${data.firstName}', '${data.lastName}', '${data.address}', '${data.username}', '${data.email}', '${data.password}')`;
+        const insertUser = `CALL sp_register(0, ${data.role}, '${data.firstname}', '${data.lastname}', '${data.address}', '${data.username}', '${data.email}', '${data.password}')`;
         
         const sqlData = await Mysql.connect(insertUser, null);
         
@@ -28,7 +28,7 @@ export class User {
         const updatedOn = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         const updateUserQuery = `
-            CALL sp_updateUser(${data.role}, '${data.firstName}','${data.lastName}','${data.address}', '${data.email}', '${data.password}', ${updatedBy}, '${updatedOn}', ${id} )`;
+            CALL sp_updateUser(${data.role}, '${data.firstname}','${data.lastname}','${data.address}', '${data.email}', '${data.password}', ${updatedBy}, '${updatedOn}', ${id} )`;
 
         const sqlData = await Mysql.connect(updateUserQuery, null);
 
