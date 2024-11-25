@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 class JwtToken {
     static verify(req, res, next) {
         var _a;
-        const token = (_a = req.headers['authorization']) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        const token = (_a = req.headers['token']) === null || _a === void 0 ? void 0 : _a.toString();
         if (!token) {
             return (0, response_1.forbidden)("Access Denied: No token provided", req.body, res);
         }
@@ -21,7 +21,7 @@ class JwtToken {
     }
     static get(req) {
         var _a;
-        const token = (_a = req.headers['authorization']) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        const token = (_a = req.headers['token']) === null || _a === void 0 ? void 0 : _a.toString();
         if (!token) {
             throw new Error("Token is required");
         }

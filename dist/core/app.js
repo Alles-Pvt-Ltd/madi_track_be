@@ -7,7 +7,7 @@ const uuid_1 = require("uuid");
 class AppFunction {
     static isInt(n) {
         n = parseFloat(n);
-        return Number(n) === n && n % 1 !== 0;
+        return Number(n) === n && n % 1 === 0;
     }
     static isFloat(n) {
         n = parseFloat(n);
@@ -39,8 +39,8 @@ class AppFunction {
         return jwt.verify(jwtToken, "HJOGHJOAHG");
     }
     static createJwtToken(username, role) {
-        return jwt.sign({ name: username, role }, "HJOGHJOAHG", {
-        // expiresIn: "2h", //token will expire after 2 hours
+        return jwt.sign({ username, role }, "HJOGHJOAHG", {
+        // expiresIn: "2h", // token will expire after 2 hours
         });
     }
     static uuid() {

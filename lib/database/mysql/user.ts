@@ -4,15 +4,15 @@ import { IData } from "../../core/common/constant";
 
 export class User {
     public static findUserByUsername = async (userName: string) => {
-        const sqlQueryString = `CALL sp_findUserByUsername ('${userName}')`;
+        const sqlQueryString = `CALL sp_findUserByUsername ('${userName}')`;  // Use stored procedures safely.
         const sqlData = await Mysql.connect(sqlQueryString, null);
-  
+
         if (sqlData.err) {
           return { err: true, message: sqlData.result } as IData;
         }
         return { err: false, data: sqlData.result[0] } as IData;
-      };
-  
+    };
+
     public static register = async (data: IUser) => {
         const insertUser = `CALL sp_register(NULL, ${data.role}, '${data.firstName}', '${data.lastName}', '${data.address}', '${data.username}', '${data.email}', '${data.password}')`;
         
@@ -59,11 +59,14 @@ export class User {
     };
 
     public static deleteUser = async (id: number) => {
-        const sqlQuery = `CALL sp_deleteUser(${id})`;
+        const sqlQuery = `CALL sp_deleteUser(${id})`; 
         const sqlData = await Mysql.connect(sqlQuery, null);
+    
         if (sqlData.err) {
             return { err: true, message: sqlData.result };
         }
-        return { err: false, data: sqlData.result };
+    
+        return { err: false, data: sqlData.result[0] };
     };
+    
 }

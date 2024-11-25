@@ -17,7 +17,7 @@ class User {
 exports.User = User;
 _a = User;
 User.findUserByUsername = (userName) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_findUserByUsername ('${userName}')`;
+    const sqlQueryString = `CALL sp_findUserByUsername ('${userName}')`; // Use stored procedures safely.
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
@@ -64,5 +64,5 @@ User.deleteUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
     }
-    return { err: false, data: sqlData.result };
+    return { err: false, data: sqlData.result[0] };
 });

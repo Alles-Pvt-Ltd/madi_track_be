@@ -1,8 +1,7 @@
 export interface IUser {
-    code: String;
-    req:any;
-    created_by:String;
-    updated_by:String;
-    user:String;
+    code: string;
+    req: any;
+    created_by: string;
+    updated_by: string;
+    user: string;
 }
-// test

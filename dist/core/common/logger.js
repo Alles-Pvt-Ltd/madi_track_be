@@ -17,6 +17,7 @@ class Logger {
 }
 exports.Logger = Logger;
 Logger.errorLogger = (data) => {
+    console.error("Error:", data);
     logger.error(data);
 };
 Logger.infoLog = (data) => {

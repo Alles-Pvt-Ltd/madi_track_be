@@ -15,6 +15,7 @@ const logger = winston.createLogger({
 
 export class Logger {
   public static errorLogger = (data: any) => {
+    console.error("Error:", data);
     logger.error(data);
   };
 

@@ -19,14 +19,14 @@ export class UserRoutes {
             url + "/register",  
             Validation.registerValidation,  
             (req: Request, res: Response) => {
-                this.userCtrl.register(req, res);  
+                this.userCtrl.register(req, res); 
             }
         );
 
-
         app.put(
             url + "/updateUser",  
-            Validation.updateValidation,  
+            Validation.updateValidation, 
+            JwtToken.verify,  
             (req: Request, res: Response) => {
                 this.userCtrl.updateUser(req, res);  
             }
@@ -34,23 +34,25 @@ export class UserRoutes {
 
         app.get(
             url + "/getAllUsers",
+            JwtToken.verify,  
             (req: Request, res: Response) => {
-                this.userCtrl.getAllUsers(req, res);
+                this.userCtrl.getAllUsers(req, res);  
             }
         );
 
         app.get(
             url + "/getUserById/:id",
+            JwtToken.verify,  
             (req: Request, res: Response) => {
-                this.userCtrl.getUserById(req, res);
+                this.userCtrl.getUserById(req, res);  
             }
         );
 
         app.get(
             url + "/deleteUser/:id",
-            JwtToken.verify,
+            JwtToken.verify,  
             (req: Request, res: Response) => {
-                this.userCtrl.deleteUser(req, res);
+                this.userCtrl.deleteUser(req, res);  
             }
         );
     }
