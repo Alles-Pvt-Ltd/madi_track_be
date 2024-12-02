@@ -16,11 +16,43 @@ class App {
 }
 exports.App = App;
 _a = App;
-App.getAppVersion = (version) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `SELECT * FROM t_appVersion WHERE version > ${version}`;
+App.addIntro = (title, description, img_url) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_AppIntro(0, '${title}', '${description}', '${img_url}')`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
-        return { err: true, message: "Version not found" };
+        return { err: true, message: sqlData.result };
+    }
+    return { err: false, data: sqlData.result };
+});
+App.getIntroById = (sid) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQuery = `CALL sp_getById('${sid}')`;
+    const sqlData = yield connection_1.default.connect(sqlQuery, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
+    }
+    return { err: false, data: sqlData.result[0] };
+});
+App.updateIntro = (sid, title, description, img_url) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_AppIntro(${sid}, '${title}', '${description}', '${img_url}')`;
+    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
+    }
+    return { err: false, data: sqlData.result };
+});
+App.deleteIntro = (sid) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQuery = `CALL sp_deleteIntro(${sid})`;
+    const sqlData = yield connection_1.default.connect(sqlQuery, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
+    }
+    return { err: false, data: sqlData.result };
+});
+App.getAllIntro = () => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQuery = `CALL sp_getAllIntro()`;
+    const sqlData = yield connection_1.default.connect(sqlQuery, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
     }
     return { err: false, data: sqlData.result };
 });

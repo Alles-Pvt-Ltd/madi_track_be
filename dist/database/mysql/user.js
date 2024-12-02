@@ -17,7 +17,7 @@ class User {
 exports.User = User;
 _a = User;
 User.findUserByUsername = (userName) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_findUserByUsername ('${userName}')`; // Use stored procedures safely.
+    const sqlQueryString = `CALL sp_findUserByUsername ('${userName}')`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
@@ -25,7 +25,7 @@ User.findUserByUsername = (userName) => __awaiter(void 0, void 0, void 0, functi
     return { err: false, data: sqlData.result[0] };
 });
 User.register = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const insertUser = `CALL sp_register(0, ${data.role}, '${data.firstname}', '${data.lastname}', '${data.address}', '${data.username}', '${data.email}', '${data.password}')`;
+    const insertUser = `CALL sp_register(NULL, ${data.role}, '${data.firstname}', '${data.lastname}', '${data.address}', '${data.username}', '${data.email}', '${data.password}')`;
     const sqlData = yield connection_1.default.connect(insertUser, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };

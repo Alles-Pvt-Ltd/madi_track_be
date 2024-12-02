@@ -3,35 +3,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FileUpload = void 0;
 const multer = require("multer");
 const uuid_1 = require("uuid");
-const response_1 = require("./response");
-const jwt_1 = require("./jwt");
 const fs = require("fs");
+const path = require("path");
 class FileUpload {
 }
 exports.FileUpload = FileUpload;
-// public static fileUpload() {
 FileUpload.MIME_TYPE_MAP = {
     "image/png": "png",
     "image/jpeg": "jpeg",
     "image/jpg": "jpg",
 };
-FileUpload.upload = multer({
-    limits: 500000000,
+FileUpload.upload = (type) => multer({
+    limits: { fileSize: 5000000 },
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
-            const jwtData = jwt_1.JwtToken.get(req);
-            const filesDir = 'upload/images/' + jwtData;
-            fs.mkdirSync(filesDir, { recursive: true });
-            return cb(null, filesDir);
+            const baseDir = "upload/images"; // The directory where images will be stored
+            const dir = path.join(__dirname, baseDir);
+            fs.mkdirSync(dir, { recursive: true }); // Create directory if it doesn't exist
+            cb(null, dir);
         },
         filename: (req, file, cb) => {
             const ext = FileUpload.MIME_TYPE_MAP[file.mimetype];
-            return cb(null, (0, uuid_1.v4)() + "." + "jpg");
+            if (!ext) {
+                cb(new Error("Invalid file type"), null);
+            }
+            else {
+                cb(null, `${(0, uuid_1.v4)()}.${ext}`); // Use UUID to avoid file name conflicts
+            }
         },
     }),
-    fileFilter: (req, file, cb, res) => {
+    fileFilter: (req, file, cb) => {
         const isValid = !!FileUpload.MIME_TYPE_MAP[file.mimetype];
-        let err = isValid ? null : (0, response_1.failureResponse)("different type of file", res);
-        return cb(err, isValid);
+        if (isValid) {
+            cb(null, true); // Allow file
+        }
+        else {
+            cb(new Error("Invalid file type"), false); // Reject file
+        }
     },
-}).single("image");
+}).single("image"); // The field name in the form is 'image'

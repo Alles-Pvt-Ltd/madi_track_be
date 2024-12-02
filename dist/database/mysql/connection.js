@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const logger_1 = require("../../core/common/logger");
 var mysql = require("mysql");
 const db_config = {
-    host: "157.230.247.143",
+    host: "127.0.0.1",
     port: 3306,
-    user: "gs-app",
-    password: "Alles_gs1717",
+    user: "project",
+    password: "2002@KM*n20",
     database: "medi_track_db",
     insecureAuth: true
 };

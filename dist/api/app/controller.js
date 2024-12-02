@@ -12,38 +12,85 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const app_1 = require("../../database/mysql/app");
 const response_1 = require("../../core/response");
-const fileUpload_1 = require("../../core/fileUpload");
-const constant_1 = require("../../core/common/constant");
-const notification_1 = require("../../external/notification");
+const express_validator_1 = require("express-validator");
 class AppController {
     constructor() {
-        this.getAppInfo = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const version = req.body.version;
-            const getAppVersion = yield app_1.App.getAppVersion(parseInt(version.split('.').join("")));
-            if (getAppVersion.err) {
-                return (0, response_1.failureResponse)(getAppVersion.message, res);
-            }
-            const response = {
-                isAppUpdate: getAppVersion.data.length > 0,
-                mediaBaseUrl: constant_1.MEDIA_SERVER_URL,
-                baseUrl: constant_1.API_BASE_URL
-            };
-            return (0, response_1.successResponse)(response, "Success", res);
-        });
-        this.uploadImage = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            fileUpload_1.FileUpload.upload(req, res, (err) => {
-                if (err) {
-                    return (0, response_1.failureResponse)(err.message, res);
+        this.add = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const errors = (0, express_validator_1.validationResult)(req);
+                if (!errors.isEmpty()) {
+                    return (0, response_1.failureResponse)("Validation failed", res);
                 }
-                const documentFile = req.file;
-                //  return successResponse({imageUrl: '/'+documentFile.path },"Success", res);
-                return (0, response_1.successResponse)({ imageUrl: '/' + documentFile.destination + '/' + documentFile.filename }, "Success", res);
-            });
+                const { title, description, img_url } = req.body;
+                // If file is uploaded, use the file URL
+                const imgUrl = req.file ? `/upload/images/${req.file.filename}` : img_url; // Use the provided img_url if no file
+                const addResponse = yield app_1.App.addIntro(title, description, imgUrl);
+                if (addResponse.err) {
+                    return (0, response_1.failureResponse)(addResponse.message, res);
+                }
+                return (0, response_1.successResponse)(addResponse.data, "Intro Screen Added Successfully", res);
+            }
+            catch (error) {
+                return (0, response_1.failureResponse)("Error adding intro: " + error.message, res);
+            }
         });
-        this.sendMessage = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            yield (0, notification_1.sendMessage)("0777355075", `gs Division id : ${req.body.gsDivisionId} village id: ${req.body.villageId}, and message: ${req.body.message}`);
-            yield (0, notification_1.sendMessage)("0775014901", `gs Division id : ${req.body.gsDivisionId} village id: ${req.body.villageId}, and message: ${req.body.message}`);
-            return (0, response_1.successResponse)("Success", "Success", res);
+        this.getById = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const sid = parseInt(req.params.sid, 10);
+                const getResponse = yield app_1.App.getIntroById(sid);
+                if (getResponse.err) {
+                    return (0, response_1.failureResponse)(getResponse.message, res);
+                }
+                return (0, response_1.successResponse)(getResponse.data, "Intro Screen Retrieved Successfully", res);
+            }
+            catch (error) {
+                return (0, response_1.failureResponse)("Error retrieving intro: " + error.message, res);
+            }
+        });
+        this.update = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const errors = (0, express_validator_1.validationResult)(req);
+                if (!errors.isEmpty()) {
+                    return (0, response_1.failureResponse)("Validation failed", res);
+                }
+                const sid = parseInt(req.params.sid, 10);
+                const { title, description, img_url } = req.body;
+                // If file is uploaded, use the file URL
+                const imgUrl = req.file ? `/upload/images/${req.file.filename}` : img_url; // Use the provided img_url if no file
+                const updateResponse = yield app_1.App.updateIntro(sid, title, description, imgUrl);
+                if (updateResponse.err) {
+                    return (0, response_1.failureResponse)(updateResponse.message, res);
+                }
+                return (0, response_1.successResponse)(updateResponse.data, "Intro Screen Updated Successfully", res);
+            }
+            catch (error) {
+                return (0, response_1.failureResponse)("Error updating intro: " + error.message, res);
+            }
+        });
+        this.delete = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const sid = parseInt(req.params.sid, 10);
+                const deleteResponse = yield app_1.App.deleteIntro(sid);
+                if (deleteResponse.err) {
+                    return (0, response_1.failureResponse)(deleteResponse.message, res);
+                }
+                return (0, response_1.successResponse)(deleteResponse.data, "Intro Screen Deleted Successfully", res);
+            }
+            catch (error) {
+                return (0, response_1.failureResponse)("Error deleting intro: " + error.message, res);
+            }
+        });
+        this.getAll = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const getAllResponse = yield app_1.App.getAllIntro();
+                if (getAllResponse.err) {
+                    return (0, response_1.failureResponse)(getAllResponse.message, res);
+                }
+                return (0, response_1.successResponse)(getAllResponse.data, "All Intro Screens Retrieved Successfully", res);
+            }
+            catch (error) {
+                return (0, response_1.failureResponse)("Error retrieving intros: " + error.message, res);
+            }
         });
     }
 }
