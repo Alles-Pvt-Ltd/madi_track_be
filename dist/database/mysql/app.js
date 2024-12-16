@@ -17,12 +17,12 @@ class App {
 exports.App = App;
 _a = App;
 App.addIntro = (title, description, img_url) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_AppIntro(0, '${title}', '${description}', '${img_url}')`;
-    const sqlData = yield connection_1.default.connect(sqlQueryString, null);
-    if (sqlData.err) {
-        return { err: true, message: sqlData.result };
+    const sqlQueryString = `CALL sp_addIntro('${title}', '${description}', '${img_url}')`;
+    const result = yield connection_1.default.connect(sqlQueryString, null);
+    if (result.err) {
+        return { err: true, message: result.result };
     }
-    return { err: false, data: sqlData.result };
+    return { err: false, data: result.result[0] };
 });
 App.getIntroById = (sid) => __awaiter(void 0, void 0, void 0, function* () {
     const sqlQuery = `CALL sp_getById('${sid}')`;
@@ -32,13 +32,13 @@ App.getIntroById = (sid) => __awaiter(void 0, void 0, void 0, function* () {
     }
     return { err: false, data: sqlData.result[0] };
 });
-App.updateIntro = (sid, title, description, img_url) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `CALL sp_AppIntro(${sid}, '${title}', '${description}', '${img_url}')`;
+App.updateIntro = (sid, title, description, img_url, updatedBy) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_updateIntro(${sid}, '${title}', '${description}', '${img_url}', ${updatedBy})`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
     }
-    return { err: false, data: sqlData.result };
+    return { err: false, data: sqlData.result[0] };
 });
 App.deleteIntro = (sid) => __awaiter(void 0, void 0, void 0, function* () {
     const sqlQuery = `CALL sp_deleteIntro(${sid})`;
@@ -46,7 +46,7 @@ App.deleteIntro = (sid) => __awaiter(void 0, void 0, void 0, function* () {
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
     }
-    return { err: false, data: sqlData.result };
+    return { err: false, data: sqlData.result[0] };
 });
 App.getAllIntro = () => __awaiter(void 0, void 0, void 0, function* () {
     const sqlQuery = `CALL sp_getAllIntro()`;
@@ -54,5 +54,5 @@ App.getAllIntro = () => __awaiter(void 0, void 0, void 0, function* () {
     if (sqlData.err) {
         return { err: true, message: sqlData.result };
     }
-    return { err: false, data: sqlData.result };
+    return { err: false, data: sqlData.result[0] };
 });

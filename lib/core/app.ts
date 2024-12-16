@@ -37,12 +37,18 @@ export class AppFunction {
     return password_hash.verify(pw, db_pw);
   }
 
-  public static jwtVerify(jwtToken: string) {
-    return jwt.verify(jwtToken, "HJOGHJOAHG") as { username: string; email: string; };
+  public static jwtVerify(jwtToken: string): { username: string; userId: number; email: string } {
+    try {
+      const decodedToken = jwt.verify(jwtToken, "HJOGHJOAHG") as { username: string; userId: number; email: string };
+      decodedToken.userId = Number(decodedToken.userId);  // Ensure userId is a number
+      return decodedToken;
+    } catch (error) {
+      throw new Error("Invalid token");
+    }
   }
 
-  public static createJwtToken(username: string, role: number) {
-    return jwt.sign({ username, role }, "HJOGHJOAHG", {
+  public static createJwtToken(name: string, id: number, email: string) {
+    return jwt.sign({ username: name, userId: id, email: email }, "HJOGHJOAHG", {
       // expiresIn: "2h", // token will expire after 2 hours
     });
   }

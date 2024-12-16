@@ -1,12 +1,15 @@
 import { AppFunction } from "../../core/app";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export default class Helper {
-    public static getToken(username: string, role: number): { token: string } {
-        if (!Number.isInteger(role)) {
-            throw new Error("Role must be an integer");
-        }
-        const token = AppFunction.createJwtToken(username, role);
-        return { token };
+   public static async passwordVerify(plainPassword: string, hashedPassword: string): Promise<boolean> {
+    try {
+        return await bcrypt.compare(plainPassword, hashedPassword);
+    } catch (error) {
+        console.error("Error verifying password:", error);
+        return false;  
     }
-    
+}
+
 }

@@ -1,5 +1,5 @@
 export interface IUser {
-    role : number;
+    role: number;
     firstname: string;
     lastname: string;
     address: string;
@@ -7,5 +7,6 @@ export interface IUser {
     email: string;
     password: string;
     createdOn: string;
+    createdBy: number; 
     updatedOn: string;
 }

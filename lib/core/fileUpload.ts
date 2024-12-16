@@ -5,18 +5,21 @@ import * as fs from "fs";
 import * as path from "path";
 
 export class FileUpload {
-  private static MIME_TYPE_MAP = {
+  private static MIME_TYPE_MAP: Record<string, string> = {
     "image/png": "png",
     "image/jpeg": "jpeg",
     "image/jpg": "jpg",
+    "application/pdf": "pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
   };
 
-  public static upload = (type: "image") =>
+  public static upload = (type: "image" | "document") =>
     multer({
-      limits: { fileSize: 5000000 }, 
+      limits: { fileSize: 10000000 }, // Max file size 10MB
       storage: multer.diskStorage({
         destination: (req, file, cb) => {
-          const baseDir = "upload/images"; 
+          const baseDir =
+            type === "image" ? "upload/images" : "upload/documents";
           const dir = path.join(__dirname, baseDir);
           fs.mkdirSync(dir, { recursive: true }); 
           cb(null, dir);
@@ -24,19 +27,14 @@ export class FileUpload {
         filename: (req: Request, file, cb) => {
           const ext: string | undefined = FileUpload.MIME_TYPE_MAP[file.mimetype];
           if (!ext) {
-            cb(new Error("Invalid file type"), null);
-          } else {
-            cb(null, `${uuidv4()}.${ext}`); 
+            return cb(new Error("Invalid file type"), null);
           }
+          cb(null, `${uuidv4()}.${ext}`);
         },
       }),
       fileFilter: (req: Request, file, cb) => {
         const isValid = !!FileUpload.MIME_TYPE_MAP[file.mimetype];
-        if (isValid) {
-          cb(null, true); 
-        } else {
-          cb(new Error("Invalid file type") as any, false); 
-        }
+        cb(null, isValid);
       },
-    }).single("image"); 
+    }).single(type);
 }

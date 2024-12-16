@@ -38,5 +38,5 @@ export class FileUpload {
           cb(new Error("Invalid file type") as any, false); 
         }
       },
-    }).single("image"); 
+    });
 }

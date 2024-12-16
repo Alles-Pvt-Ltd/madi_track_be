@@ -8,10 +8,10 @@ export class UserRoutes {
 
     public route(app: Application, url: string) {
         app.post(
-            url + "/login", 
-            Validation.registerValidation,  
+            `${url}/login`,
+            Validation.loginValidation, 
             (req: Request, res: Response) => {
-                this.userCtrl.login(req, res);  
+                UserController.login(req, res); 
             }
         );
 
@@ -19,7 +19,7 @@ export class UserRoutes {
             url + "/register",  
             Validation.registerValidation,  
             (req: Request, res: Response) => {
-                this.userCtrl.register(req, res); 
+                UserController.register(req, res); 
             }
         );
 

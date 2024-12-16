@@ -16,7 +16,6 @@ function failureResponse(message, res) {
         code: constant_1.ResponseStatusCodes.success,
         status: false,
         message,
-        data: {},
     });
 }
 exports.failureResponse = failureResponse;

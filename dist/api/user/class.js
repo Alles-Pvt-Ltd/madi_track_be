@@ -6,8 +6,8 @@ class Validation {
 }
 exports.Validation = Validation;
 Validation.loginValidation = [
-    (0, express_validator_1.check)("username").notEmpty().withMessage("Username is required"),
-    (0, express_validator_1.check)("password").notEmpty().withMessage("Password is required")
+    (0, express_validator_1.check)('username').not().isEmpty().withMessage('Username is required'),
+    (0, express_validator_1.check)('password').not().isEmpty().withMessage('Password is required'),
 ];
 Validation.registerValidation = [
     (0, express_validator_1.check)("role").isInt().withMessage("Role must be an integer"),

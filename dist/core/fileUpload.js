@@ -12,33 +12,28 @@ FileUpload.MIME_TYPE_MAP = {
     "image/png": "png",
     "image/jpeg": "jpeg",
     "image/jpg": "jpg",
+    "application/pdf": "pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
 };
 FileUpload.upload = (type) => multer({
-    limits: { fileSize: 5000000 },
+    limits: { fileSize: 10000000 },
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
-            const baseDir = "upload/images"; // The directory where images will be stored
+            const baseDir = type === "image" ? "upload/images" : "upload/documents";
             const dir = path.join(__dirname, baseDir);
-            fs.mkdirSync(dir, { recursive: true }); // Create directory if it doesn't exist
+            fs.mkdirSync(dir, { recursive: true });
             cb(null, dir);
         },
         filename: (req, file, cb) => {
             const ext = FileUpload.MIME_TYPE_MAP[file.mimetype];
             if (!ext) {
-                cb(new Error("Invalid file type"), null);
+                return cb(new Error("Invalid file type"), null);
             }
-            else {
-                cb(null, `${(0, uuid_1.v4)()}.${ext}`); // Use UUID to avoid file name conflicts
-            }
+            cb(null, `${(0, uuid_1.v4)()}.${ext}`);
         },
     }),
     fileFilter: (req, file, cb) => {
         const isValid = !!FileUpload.MIME_TYPE_MAP[file.mimetype];
-        if (isValid) {
-            cb(null, true); // Allow file
-        }
-        else {
-            cb(new Error("Invalid file type"), false); // Reject file
-        }
+        cb(null, isValid);
     },
-}).single("image"); // The field name in the form is 'image'
+}).single(type);

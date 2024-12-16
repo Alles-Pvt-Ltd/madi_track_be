@@ -20,7 +20,6 @@ export function failureResponse(message: string, res: Response) {
     code: ResponseStatusCodes.success,
     status: false,
     message,
-    data: {},
   });
 }
 

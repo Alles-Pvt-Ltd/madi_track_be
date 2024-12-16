@@ -9,14 +9,10 @@ class AppRoutes {
         this.appCtrl = new controller_1.AppController();
     }
     route(app, url) {
-        app.post(url + "/add", fileUpload_1.FileUpload.upload("image"), // File upload middleware for images
-        class_1.AppValidation.addValidation, // Validation for add
-        (req, res) => {
+        app.post(url + "/add", fileUpload_1.FileUpload.upload("image"), class_1.AppValidation.addValidation, (req, res) => {
             this.appCtrl.add(req, res);
         });
-        app.put(url + "/update/:sid", fileUpload_1.FileUpload.upload("image"), // File upload middleware for image update
-        class_1.AppValidation.updateValidation, // Validation for update
-        (req, res) => {
+        app.put(url + "/update/:sid", fileUpload_1.FileUpload.upload("image"), class_1.AppValidation.updateValidation, (req, res) => {
             this.appCtrl.update(req, res);
         });
         app.get(url + "/getById/:sid", (req, res) => {
