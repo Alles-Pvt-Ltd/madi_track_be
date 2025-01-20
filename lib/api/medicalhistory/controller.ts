@@ -65,7 +65,7 @@ export class MedicalHistoryController {
 };
 
 
-
+//Update MH Api
 public update = async (req: Request, res: Response): Promise<void> => {
     try {
         const errors = validationResult(req);
@@ -111,6 +111,8 @@ public update = async (req: Request, res: Response): Promise<void> => {
         return failureResponse("Error updating medical history: " + err.message, res);
     }
 };
+
+//GetMedi His BYId
 public getMedihis = async (req: Request, res: Response): Promise<void> => {
   try {
       const hid = parseInt(req.params.hid, 10);
@@ -183,83 +185,61 @@ public getMedihis = async (req: Request, res: Response): Promise<void> => {
 };
 
   // Delete Medical History
-public delete = async (req: Request, res: Response)=> {
+  public delete = async (req: Request, res: Response) => {
     try {
-        const hid = parseInt(req.params.hid, 10); 
-        const tokenData = JwtToken.get(req); 
-
-        if (!tokenData || isNaN(Number(tokenData.userId))) {
-            res.status(401).json({
-                code: 401,
-                status: false,
-                message: 'Unauthorized access: Invalid or missing token',
-            });
-            return; 
-        }
+        const hid = parseInt(req.params.hid, 10);
 
         if (isNaN(hid)) {
-            res.status(400).json({
-                code: 400,
-                status: false,
-                message: 'Invalid HID provided',
-            });
-            return;
+            return failureResponse("Invalid HID provided", res);
         }
 
-        const userId = Number(tokenData.userId);
+        const tokenData = JwtToken.get(req);
+
+        if (!tokenData || isNaN(Number(tokenData.userId))) {
+            return failureResponse("Invalid or missing token data", res);
+        }
 
         const historyResponse = await MedicalHistory.getMedicalHistoryById(hid);
         if (historyResponse.err) {
-            res.status(500).json({
-                code: 500,
-                status: false,
-                message: historyResponse.message || 'Error fetching medical history',
-            });
-            return; 
+            return failureResponse(historyResponse.message, res);
         }
 
-        const history = historyResponse.data[0]; 
-        if (!history) {
-            res.status(404).json({
-                code: 404,
-                status: false,
-                message: 'Medical history not found',
-            });
-            return;
+        const history = historyResponse.data[0]?.message;
+
+        if (history) {
+            const messageLowerCase = history.toLowerCase();
+
+            if (messageLowerCase === "history does not exist") {
+                return res.status(404).json({
+                    code: 404,
+                    status: false,
+                    message: "Medical history not found",
+                });
+            }
+
+            if (messageLowerCase === "history is deleted") {
+                return res.status(200).json({
+                    code: 200,
+                    status: false,
+                    message: "Medical history is already deleted",
+                });
+            }
         }
 
-        if (history.message === 'User is deleted') {
-            res.status(200).json({
+        if (historyResponse.data[0]) {
+            return res.status(200).json({
                 code: 200,
-                status: false,
-                message: 'Medical history already marked as deleted',
+                status: true,
+                message: "Medical history deleted",
             });
-            return; 
         }
-
-        const result = await MedicalHistory.deleteMedicalHistory(hid);
-        if (result.err) {
-            res.status(500).json({
-                code: 500,
-                status: false,
-                message: result.message || 'Error deleting medical history',
-            });
-            return; 
-        }
-
-        res.status(200).json({
-            code: 200,
-            status: true,
-            message: 'Medical history deleted successfully',
-        });
     } catch (error) {
-        res.status(500).json({
-            code: 500,
-            status: false,
-            message: 'An unexpected error occurred',
-        });
+        if (!res.headersSent) {
+            return failureResponse("An unexpected error occurred: " + error.message, res);
+        }
     }
 };
+
 
 
   // List All Medical Histories

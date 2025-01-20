@@ -4,6 +4,7 @@ exports.AppRoutes = void 0;
 const controller_1 = require("./controller");
 const fileUpload_1 = require("../../core/fileUpload");
 const class_1 = require("../../api/app/class");
+const jwt_1 = require("../../core/jwt");
 class AppRoutes {
     constructor() {
         this.appCtrl = new controller_1.AppController();
@@ -23,6 +24,9 @@ class AppRoutes {
         });
         app.get(url + "/getAll", (req, res) => {
             this.appCtrl.getAll(req, res);
+        });
+        app.post(url + "/upload", jwt_1.JwtToken.verify, fileUpload_1.FileUpload.upload("image"), (req, res) => {
+            this.appCtrl.uploadImage(req, res);
         });
     }
 }

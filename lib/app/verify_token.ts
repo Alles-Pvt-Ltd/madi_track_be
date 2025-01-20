@@ -12,18 +12,18 @@ declare global {
 
 export class Verify {
   public verify(req: Request, res: Response, next: NextFunction) {
-    const token = req.header('token'); // Use `req.header` to retrieve the token
+    const token = req.header('token'); 
 
     if (!token) {
         return forbidden("Access Denied: No token provided", req.body, res);
     }
 
     try {
-        const verified = AppFunction.jwtVerify(token); // Verify the token using AppFunction.jwtVerify
+        const verified = AppFunction.jwtVerify(token); 
         if (!verified) {
             return forbidden("Invalid token provided", req.body, res);
         }
-        req.user = verified; // Attach the verified user data to the request object
+        req.user = verified; 
     } catch (error) {
         return forbidden("Invalid token provided", req.body, res);
     }

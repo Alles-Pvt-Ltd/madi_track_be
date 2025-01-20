@@ -13,6 +13,7 @@ exports.AppController = void 0;
 const app_1 = require("../../database/mysql/app");
 const response_1 = require("../../core/response");
 const express_validator_1 = require("express-validator");
+const { exec } = require("child_process");
 class AppController {
     constructor() {
         this.add = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -169,9 +170,7 @@ class AppController {
                         message: 'Invalid userId provided',
                     });
                 }
-                // Fetch user details by id
                 const userResponse = yield app_1.App.getIntroById(sid);
-                // Handle errors from App.getIntroById
                 if (userResponse.err) {
                     res.status(500).json({
                         code: 500,
@@ -179,7 +178,6 @@ class AppController {
                         message: userResponse.message,
                     });
                 }
-                // If no data exists or the message indicates user does not exist
                 const user = userResponse.data[0];
                 if (!user || user.message === "User does not exist") {
                     res.status(404).json({
@@ -188,7 +186,6 @@ class AppController {
                         message: 'User does not exist',
                     });
                 }
-                // Check if the user is already deleted
                 if (user.message === "User is deleted") {
                     res.status(200).json({
                         code: 200,
@@ -196,9 +193,7 @@ class AppController {
                         message: 'User is already deleted',
                     });
                 }
-                // Perform delete operation
                 const deleteResponse = yield app_1.App.deleteIntro(sid);
-                // Handle errors from App.deleteIntro
                 if (deleteResponse.err) {
                     res.status(500).json({
                         code: 500,
@@ -206,7 +201,6 @@ class AppController {
                         message: deleteResponse.message,
                     });
                 }
-                // Respond with success if the user is deleted
                 res.status(200).json({
                     code: 200,
                     status: true,
@@ -228,6 +222,22 @@ class AppController {
                 return (0, response_1.failureResponse)(getAllResponse.message, res);
             }
             return (0, response_1.successResponse)(getAllResponse.data, "All Intro Screens Retrieved Successfully", res);
+        });
+        this.uploadImage = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const documentFile = req.file;
+                if (!documentFile) {
+                    console.error("No file provided in the request.");
+                    return (0, response_1.failureResponse)("No file provided.", res);
+                }
+                // Successfully uploaded file
+                console.log("File uploaded successfully:", documentFile);
+                return (0, response_1.successResponse)({ imageUrl: "/" + documentFile.path }, "Image uploaded successfully", res);
+            }
+            catch (error) {
+                console.error("Unexpected error during file upload:", error);
+                return (0, response_1.failureResponse)("Unexpected server error during file upload.", res);
+            }
         });
     }
 }

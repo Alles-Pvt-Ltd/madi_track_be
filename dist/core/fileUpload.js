@@ -15,25 +15,26 @@ FileUpload.MIME_TYPE_MAP = {
     "application/pdf": "pdf",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
 };
+// Multer upload middleware
 FileUpload.upload = (type) => multer({
     limits: { fileSize: 10000000 },
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
             const baseDir = type === "image" ? "upload/images" : "upload/documents";
             const dir = path.join(__dirname, baseDir);
-            fs.mkdirSync(dir, { recursive: true });
-            cb(null, dir);
+            fs.mkdirSync(dir, { recursive: true }); // Create directory if not exists
+            cb(null, dir); // Set the destination
         },
         filename: (req, file, cb) => {
             const ext = FileUpload.MIME_TYPE_MAP[file.mimetype];
             if (!ext) {
                 return cb(new Error("Invalid file type"), null);
             }
-            cb(null, `${(0, uuid_1.v4)()}.${ext}`);
+            cb(null, `${(0, uuid_1.v4)()}.${ext}`); // Unique file name
         },
     }),
     fileFilter: (req, file, cb) => {
         const isValid = !!FileUpload.MIME_TYPE_MAP[file.mimetype];
-        cb(null, isValid);
+        cb(null, isValid); // Validate file type
     },
-}).single(type);
+}).single(type); // Use `.single()` to handle single file upload

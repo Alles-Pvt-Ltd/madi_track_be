@@ -9,18 +9,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const bcrypt_1 = require("bcrypt");
+const app_1 = require("../../core/app");
+const express_validator_1 = require("express-validator");
 class Helper {
-    static passwordVerify(plainPassword, hashedPassword) {
+    // Static method to handle validation errors
+    static validateRequest(req, res) {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            res.status(400).json({ success: false, errors: errors.array() });
+            return false;
+        }
+        return true;
+    }
+    // Static method to verify user password
+    static verifyPassword(inputPassword, storedPassword) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return yield bcrypt_1.default.compare(plainPassword, hashedPassword);
-            }
-            catch (error) {
-                console.error("Error verifying password:", error);
-                return false;
-            }
+            return yield app_1.AppFunction.passwordVerify(inputPassword, storedPassword);
         });
+    }
+    // Static method to generate JWT token
+    static generateJwtToken(username, userId, email) {
+        return app_1.AppFunction.createJwtToken(username, userId, email);
     }
 }
 exports.default = Helper;

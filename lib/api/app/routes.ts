@@ -2,6 +2,7 @@ import { Application, Request, Response } from "express";
 import { AppController } from "./controller";
 import { FileUpload } from "../../core/fileUpload";
 import { AppValidation } from "../../api/app/class";
+import { JwtToken } from "../../core/jwt";
 
 export class AppRoutes {
   private appCtrl: AppController = new AppController();
@@ -45,5 +46,16 @@ export class AppRoutes {
       (req: Request, res: Response) => {
       this.appCtrl.getAll(req, res);
     });
+
+    app.post(
+      url + "/upload",
+      JwtToken.verify, 
+      FileUpload.upload("image"), 
+      (req: Request, res: Response) => {
+        this.appCtrl.uploadImage(req, res);
+      }
+    );
+    
+    
   }
 }

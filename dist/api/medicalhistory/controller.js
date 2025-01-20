@@ -74,7 +74,6 @@ class MedicalHistoryController {
                 return (0, response_1.successResponse)(response, "Medical History Updated Successfully", res);
             }
             catch (err) {
-                console.error("Error updating medical history:", err.message);
                 return (0, response_1.failureResponse)("Error updating medical history: " + err.message, res);
             }
         });
@@ -114,7 +113,7 @@ class MedicalHistoryController {
                         res.status(200).json({
                             code: 200,
                             status: false,
-                            message: "User is deleted", 
+                            message: "User is deleted",
                         });
                     }
                 }
@@ -140,73 +139,56 @@ class MedicalHistoryController {
         });
         // Delete Medical History
         this.delete = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            var _b;
             try {
-                const hid = parseInt(req.params.hid, 10); 
-                const tokenData = jwt_1.JwtToken.get(req);
-                if (!tokenData || isNaN(Number(tokenData.userId))) {
-                    res.status(401).json({
-                        code: 401,
-                        status: false,
-                        message: 'Unauthorized access: Invalid or missing token',
-                    });
-                    return;
-                }
+                const hid = parseInt(req.params.hid, 10);
+                // Check if the HID is valid
                 if (isNaN(hid)) {
-                    res.status(400).json({
-                        code: 400,
-                        status: false,
-                        message: 'Invalid HID provided',
-                    });
-                    return;
+                    return (0, response_1.failureResponse)("Invalid HID provided", res);
                 }
-                const userId = Number(tokenData.userId);
+                const tokenData = jwt_1.JwtToken.get(req);
+                // Check if the token is valid
+                if (!tokenData || isNaN(Number(tokenData.userId))) {
+                    return (0, response_1.failureResponse)("Invalid or missing token data", res);
+                }
+                // Fetch medical history by ID
                 const historyResponse = yield medicalhistory_1.MedicalHistory.getMedicalHistoryById(hid);
                 if (historyResponse.err) {
-                    res.status(500).json({
-                        code: 500,
-                        status: false,
-                        message: historyResponse.message || 'Error fetching medical history',
-                    });
-                    return;
+                    return (0, response_1.failureResponse)(historyResponse.message, res);
                 }
-                const history = historyResponse.data[0];
-                if (!history) {
-                    res.status(404).json({
-                        code: 404,
-                        status: false,
-                        message: 'Medical history not found',
-                    });
-                    return;
+                const history = (_b = historyResponse.data[0]) === null || _b === void 0 ? void 0 : _b.message;
+                if (history) {
+                    const messageLowerCase = history.toLowerCase();
+                    // Check for specific conditions in the response message
+                    if (messageLowerCase === "history does not exist") {
+                        return res.status(404).json({
+                            code: 404,
+                            status: false,
+                            message: "Medical history not found",
+                        });
+                    }
+                    if (messageLowerCase === "history is deleted") {
+                        return res.status(200).json({
+                            code: 200,
+                            status: false,
+                            message: "Medical history is already deleted",
+                        });
+                    }
                 }
-                if (history.message === 'User is deleted') {
-                    res.status(200).json({
+                // Check if history exists
+                if (historyResponse.data[0]) {
+                    return res.status(200).json({
                         code: 200,
-                        status: false,
-                        message: 'Medical history already marked as deleted',
+                        status: true,
+                        message: "Medical history deleted",
                     });
-                    return;
                 }
-                const result = yield medicalhistory_1.MedicalHistory.deleteMedicalHistory(hid);
-                if (result.err) {
-                    res.status(500).json({
-                        code: 500,
-                        status: false,
-                        message: result.message || 'Error deleting medical history',
-                    });
-                    return;
-                }
-                res.status(200).json({
-                    code: 200,
-                    status: true,
-                    message: 'Medical history deleted successfully',
-                });
             }
             catch (error) {
-                res.status(500).json({
-                    code: 500,
-                    status: false,
-                    message: 'An unexpected error occurred',
-                });
+                // Handle unexpected errors
+                if (!res.headersSent) {
+                    return (0, response_1.failureResponse)("An unexpected error occurred: " + error.message, res);
+                }
             }
         });
         // List All Medical Histories

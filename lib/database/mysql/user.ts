@@ -23,7 +23,7 @@ export class User {
     };
     
     public static register = async (data: IUser) => {
-        const insertUserQuery = `CALL sp_register(${data.role}, '${data.firstname}', '${data.lastname}', '${data.address}', '${data.username}', '${data.email}', '${data.password}', ${data.createdBy})`;
+        const insertUserQuery = `CALL sp_register(${data.role}, '${data.firstname}', '${data.lastname}', '${data.address}', '${data.username}', '${data.email}', '${data.password}', ${data.createdBy},${data.parentId})`;
     
         const result = await Mysql.connect(insertUserQuery, null);
     
@@ -34,16 +34,28 @@ export class User {
     };
     
     
-    public static updateUser = async (id: number, data: IUser, updatedBy: number) => {
-        const updateUserQuery = `CALL sp_updateUser(${data.role}, '${data.firstname}', '${data.lastname}', '${data.address}', '${data.email}', '${data.password}', ${updatedBy}, ${id})`;
-    
+    public static async updateUser(id: number, data: IUser, updatedBy: number) {
+        const updateUserQuery = `CALL sp_updateUser(${data.role},'${data.firstname}','${data.lastname}','${data.address}','${data.email}','${data.password}',${updatedBy},${id},${data.parentId }) `;
         const sqlData = await Mysql.connect(updateUserQuery, null);
     
         if (sqlData.err) {
             return { err: true, message: sqlData.result };
         }
         return { err: false, data: sqlData.result[0] };
-    };
+    }
+    
+    public static async findUserById(id: number): Promise<{ err: boolean, data: any }> {
+        const query = 'SELECT id, isDeleted FROM t_user WHERE id = ?';
+        const result = await Mysql.connect(query, [id]);
+
+        if (!result || !result.result.length) {
+            return { err: true, data:null };
+        }
+    
+        return { err: false, data: result.result[0] };
+    }
+    
+
     
     public static getAllUsers = async () => {
         const sqlQuery = `CALL sp_getAllUser()`;
@@ -68,9 +80,12 @@ export class User {
     public static deleteUser = async (id: number) => {
         const sqlQuery = `CALL sp_deleteUser(${id})`;
         const sqlData = await Mysql.connect(sqlQuery, null);
+    
         if (sqlData.err) {
             return { err: true, message: sqlData.result };
         }
+    
         return { err: false, data: sqlData.result[0] };
     };
+    
 }

@@ -3,6 +3,21 @@ import { App } from "../../database/mysql/app";
 import { successResponse, failureResponse,badResponse } from "../../core/response";
 import { FileUpload } from "../../core/fileUpload";
 import { validationResult } from "express-validator";
+const { exec } = require("child_process");
+import e = require("express");
+
+interface MulterRequest extends Request {
+    file: any;
+  }
+  
+  interface IFile {
+    fieldname: string;
+    originalname: string;
+    mimetype: string;
+    destination: string;
+    filename: string;
+    path: string;
+  }
 
 export class AppController {
   public add = async (req: Request, res: Response)=> {
@@ -36,12 +51,10 @@ export class AppController {
 
         const introResponse = await App.getIntroById(sid);
 
-        // Check if there is an error in fetching data from the database
         if (introResponse.err) {
             return failureResponse(introResponse.message, res);
         }
 
-        // Ensure introResponse.data exists and then check the message property
         if (!introResponse.data || !introResponse.data[0]) {
              res.status(404).json({
                 code: 404,
@@ -52,7 +65,6 @@ export class AppController {
 
         const userMessage = introResponse.data[0]?.message;
 
-        // Check if the message exists and handle accordingly
         if (userMessage) {
             const messageLowerCase = userMessage.toLowerCase();
 
@@ -73,7 +85,6 @@ export class AppController {
             }
         }
 
-        // If user data exists, return the data
         if (introResponse.data[0]) {
              res.status(200).json({
                 code: 200,
@@ -83,7 +94,6 @@ export class AppController {
             });
         }
 
-        // If no valid data is available for the user
          res.status(404).json({
             code: 404,
             status: false,
@@ -91,7 +101,6 @@ export class AppController {
         });
 
     } catch (error) {
-        console.error(error); // Log the error to the console for debugging
         return failureResponse("An unexpected error occurred", res);
     }
 };
@@ -176,7 +185,6 @@ public delete = async (req: Request, res: Response) => {
   try {
       const sid = parseInt(req.params.sid, 10);
 
-      // Validate if sid is a valid number
       if (isNaN(sid)) {
            res.status(400).json({
               code: 400,
@@ -185,10 +193,7 @@ public delete = async (req: Request, res: Response) => {
           });
       }
 
-      // Fetch user details by id
       const userResponse = await App.getIntroById(sid);
-
-      // Handle errors from App.getIntroById
       if (userResponse.err) {
            res.status(500).json({
               code: 500,
@@ -196,8 +201,6 @@ public delete = async (req: Request, res: Response) => {
               message: userResponse.message,
           });
       }
-
-      // If no data exists or the message indicates user does not exist
       const user = userResponse.data[0];
       if (!user || user.message === "User does not exist") {
            res.status(404).json({
@@ -207,7 +210,6 @@ public delete = async (req: Request, res: Response) => {
           });
       }
 
-      // Check if the user is already deleted
       if (user.message === "User is deleted") {
            res.status(200).json({
               code: 200,
@@ -215,11 +217,8 @@ public delete = async (req: Request, res: Response) => {
               message: 'User is already deleted',
           });
       }
-
-      // Perform delete operation
       const deleteResponse = await App.deleteIntro(sid);
 
-      // Handle errors from App.deleteIntro
       if (deleteResponse.err) {
            res.status(500).json({
               code: 500,
@@ -227,15 +226,12 @@ public delete = async (req: Request, res: Response) => {
               message: deleteResponse.message,
           });
       }
-
-      // Respond with success if the user is deleted
       res.status(200).json({
           code: 200,
           status: true,
           message: 'User deleted successfully',
       });
   } catch (error) {
-      console.error("Error in delete method:", error);
        res.status(500).json({
           code: 500,
           status: false,
@@ -252,4 +248,24 @@ public delete = async (req: Request, res: Response) => {
       }
       return successResponse(getAllResponse.data, "All Intro Screens Retrieved Successfully", res);
   };
+
+  public uploadImage = async (req: Request, res: Response) => {
+    try {
+      const documentFile = req.file as IFile;
+      if (!documentFile) {
+        return failureResponse("No file provided.", res);
+      }
+      return successResponse(
+        { imageUrl: "/" + documentFile.path },
+        "Image uploaded successfully",
+        res
+      );
+    } catch (error) {
+      return failureResponse("Unexpected server error during file upload.", res);
+    }
+  };
+  
+  
+  
+  
 }

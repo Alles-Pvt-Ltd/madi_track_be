@@ -16,13 +16,14 @@ class Mysql {
 exports.default = Mysql;
 Mysql.connect = (query, data) => {
     return new Promise((resolve, reject) => {
-        pool.getConnection((err, connect) => {
+        pool.getConnection((err, connection) => {
             if (err) {
                 logger_1.Logger.errorLogger({ place: 'Database Connection', err });
                 return resolve({ err: true, result: err, data });
             }
-            connect.query(query, (err, result) => {
-                connect.release();
+            // Correct usage of the connection object
+            connection.query(query, data, (err, result) => {
+                connection.release(); // Release the connection back to the pool
                 if (err) {
                     logger_1.Logger.errorLogger({ place: 'Database Connection SQL Error', err });
                     return resolve({ err: true, result: err, data });
