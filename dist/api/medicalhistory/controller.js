@@ -50,6 +50,7 @@ class MedicalHistoryController {
                 return (0, response_1.failureResponse)("Error adding medical history: " + error.message, res);
             }
         });
+        //Update MH Api
         this.update = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const errors = (0, express_validator_1.validationResult)(req);
@@ -77,6 +78,7 @@ class MedicalHistoryController {
                 return (0, response_1.failureResponse)("Error updating medical history: " + err.message, res);
             }
         });
+        //GetMedi His BYId
         this.getMedihis = (req, res) => __awaiter(this, void 0, void 0, function* () {
             var _a;
             try {
@@ -142,16 +144,13 @@ class MedicalHistoryController {
             var _b;
             try {
                 const hid = parseInt(req.params.hid, 10);
-                // Check if the HID is valid
                 if (isNaN(hid)) {
                     return (0, response_1.failureResponse)("Invalid HID provided", res);
                 }
                 const tokenData = jwt_1.JwtToken.get(req);
-                // Check if the token is valid
                 if (!tokenData || isNaN(Number(tokenData.userId))) {
                     return (0, response_1.failureResponse)("Invalid or missing token data", res);
                 }
-                // Fetch medical history by ID
                 const historyResponse = yield medicalhistory_1.MedicalHistory.getMedicalHistoryById(hid);
                 if (historyResponse.err) {
                     return (0, response_1.failureResponse)(historyResponse.message, res);
@@ -159,7 +158,6 @@ class MedicalHistoryController {
                 const history = (_b = historyResponse.data[0]) === null || _b === void 0 ? void 0 : _b.message;
                 if (history) {
                     const messageLowerCase = history.toLowerCase();
-                    // Check for specific conditions in the response message
                     if (messageLowerCase === "history does not exist") {
                         return res.status(404).json({
                             code: 404,
@@ -175,7 +173,6 @@ class MedicalHistoryController {
                         });
                     }
                 }
-                // Check if history exists
                 if (historyResponse.data[0]) {
                     return res.status(200).json({
                         code: 200,
@@ -185,7 +182,6 @@ class MedicalHistoryController {
                 }
             }
             catch (error) {
-                // Handle unexpected errors
                 if (!res.headersSent) {
                     return (0, response_1.failureResponse)("An unexpected error occurred: " + error.message, res);
                 }

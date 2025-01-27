@@ -32,10 +32,10 @@ export class UserRoutes {
         );
 
         app.get(
-            url + "/getAllUsers",
-            JwtToken.verify,  
+            `${url}/getAllUsers`,
+            JwtToken.verify,
             (req: Request, res: Response) => {
-                this.userCtrl.getAllUsers(req, res);  
+                UserController.getAllUsers(req, res); 
             }
         );
 
@@ -46,6 +46,7 @@ export class UserRoutes {
                 this.userCtrl.getUserById(req, res);  
             }
         );
+
 
         app.get(
             url + "/deleteUser/:id",

@@ -59,7 +59,7 @@ export class AppController {
              res.status(404).json({
                 code: 404,
                 status: false,
-                message: 'User does not exist',
+                message: 'Intro does not exist',
             });
         }
 
@@ -68,19 +68,19 @@ export class AppController {
         if (userMessage) {
             const messageLowerCase = userMessage.toLowerCase();
 
-            if (messageLowerCase === "user does not exist") {
+            if (messageLowerCase === "Intro does not exist") {
                  res.status(404).json({
                     code: 404,
                     status: false,
-                    message: 'User does not exist',
+                    message: 'Intro does not exist',
                 });
             }
 
-            if (messageLowerCase === "user is deleted") {
+            if (messageLowerCase === "Intro is deleted") {
                  res.status(200).json({
                     code: 200,
                     status: false,
-                    message: 'User is deleted',
+                    message: 'Intro is deleted',
                 });
             }
         }
@@ -89,7 +89,7 @@ export class AppController {
              res.status(200).json({
                 code: 200,
                 status: true,
-                message: 'User Retrieved Successfully',
+                message: 'Intro Retrieved Successfully',
                 data: introResponse.data[0],
             });
         }
@@ -202,19 +202,19 @@ public delete = async (req: Request, res: Response) => {
           });
       }
       const user = userResponse.data[0];
-      if (!user || user.message === "User does not exist") {
+      if (!user || user.message === "Intro does not exist") {
            res.status(404).json({
               code: 404,
               status: false,
-              message: 'User does not exist',
+              message: 'Intro does not exist',
           });
       }
 
-      if (user.message === "User is deleted") {
+      if (user.message === "Intro is deleted") {
            res.status(200).json({
               code: 200,
               status: false,
-              message: 'User is already deleted',
+              message: 'Intro is already deleted',
           });
       }
       const deleteResponse = await App.deleteIntro(sid);
