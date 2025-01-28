@@ -120,90 +120,89 @@ export class UserController {
             });
         }
       }    
+
     // Update User API
-    public static async updateUser(req: Request, res: Response): Promise<void> {
-        if (!Helper.validateRequest(req, res)) return;
-
-        const { id, role, firstname, lastname, address, email, password, parentId, updatedBy, username } = req.body;
-
-        if (![1, 2].includes(updatedBy)) {
-            return badResponse([{ msg: 'Invalid updatedBy value. Only 1 or 2 are allowed.' }], res);
+    public  updateUser = async(req: Request, res: Response)=> {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return badResponse(errors.array(), res);
         }
 
-        if (id === parentId) {
-            return badResponse([{ msg: 'User and parent cannot be the same.' }], res);
+        const { id, role, firstname, lastname, address, email, password, updatedBy } = req.body;
+
+        if(![1,2].includes(updatedBy)){
+            return badResponse([{msg:'Invalid updatedBy Value.Only 1 or 2 are allowed.'}],res);
         }
 
-        const encryptedPassword = password ? await Helper.encryptPassword(password) : null;
+        const existingUser = await User.getUserById(id);
+        if(!existingUser){
+            return badResponse([{msg:'User not found.please try Again.'}],res);
+        }
 
-        const userData: IUser = {
+        const user= {
             role,
             firstname,
             lastname,
             address,
-            username,
+            username: email, 
             email,
-            password: encryptedPassword,
-            parentId: parentId,
-            updatedBy,
+            password: await AppFunction.encryptPassword(password),
+            createdOn: '',
             updatedOn: new Date().toISOString(),
+            createdBy: updatedBy
         };
 
-        const updateResponse = await User.updateUser(id, userData, updatedBy);
-
+        const updateResponse = await User.updateUser(id, user, updatedBy);
         if (updateResponse.err) {
             return failureResponse(updateResponse.message, res);
         }
-
         return successResponse(updateResponse.data, 'User updated successfully', res);
     }
 
     // Delete User API
-    public deleteUser = async (req: Request, res: Response) => {
+    public deleteUser = async (req: Request, res: Response): Promise<void> => {
         try {
             const userId = parseInt(req.params.id, 10);
             if (isNaN(userId)) {
-                return failureResponse("Invalid user ID provided", res);
+                return Helper.failureResponse("Invalid user ID provided", res);
             }
+
             const userResponse = await User.getUserById(userId);
-    
             if (userResponse.err) {
-                return failureResponse(userResponse.message, res);
+                return Helper.failureResponse(userResponse.message, res);
             }
-        
-            if (userResponse.data && userResponse.data[0].message === "User does not exist") {
-                return res.status(404).json({ 
+
+            if (userResponse.data && userResponse.data[0]?.message === "User does not exist") {
+                 res.status(404).json({
                     code: 404,
                     status: false,
-                    message: 'Invalid Id ',
+                    message: 'User ID not found',
                 });
             }
-        
-            const user = userResponse.data[0]; 
-    
-            if (user && user.message === "User is deleted") { 
-                return res.status(200).json({
+
+            const user = userResponse.data[0];
+            if (user && user.message === "User is already deleted") {
+              res.status(200).json({
                     code: 200,
                     status: false,
-                    message: 'Already deleted the user',
+                    message: 'The user has already been deleted',
                 });
             }
+
             const deleteResponse = await User.deleteUser(userId);
-        
             if (deleteResponse.err) {
-                return failureResponse(deleteResponse.message, res);
+                return Helper.failureResponse(deleteResponse.message, res);
             }
-            return res.status(200).json({
+
+          res.status(200).json({
                 code: 200,
                 status: true,
-                message: 'User Deleted Successfully',
+                message: 'User deleted successfully, including associated family members.',
             });
-        
         } catch (error) {
-            return failureResponse("An unexpected error occurred", res);
+            return Helper.failureResponse("An unexpected error occurred", res);
         }
     };
-    
 
     // Get All Users API
     public static async getAllUsers(req: Request, res: Response): Promise<void> {

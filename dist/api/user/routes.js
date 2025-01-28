@@ -15,9 +15,11 @@ class UserRoutes {
         app.post(url + "/register", class_1.Validation.registerValidation, (req, res) => {
             controller_1.UserController.register(req, res);
         });
-        app.put(url + '/updateUser', class_1.Validation.updateValidation, jwt_1.JwtToken.verify, (req, res) => controller_1.UserController.updateUser(req, res));
+        app.put(url + "/updateUser", class_1.Validation.updateValidation, jwt_1.JwtToken.verify, (req, res) => {
+            this.userCtrl.updateUser(req, res);
+        });
         app.get(`${url}/getAllUsers`, jwt_1.JwtToken.verify, (req, res) => {
-            controller_1.UserController.getAllUsers(req, res); // Call directly on the class
+            controller_1.UserController.getAllUsers(req, res);
         });
         app.get(url + "/getUserById/:id", jwt_1.JwtToken.verify, (req, res) => {
             this.userCtrl.getUserById(req, res);

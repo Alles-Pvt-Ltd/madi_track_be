@@ -13,31 +13,26 @@ export default class Helper {
         }
         return true;
     }
-
-    public static async verifyPassword(inputPassword: string, storedPassword: string): Promise<boolean> {
-        try {
-            if (storedPassword.startsWith('$2b$') || storedPassword.startsWith('$2a$')) {
-                return await bcrypt.compare(inputPassword, storedPassword);
-            }
-            if (storedPassword.startsWith('sha1$')) {
-                const parts = storedPassword.split('$');
-                if (parts.length >= 3) {
-                    const [prefix, salt, ...hashParts] = parts;
-                    const hash = hashParts.join('$');
-                    const sha1Hash = crypto.createHash('sha1').update(salt + inputPassword).digest('hex');
-                    return sha1Hash === hash;
-                }
-            }
-            console.error('Unsupported password format');
-            return false;
-        } catch (err) {
-            return false;
-        }
+    public static failureResponse(message: string, res: Response): void {
+        res.status(500).json({ success: false, message });
     }
 
     public static async encryptPassword(password: string): Promise<string> {
-        const saltRounds = 10;
-        return bcrypt.hash(password, saltRounds);
+        try {
+            const saltRounds = 10;
+            return await bcrypt.hash(password, saltRounds);
+        } catch (err) {
+            console.error('Error in encryptPassword:', err);
+            throw err;
+        }
+    }
+    public static async verifyPassword(inputPassword: string, storedPassword: string): Promise<boolean> {
+        try {
+            return await bcrypt.compare(inputPassword, storedPassword);
+        } catch (err) {
+            console.error('Error in verifyPassword:', err);
+            return false;
+        }
     }
 
     public static generateJwtToken(username: string, userId: number, email: string): string {
@@ -46,13 +41,5 @@ export default class Helper {
             process.env.JWT_SECRET || 'default_secret',
             { expiresIn: '1h' }
         );
-    }
-    public static async generateUniqueFamilyId(): Promise<string> {
-        try {
-            const familyId = crypto.randomBytes(8).toString('hex'); // Generate a random 16-character hex string
-            return familyId;
-        } catch (error) {
-            throw new Error('Failed to generate unique family ID');
-        }
     }
 }

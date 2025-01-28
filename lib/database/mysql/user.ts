@@ -37,10 +37,9 @@ export class User {
         }
     }
     
-    public static async updateUser(id: number, data: IUser, updatedBy: number) {
-        const updateUserQuery = `CALL sp_updateUser(${data.role},'${data.firstname}','${data.lastname}','${data.address}','${data.email}','${data.password}',${updatedBy},${id},${data.parentId }) `;
+    public static async updateUser(id: number, data: any, updatedBy: number) {
+        const updateUserQuery = `CALL sp_updateUser( ${data.role}, '${data.firstname}', '${data.lastname}', '${data.address}', '${data.email}', ${data.password ? `'${data.password}'` : 'NULL'},  ${updatedBy}, ${id} )`;
         const sqlData = await Mysql.connect(updateUserQuery, null);
-    
         if (sqlData.err) {
             return { err: true, message: sqlData.result };
         }
@@ -58,7 +57,6 @@ export class User {
         return { err: false, data: result.result[0] };
     }
     
-
     
     public static getAllUsers = async () => {
         const sqlQuery = `CALL sp_getAllUser()`;

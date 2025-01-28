@@ -24,11 +24,12 @@ export class UserRoutes {
         );
 
         app.put(
-           url+ '/updateUser',
-            Validation.updateValidation,
-            JwtToken.verify,
-            (req: Request, res: Response) =>
-                 UserController.updateUser(req, res)  
+            url + "/updateUser",  
+            Validation.updateValidation, 
+            JwtToken.verify,  
+            (req: Request, res: Response) => {
+                this.userCtrl.updateUser(req, res);  
+            }
         );
 
         app.get(

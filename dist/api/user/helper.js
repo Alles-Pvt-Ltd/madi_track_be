@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = require("bcrypt");
 const jsonwebtoken_1 = require("jsonwebtoken");
-const crypto = require("crypto");
 const express_validator_1 = require("express-validator");
 class Helper {
     static validateRequest(req, res) {
@@ -22,53 +21,38 @@ class Helper {
         }
         return true;
     }
+    // Send a failure response
+    static failureResponse(message, res) {
+        res.status(500).json({ success: false, message });
+    }
+    // Encrypt password using bcrypt
+    static encryptPassword(password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const saltRounds = 10;
+                return yield bcrypt_1.default.hash(password, saltRounds);
+            }
+            catch (err) {
+                console.error('Error in encryptPassword:', err);
+                throw err;
+            }
+        });
+    }
+    // Verify password using bcrypt
     static verifyPassword(inputPassword, storedPassword) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (storedPassword.startsWith('$2b$') || storedPassword.startsWith('$2a$')) {
-                    return yield bcrypt_1.default.compare(inputPassword, storedPassword);
-                }
-                if (storedPassword.startsWith('sha1$')) {
-                    const parts = storedPassword.split('$');
-                    if (parts.length >= 3) {
-                        const [prefix, salt, ...hashParts] = parts;
-                        const hash = hashParts.join('$');
-                        const sha1Hash = crypto.createHash('sha1').update(salt + inputPassword).digest('hex');
-                        return sha1Hash === hash;
-                    }
-                }
-                console.error('Unsupported password format');
-                return false;
+                return yield bcrypt_1.default.compare(inputPassword, storedPassword);
             }
             catch (err) {
-                console.error('Error in password verification:', err);
+                console.error('Error in verifyPassword:', err);
                 return false;
             }
         });
     }
-    static encryptPassword(password) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const saltRounds = 10;
-            return bcrypt_1.default.hash(password, saltRounds);
-        });
-    }
+    // Generate JWT token
     static generateJwtToken(username, userId, email) {
         return jsonwebtoken_1.default.sign({ username, userId, email }, process.env.JWT_SECRET || 'default_secret', { expiresIn: '1h' });
-    }
-    /**
-     * Generates a unique family ID using a random string.
-     */
-    static generateUniqueFamilyId() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const familyId = crypto.randomBytes(8).toString('hex'); // Generate a random 16-character hex string
-                return familyId;
-            }
-            catch (error) {
-                console.error('Error generating unique family ID:', error);
-                throw new Error('Failed to generate unique family ID');
-            }
-        });
     }
 }
 exports.default = Helper;

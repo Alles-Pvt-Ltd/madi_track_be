@@ -24,14 +24,13 @@ class User {
                 return { err: false, data: result.result[0] };
             }
             catch (error) {
-                console.error('Error during user registration:', error); // Debug log
                 return { err: true, message: 'Database query failed' };
             }
         });
     }
     static updateUser(id, data, updatedBy) {
         return __awaiter(this, void 0, void 0, function* () {
-            const updateUserQuery = `CALL sp_updateUser(${data.role},'${data.firstname}','${data.lastname}','${data.address}','${data.email}','${data.password}',${updatedBy},${id},${data.parentId}) `;
+            const updateUserQuery = `CALL sp_updateUser( ${data.role}, '${data.firstname}', '${data.lastname}', '${data.address}', '${data.email}', ${data.password ? `'${data.password}'` : 'NULL'},  ${updatedBy}, ${id} )`;
             const sqlData = yield connection_1.default.connect(updateUserQuery, null);
             if (sqlData.err) {
                 return { err: true, message: sqlData.result };

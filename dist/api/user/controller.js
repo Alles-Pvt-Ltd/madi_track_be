@@ -12,10 +12,43 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const user_1 = require("../../database/mysql/user");
 const response_1 = require("../../core/response");
+const app_1 = require("../../core/app");
 const express_validator_1 = require("express-validator");
 const helper_1 = require("./helper");
 class UserController {
     constructor() {
+        // Update User API
+        this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const errors = (0, express_validator_1.validationResult)(req);
+            if (!errors.isEmpty()) {
+                return (0, response_1.badResponse)(errors.array(), res);
+            }
+            const { id, role, firstname, lastname, address, email, password, updatedBy } = req.body;
+            if (![1, 2].includes(updatedBy)) {
+                return (0, response_1.badResponse)([{ msg: 'Invalid updatedBy Value.Only 1 or 2 are allowed.' }], res);
+            }
+            const existingUser = yield user_1.User.getUserById(id);
+            if (!existingUser) {
+                return (0, response_1.badResponse)([{ msg: 'User not found.please try Again.' }], res);
+            }
+            const user = {
+                role,
+                firstname,
+                lastname,
+                address,
+                username: email,
+                email,
+                password: yield app_1.AppFunction.encryptPassword(password),
+                createdOn: '',
+                updatedOn: new Date().toISOString(),
+                createdBy: updatedBy
+            };
+            const updateResponse = yield user_1.User.updateUser(id, user, updatedBy);
+            if (updateResponse.err) {
+                return (0, response_1.failureResponse)(updateResponse.message, res);
+            }
+            return (0, response_1.successResponse)(updateResponse.data, 'User updated successfully', res);
+        });
         // Delete User API
         this.deleteUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
@@ -193,44 +226,11 @@ class UserController {
                 });
             }
             catch (error) {
-                console.error(error);
                 res.status(500).json({
                     success: false,
                     message: "Internal server error. Please try again later.",
                 });
             }
-        });
-    }
-    // Update User API
-    static updateUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!helper_1.default.validateRequest(req, res))
-                return;
-            const { id, role, firstname, lastname, address, email, password, parentId, updatedBy, username } = req.body;
-            if (![1, 2].includes(updatedBy)) {
-                return (0, response_1.badResponse)([{ msg: 'Invalid updatedBy value. Only 1 or 2 are allowed.' }], res);
-            }
-            if (id === parentId) {
-                return (0, response_1.badResponse)([{ msg: 'User and parent cannot be the same.' }], res);
-            }
-            const encryptedPassword = password ? yield helper_1.default.encryptPassword(password) : null;
-            const userData = {
-                role,
-                firstname,
-                lastname,
-                address,
-                username,
-                email,
-                password: encryptedPassword,
-                parentId: parentId,
-                updatedBy,
-                updatedOn: new Date().toISOString(),
-            };
-            const updateResponse = yield user_1.User.updateUser(id, userData, updatedBy);
-            if (updateResponse.err) {
-                return (0, response_1.failureResponse)(updateResponse.message, res);
-            }
-            return (0, response_1.successResponse)(updateResponse.data, 'User updated successfully', res);
         });
     }
     // Get All Users API
