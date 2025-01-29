@@ -51,47 +51,48 @@ class UserController {
         });
         // Delete User API
         this.deleteUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            var _a;
             try {
                 const userId = parseInt(req.params.id, 10);
                 if (isNaN(userId)) {
-                    return (0, response_1.failureResponse)("Invalid user ID provided", res);
+                    return helper_1.default.failureResponse("Invalid user ID provided", res);
                 }
                 const userResponse = yield user_1.User.getUserById(userId);
                 if (userResponse.err) {
-                    return (0, response_1.failureResponse)(userResponse.message, res);
+                    return helper_1.default.failureResponse(userResponse.message, res);
                 }
-                if (userResponse.data && userResponse.data[0].message === "User does not exist") {
-                    return res.status(404).json({
+                if (userResponse.data && ((_a = userResponse.data[0]) === null || _a === void 0 ? void 0 : _a.message) === "User does not exist") {
+                    res.status(404).json({
                         code: 404,
                         status: false,
-                        message: 'Invalid Id ',
+                        message: 'User ID not found',
                     });
                 }
                 const user = userResponse.data[0];
-                if (user && user.message === "User is deleted") {
-                    return res.status(200).json({
+                if (user && user.message === "User is already deleted") {
+                    res.status(200).json({
                         code: 200,
                         status: false,
-                        message: 'Already deleted the user',
+                        message: 'The user has already been deleted',
                     });
                 }
                 const deleteResponse = yield user_1.User.deleteUser(userId);
                 if (deleteResponse.err) {
-                    return (0, response_1.failureResponse)(deleteResponse.message, res);
+                    return helper_1.default.failureResponse(deleteResponse.message, res);
                 }
-                return res.status(200).json({
+                res.status(200).json({
                     code: 200,
                     status: true,
-                    message: 'User Deleted Successfully',
+                    message: 'User deleted successfully, including associated family members.',
                 });
             }
             catch (error) {
-                return (0, response_1.failureResponse)("An unexpected error occurred", res);
+                return helper_1.default.failureResponse("An unexpected error occurred", res);
             }
         });
         // Get User By ID API
         this.getUserById = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
+            var _b, _c;
             try {
                 const userId = parseInt(req.params.id, 10);
                 if (isNaN(userId)) {
@@ -101,14 +102,14 @@ class UserController {
                 if (userResponse.err) {
                     return (0, response_1.failureResponse)(userResponse.message, res);
                 }
-                if (!userResponse.data || ((_a = userResponse.data[0]) === null || _a === void 0 ? void 0 : _a.message) === "User does not exist") {
+                if (!userResponse.data || ((_b = userResponse.data[0]) === null || _b === void 0 ? void 0 : _b.message) === "User does not exist") {
                     return res.status(404).json({
                         code: 404,
                         status: false,
                         message: 'Invalid Id',
                     });
                 }
-                if ((((_b = userResponse.data[0]) === null || _b === void 0 ? void 0 : _b.message) || "").toLowerCase() === "user is deleted") {
+                if ((((_c = userResponse.data[0]) === null || _c === void 0 ? void 0 : _c.message) || "").toLowerCase() === "user is deleted") {
                     return res.status(200).json({
                         code: 200,
                         status: false,

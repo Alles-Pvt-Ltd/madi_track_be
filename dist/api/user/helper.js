@@ -21,11 +21,9 @@ class Helper {
         }
         return true;
     }
-    // Send a failure response
     static failureResponse(message, res) {
         res.status(500).json({ success: false, message });
     }
-    // Encrypt password using bcrypt
     static encryptPassword(password) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -38,7 +36,6 @@ class Helper {
             }
         });
     }
-    // Verify password using bcrypt
     static verifyPassword(inputPassword, storedPassword) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -50,7 +47,6 @@ class Helper {
             }
         });
     }
-    // Generate JWT token
     static generateJwtToken(username, userId, email) {
         return jsonwebtoken_1.default.sign({ username, userId, email }, process.env.JWT_SECRET || 'default_secret', { expiresIn: '1h' });
     }
