@@ -21,23 +21,25 @@ export class User {
     
         return { err: false, data: sqlData.result[0][0] }; 
     };
+
+    public static async register(user: any) {
+        try {
+            const insertUserQuery = `CALL sp_register(${user.role}, '${user.firstname}', '${user.lastname}', '${user.address}', '${user.username}', '${user.email}', '${user.password}', ${user.createdBy}, ${user.parentId || 'NULL'})`;
     
-    public static register = async (data: IUser) => {
-        const insertUserQuery = `CALL sp_register(${data.role}, '${data.firstname}', '${data.lastname}', '${data.address}', '${data.username}', '${data.email}', '${data.password}', ${data.createdBy},${data.parentId})`;
+            const result = await Mysql.connect(insertUserQuery, null);
     
-        const result = await Mysql.connect(insertUserQuery, null);
-    
-        if (result.err) {
-            return { err: true, message: result.result };
+            if (result.err) {
+                return { err: true, message: result.result };
+            }
+            return { err: false, data: result.result[0] };
+        } catch (error) {
+            return { err: true, message: 'Database query failed' };
         }
-        return { err: false, data: result.result[0] };
-    };
+    }
     
-    
-    public static async updateUser(id: number, data: IUser, updatedBy: number) {
-        const updateUserQuery = `CALL sp_updateUser(${data.role},'${data.firstname}','${data.lastname}','${data.address}','${data.email}','${data.password}',${updatedBy},${id},${data.parentId }) `;
+    public static async updateUser(id: number, data: any, updatedBy: number) {
+        const updateUserQuery = `CALL sp_updateUser( ${data.role}, '${data.firstname}', '${data.lastname}', '${data.address}', '${data.email}', ${data.password ? `'${data.password}'` : 'NULL'},  ${updatedBy}, ${id} )`;
         const sqlData = await Mysql.connect(updateUserQuery, null);
-    
         if (sqlData.err) {
             return { err: true, message: sqlData.result };
         }
@@ -55,7 +57,6 @@ export class User {
         return { err: false, data: result.result[0] };
     }
     
-
     
     public static getAllUsers = async () => {
         const sqlQuery = `CALL sp_getAllUser()`;

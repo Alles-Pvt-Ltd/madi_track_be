@@ -42,47 +42,42 @@ class AppController {
                     return (0, response_1.failureResponse)("Invalid userId provided", res);
                 }
                 const introResponse = yield app_1.App.getIntroById(sid);
-                // Check if there is an error in fetching data from the database
                 if (introResponse.err) {
                     return (0, response_1.failureResponse)(introResponse.message, res);
                 }
-                // Ensure introResponse.data exists and then check the message property
                 if (!introResponse.data || !introResponse.data[0]) {
                     res.status(404).json({
                         code: 404,
                         status: false,
-                        message: 'User does not exist',
+                        message: 'Intro does not exist',
                     });
                 }
                 const userMessage = (_a = introResponse.data[0]) === null || _a === void 0 ? void 0 : _a.message;
-                // Check if the message exists and handle accordingly
                 if (userMessage) {
                     const messageLowerCase = userMessage.toLowerCase();
-                    if (messageLowerCase === "user does not exist") {
+                    if (messageLowerCase === "Intro does not exist") {
                         res.status(404).json({
                             code: 404,
                             status: false,
-                            message: 'User does not exist',
+                            message: 'Intro does not exist',
                         });
                     }
-                    if (messageLowerCase === "user is deleted") {
+                    if (messageLowerCase === "Intro is deleted") {
                         res.status(200).json({
                             code: 200,
                             status: false,
-                            message: 'User is deleted',
+                            message: 'Intro is deleted',
                         });
                     }
                 }
-                // If user data exists, return the data
                 if (introResponse.data[0]) {
                     res.status(200).json({
                         code: 200,
                         status: true,
-                        message: 'User Retrieved Successfully',
+                        message: 'Intro Retrieved Successfully',
                         data: introResponse.data[0],
                     });
                 }
-                // If no valid data is available for the user
                 res.status(404).json({
                     code: 404,
                     status: false,
@@ -90,7 +85,6 @@ class AppController {
                 });
             }
             catch (error) {
-                console.error(error); // Log the error to the console for debugging
                 return (0, response_1.failureResponse)("An unexpected error occurred", res);
             }
         });
@@ -162,7 +156,6 @@ class AppController {
         this.delete = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const sid = parseInt(req.params.sid, 10);
-                // Validate if sid is a valid number
                 if (isNaN(sid)) {
                     res.status(400).json({
                         code: 400,
@@ -179,18 +172,18 @@ class AppController {
                     });
                 }
                 const user = userResponse.data[0];
-                if (!user || user.message === "User does not exist") {
+                if (!user || user.message === "Intro does not exist") {
                     res.status(404).json({
                         code: 404,
                         status: false,
-                        message: 'User does not exist',
+                        message: 'Intro does not exist',
                     });
                 }
-                if (user.message === "User is deleted") {
+                if (user.message === "Intro is deleted") {
                     res.status(200).json({
                         code: 200,
                         status: false,
-                        message: 'User is already deleted',
+                        message: 'Intro is already deleted',
                     });
                 }
                 const deleteResponse = yield app_1.App.deleteIntro(sid);
@@ -208,7 +201,6 @@ class AppController {
                 });
             }
             catch (error) {
-                console.error("Error in delete method:", error);
                 res.status(500).json({
                     code: 500,
                     status: false,
@@ -227,15 +219,11 @@ class AppController {
             try {
                 const documentFile = req.file;
                 if (!documentFile) {
-                    console.error("No file provided in the request.");
                     return (0, response_1.failureResponse)("No file provided.", res);
                 }
-                // Successfully uploaded file
-                console.log("File uploaded successfully:", documentFile);
                 return (0, response_1.successResponse)({ imageUrl: "/" + documentFile.path }, "Image uploaded successfully", res);
             }
             catch (error) {
-                console.error("Unexpected error during file upload:", error);
                 return (0, response_1.failureResponse)("Unexpected server error during file upload.", res);
             }
         });

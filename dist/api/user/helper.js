@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("../../core/app");
+const bcrypt_1 = require("bcrypt");
+const jsonwebtoken_1 = require("jsonwebtoken");
 const express_validator_1 = require("express-validator");
 class Helper {
-    // Static method to handle validation errors
     static validateRequest(req, res) {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
@@ -21,15 +21,38 @@ class Helper {
         }
         return true;
     }
-    // Static method to verify user password
-    static verifyPassword(inputPassword, storedPassword) {
+    // Send a failure response
+    static failureResponse(message, res) {
+        res.status(500).json({ success: false, message });
+    }
+    // Encrypt password using bcrypt
+    static encryptPassword(password) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield app_1.AppFunction.passwordVerify(inputPassword, storedPassword);
+            try {
+                const saltRounds = 10;
+                return yield bcrypt_1.default.hash(password, saltRounds);
+            }
+            catch (err) {
+                console.error('Error in encryptPassword:', err);
+                throw err;
+            }
         });
     }
-    // Static method to generate JWT token
+    // Verify password using bcrypt
+    static verifyPassword(inputPassword, storedPassword) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield bcrypt_1.default.compare(inputPassword, storedPassword);
+            }
+            catch (err) {
+                console.error('Error in verifyPassword:', err);
+                return false;
+            }
+        });
+    }
+    // Generate JWT token
     static generateJwtToken(username, userId, email) {
-        return app_1.AppFunction.createJwtToken(username, userId, email);
+        return jsonwebtoken_1.default.sign({ username, userId, email }, process.env.JWT_SECRET || 'default_secret', { expiresIn: '1h' });
     }
 }
 exports.default = Helper;
