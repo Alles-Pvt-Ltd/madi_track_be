@@ -1,6 +1,4 @@
 import * as bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import * as crypto from 'crypto';
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
