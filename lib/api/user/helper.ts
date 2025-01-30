@@ -1,7 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-
 export default class Helper {
     public static validateRequest(req: Request, res: Response): boolean {
         const errors = validationResult(req);
