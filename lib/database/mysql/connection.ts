@@ -1,7 +1,6 @@
 
 import { connect } from "http2";
 import { Logger } from "../../core/common/logger";
-import { connection } from "mongoose";
 
 var mysql = require("mysql");
 
@@ -25,15 +24,14 @@ interface MySQLResponse {
 export default class Mysql {
   public static connect = (query: string, data: any) => {
     return new Promise<MySQLResponse>((resolve, reject) => {
-      pool.getConnection((err, connection) => { // Get connection from pool
+      pool.getConnection((err, connection) => {
         if (err) {
           Logger.errorLogger({ place: 'Database Connection', err });
           return resolve({ err: true, result: err, data });
         }
 
-        // Correct usage of the connection object
         connection.query(query, data, (err, result) => {
-          connection.release(); // Release the connection back to the pool
+          connection.release(); 
 
           if (err) {
             Logger.errorLogger({ place: 'Database Connection SQL Error', err });

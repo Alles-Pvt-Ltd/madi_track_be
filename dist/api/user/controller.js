@@ -14,7 +14,7 @@ const user_1 = require("../../database/mysql/user");
 const response_1 = require("../../core/response");
 const app_1 = require("../../core/app");
 const express_validator_1 = require("express-validator");
-const helper_1 = require("./helper");
+const constant_1 = require("../../config/constant");
 class UserController {
     constructor() {
         // Update User API
@@ -139,23 +139,19 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty()) {
-                res.status(400).json({ success: false, errors: errors.array() });
-                return;
+                return (0, response_1.badResponse)(errors.array(), res);
             }
             try {
                 const { username, email, password } = req.body;
-                const userResponse = yield user_1.User.findUserByUsername(username, email);
-                if (!userResponse || !userResponse.data) {
-                    res.status(404).json({ success: false, message: "User not found" });
-                    return;
+                const loginResponse = yield user_1.User.findUserByUsername(req.body.username, req.body.email);
+                if (loginResponse.err) {
+                    return (0, response_1.failureResponse)(loginResponse.message, res);
                 }
-                const user = userResponse.data;
-                const isPasswordValid = yield helper_1.default.verifyPassword(password, user.password);
-                if (!isPasswordValid) {
-                    res.status(401).json({ success: false, message: "Invalid password" });
-                    return;
+                const user = loginResponse.data;
+                if (loginResponse.data.length === 0) {
+                    return (0, response_1.failureResponse)(constant_1.StringConstant.usernamePasswordMismatch, res);
                 }
-                const token = helper_1.default.generateJwtToken(user.username, user.id, user.email);
+                const token = app_1.AppFunction.createJwtToken(user.username, user.id, user.email);
                 res.status(200).json({
                     success: true,
                     message: "Login successful",
@@ -170,67 +166,43 @@ class UserController {
     // Register API
     static register(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const errors = (0, express_validator_1.validationResult)(req);
-                if (!errors.isEmpty()) {
-                    res.status(400).json({ success: false, errors: errors.array() });
-                }
-                const { username, email, role, firstname, lastname, address, password, createdBy, parentId } = req.body;
-                if (createdBy !== 1 && createdBy !== 2) {
-                    res.status(400).json({
-                        success: false,
-                        message: "Invalid createdBy value. Only 1 (Admin) or 2 (User) are allowed.",
-                    });
-                }
-                if (parentId) {
-                    const parentExists = yield user_1.User.findUserById(parentId);
-                    if (!parentExists) {
-                        res.status(400).json({
-                            success: false,
-                            message: "Invalid parentId. Parent user does not exist.",
-                        });
-                    }
-                }
-                const existingUserResponse = yield user_1.User.findUserByUsername(username, email);
-                if (existingUserResponse) {
-                    res.status(400).json({
-                        success: false,
-                        message: "Username or email is already in use.",
-                    });
-                }
-                const encryptedPassword = yield helper_1.default.encryptPassword(password);
-                const user = {
-                    role: parseInt(role, 10),
-                    firstname,
-                    lastname,
-                    address,
-                    username,
-                    email,
-                    password: encryptedPassword,
-                    createdOn: new Date().toISOString(),
-                    updatedOn: new Date().toISOString(),
-                    createdBy,
-                    parentId: parentId || null,
-                };
-                const registerResponse = yield user_1.User.register(user);
-                if (registerResponse.err) {
-                    res.status(500).json({
-                        success: false,
-                        message: registerResponse.message,
-                    });
-                }
-                res.status(201).json({
-                    success: true,
-                    message: "User registered successfully",
-                    data: registerResponse.data,
-                });
+            const errors = (0, express_validator_1.validationResult)(req);
+            if (!errors.isEmpty()) {
+                return (0, response_1.badResponse)(errors.array(), res);
             }
-            catch (error) {
-                res.status(500).json({
-                    success: false,
-                    message: "Internal server error. Please try again later.",
-                });
+            const { username, email, role, firstname, lastname, address, password, createdBy, parentId } = req.body;
+            if (createdBy !== 1 && createdBy !== 2) {
+                return (0, response_1.badResponse)([{ message: "Invalid createdBy value. Only 1 (Admin) or 2 (User) are allowed." }], res);
             }
+            if (parentId) {
+                const parentExists = yield user_1.User.findUserById(parentId);
+                if (!parentExists) {
+                    return (0, response_1.badResponse)([{ message: "Invalid parentId. Parent user does not exist." }], res);
+                }
+            }
+            const existingUserResponse = yield user_1.User.findUserByUsername(username, email);
+            if (existingUserResponse.err != true) {
+                return (0, response_1.badResponse)([{ message: "Username or email is already in use." }], res);
+            }
+            const encryptedPassword = yield app_1.AppFunction.encryptPassword(password);
+            const user = {
+                role: parseInt(role, 10),
+                firstname,
+                lastname,
+                address,
+                username,
+                email,
+                password: encryptedPassword,
+                createdOn: new Date().toISOString(),
+                updatedOn: new Date().toISOString(),
+                createdBy,
+                parentId: parentId || null,
+            };
+            const registerResponse = yield user_1.User.register(user);
+            if (registerResponse.err) {
+                return (0, response_1.failureResponse)(registerResponse.message, res);
+            }
+            return (0, response_1.successResponse)(registerResponse.data, 'user registered sucessfully', res);
         });
     }
     // Get All Users API

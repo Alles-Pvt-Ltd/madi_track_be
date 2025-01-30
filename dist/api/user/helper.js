@@ -9,8 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const bcrypt_1 = require("bcrypt");
-const jsonwebtoken_1 = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const express_validator_1 = require("express-validator");
 class Helper {
     static validateRequest(req, res) {
@@ -21,38 +20,19 @@ class Helper {
         }
         return true;
     }
-    // Send a failure response
     static failureResponse(message, res) {
         res.status(500).json({ success: false, message });
     }
-    // Encrypt password using bcrypt
-    static encryptPassword(password) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const saltRounds = 10;
-                return yield bcrypt_1.default.hash(password, saltRounds);
-            }
-            catch (err) {
-                console.error('Error in encryptPassword:', err);
-                throw err;
-            }
-        });
-    }
-    // Verify password using bcrypt
     static verifyPassword(inputPassword, storedPassword) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                return yield bcrypt_1.default.compare(inputPassword, storedPassword);
+                return yield bcrypt.compare(inputPassword, storedPassword);
             }
             catch (err) {
                 console.error('Error in verifyPassword:', err);
                 return false;
             }
         });
-    }
-    // Generate JWT token
-    static generateJwtToken(username, userId, email) {
-        return jsonwebtoken_1.default.sign({ username, userId, email }, process.env.JWT_SECRET || 'default_secret', { expiresIn: '1h' });
     }
 }
 exports.default = Helper;

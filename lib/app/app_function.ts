@@ -33,11 +33,12 @@ export class AppFunction {
     return bcrypt.compare(inputPassword, storedHash);
   }
 
-  public static createJwtToken(username: string, email: string): string {
-    const payload = { username, email };
+  public static createJwtToken(username: string, id: number, email: string): string {
+    const payload = { username, id, email };
     const secret = process.env.JWT_SECRET || "your_jwt_secret";
     return jwt.sign(payload, secret, { expiresIn: "1h" });
-  }
+}
+
 
   public static jwtVerify(token: string): any {
     try {

@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import * as crypto from 'crypto';
 import { Request, Response } from 'express';
@@ -17,15 +17,6 @@ export default class Helper {
         res.status(500).json({ success: false, message });
     }
 
-    public static async encryptPassword(password: string): Promise<string> {
-        try {
-            const saltRounds = 10;
-            return await bcrypt.hash(password, saltRounds);
-        } catch (err) {
-            console.error('Error in encryptPassword:', err);
-            throw err;
-        }
-    }
     public static async verifyPassword(inputPassword: string, storedPassword: string): Promise<boolean> {
         try {
             return await bcrypt.compare(inputPassword, storedPassword);
@@ -33,13 +24,5 @@ export default class Helper {
             console.error('Error in verifyPassword:', err);
             return false;
         }
-    }
-
-    public static generateJwtToken(username: string, userId: number, email: string): string {
-        return jwt.sign(
-            { username, userId, email },
-            process.env.JWT_SECRET || 'default_secret',
-            { expiresIn: '1h' }
-        );
     }
 }

@@ -21,9 +21,8 @@ Mysql.connect = (query, data) => {
                 logger_1.Logger.errorLogger({ place: 'Database Connection', err });
                 return resolve({ err: true, result: err, data });
             }
-            // Correct usage of the connection object
             connection.query(query, data, (err, result) => {
-                connection.release(); // Release the connection back to the pool
+                connection.release();
                 if (err) {
                     logger_1.Logger.errorLogger({ place: 'Database Connection SQL Error', err });
                     return resolve({ err: true, result: err, data });
