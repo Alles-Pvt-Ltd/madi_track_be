@@ -24,10 +24,10 @@ export class User {
 
     public static async register(user: any) {
         try {
-            const insertUserQuery = `CALL sp_register(${user.role}, '${user.firstname}', '${user.lastname}', '${user.address}', '${user.username}', '${user.email}', '${user.password}', ${user.createdBy}, ${user.parentId || 'NULL'})`;
-    
+            const insertUserQuery = `CALL sp_register(${user.role}, '${user.firstname}', '${user.lastname}', '${user.address}', '${user.username}', '${user.email}', '${user.password}', ${user.createdBy || 1}, ${user.parentId || 'NULL'})`;
+
             const result = await Mysql.connect(insertUserQuery, null);
-    
+
             if (result.err) {
                 return { err: true, message: result.result };
             }

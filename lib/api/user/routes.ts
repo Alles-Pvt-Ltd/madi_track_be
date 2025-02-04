@@ -51,10 +51,11 @@ export class UserRoutes {
 
         app.get(
             url + "/deleteUser/:id",
-            JwtToken.verify,  
+            JwtToken.verify,
             (req: Request, res: Response) => {
-                this.userCtrl.deleteUser(req, res);  
+                UserController.deleteUser(req, res);
             }
         );
+        
     }
 }

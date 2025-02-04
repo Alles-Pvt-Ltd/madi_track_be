@@ -1,5 +1,5 @@
-
 export interface IUser {
+    id: number;  
     role: number;
     firstname: string;
     lastname: string;
@@ -12,4 +12,5 @@ export interface IUser {
     updatedBy: number;
     createdBy?: number;
     parentId?: number | null;
-}
+  }
+  

@@ -16,7 +16,7 @@ class User {
     static register(user) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const insertUserQuery = `CALL sp_register(${user.role}, '${user.firstname}', '${user.lastname}', '${user.address}', '${user.username}', '${user.email}', '${user.password}', ${user.createdBy}, ${user.parentId || 'NULL'})`;
+                const insertUserQuery = `CALL sp_register(${user.role}, '${user.firstname}', '${user.lastname}', '${user.address}', '${user.username}', '${user.email}', '${user.password}', ${user.createdBy || 1}, ${user.parentId || 'NULL'})`;
                 const result = yield connection_1.default.connect(insertUserQuery, null);
                 if (result.err) {
                     return { err: true, message: result.result };
