@@ -14,108 +14,167 @@ const user_1 = require("../../database/mysql/user");
 const response_1 = require("../../core/response");
 const app_1 = require("../../core/app");
 const express_validator_1 = require("express-validator");
+const constant_1 = require("../../config/constant");
 const helper_1 = require("./helper");
 class UserController {
-    constructor() {
-        this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    // Login API
+    static login(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty()) {
                 return (0, response_1.badResponse)(errors.array(), res);
             }
-            const { id, role, firstname, lastname, address, email, password, updatedBy } = req.body;
-            const userData = {
-                role,
-                firstname: firstname,
-                lastname: lastname,
+            try {
+                const loginResponse = yield user_1.User.findUserByUsername(req.body.username, req.body.email);
+                if (loginResponse.err) {
+                    return (0, response_1.failureResponse)(loginResponse.message, res);
+                }
+                const user = loginResponse.data;
+                if (!user || Object.keys(user).length === 0) {
+                    return (0, response_1.failureResponse)(constant_1.StringConstant.usernamePasswordMismatch, res);
+                }
+                const isPasswordValid = yield helper_1.default.verifyPassword(req.body.password, user.password);
+                if (!isPasswordValid) {
+                    return (0, response_1.failureResponse)("Invalid password", res);
+                }
+                const token = app_1.AppFunction.createJwtToken(user.username, user.id, user.email);
+                return (0, response_1.successResponse)(token, "Login successful", res);
+            }
+            catch (error) {
+                return (0, response_1.failureResponse)("Internal server error: " + error.message, res);
+            }
+        });
+    }
+    // Register API
+    static register(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const errors = (0, express_validator_1.validationResult)(req);
+            if (!errors.isEmpty()) {
+                return (0, response_1.badResponse)(errors.array(), res);
+            }
+            const { username, email, role, firstname, lastname, address, password, parentId, createdBy } = req.body;
+            if (parentId) {
+                const parentExists = yield user_1.User.findUserById(parentId);
+                if (!parentExists) {
+                    return (0, response_1.failureResponse)("Invalid parentId. Parent user does not exist.", res);
+                }
+            }
+            const existingUserResponse = yield user_1.User.findUserByUsername(username, email);
+            if (!existingUserResponse.err) {
+                return (0, response_1.failureResponse)("Username or email is already in use.", res);
+            }
+            const encryptedPassword = yield app_1.AppFunction.encryptPassword(password);
+            const user = {
+                role: parseInt(role, 10),
+                firstname,
+                lastname,
+                address,
+                username,
+                email,
+                password: encryptedPassword,
+                createdBy: createdBy || 1,
+                updatedBy: createdBy || 1,
+                parentId: parentId || null,
+                createdOn: new Date().toISOString(),
+                updatedOn: new Date().toISOString(),
+            };
+            const registerResponse = yield user_1.User.register(user);
+            if (registerResponse.err) {
+                return (0, response_1.failureResponse)(registerResponse.message, res);
+            }
+            return (0, response_1.successResponse)(registerResponse.data, "User registered successfully", res);
+        });
+    }
+    // Update User API
+    static updateUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const errors = (0, express_validator_1.validationResult)(req);
+            if (!errors.isEmpty()) {
+                return (0, response_1.badResponse)(errors.array(), res);
+            }
+            const { id, role, firstname, lastname, address, email, password, updatedBy, parentId } = req.body;
+            const existingUser = yield user_1.User.getUserById(id);
+            if (!existingUser) {
+                return (0, response_1.failureResponse)("User not found. Please try again.", res);
+            }
+            if (parentId) {
+                const parentExists = yield user_1.User.findUserById(parentId);
+                if (!parentExists) {
+                    return (0, response_1.failureResponse)("Invalid parentId. Parent user does not exist.", res);
+                }
+            }
+            const updatedUser = {
+                role: parseInt(role, 10),
+                firstname,
+                lastname,
                 address,
                 username: email,
                 email,
-                password: app_1.AppFunction.encryptPassword(password),
-                createdOn: "",
-                updatedOn: new Date().toISOString()
+                password: yield app_1.AppFunction.encryptPassword(password),
+                updatedBy,
+                updatedOn: new Date().toISOString(),
             };
-            const updateResponse = yield user_1.User.updateUser(id, userData, updatedBy);
+            const updateResponse = yield user_1.User.updateUser(id, updatedUser, updatedBy);
             if (updateResponse.err) {
                 return (0, response_1.failureResponse)(updateResponse.message, res);
             }
-            return (0, response_1.successResponse)(updateResponse.data, "User Updated Successfully", res);
+            return (0, response_1.successResponse)(null, "User updated successfully", res);
         });
-        this.getAllUsers = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const allUsersResponse = yield user_1.User.getAllUsers();
-            if (allUsersResponse.err) {
-                return (0, response_1.failureResponse)(allUsersResponse.message, res);
+    }
+    // Delete User API
+    static deleteUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const errors = (0, express_validator_1.validationResult)(req);
+            if (!errors.isEmpty()) {
+                return (0, response_1.badResponse)(errors.array(), res);
             }
-            return (0, response_1.successResponse)(allUsersResponse.data, "All Users Retrieved Successfully", res);
-        });
-        this.getUserById = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const userId = parseInt(req.params.id, 10);
-            const userResponse = yield user_1.User.getUserById(userId);
-            if (userResponse.err) {
-                return (0, response_1.failureResponse)(userResponse.message, res);
+            if (isNaN(userId)) {
+                return (0, response_1.failureResponse)("Invalid user ID provided", res);
             }
-            return (0, response_1.successResponse)(userResponse.data, "User Retrieved Successfully", res);
+            const userResponse = yield user_1.User.getUserById(userId);
+            if (userResponse.err || !userResponse.data) {
+                return (0, response_1.failureResponse)("User not found", res);
+            }
+            const deleteResponse = yield user_1.User.deleteUser(userId);
+            if (deleteResponse.err) {
+                return (0, response_1.failureResponse)(deleteResponse.message, res);
+            }
+            return (0, response_1.successResponse)(null, "User deleted successfully", res);
         });
-        this.deleteUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    }
+    // Get All Users API
+    static getAllUsers(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const usersResponse = yield user_1.User.getAllUsers();
+                if (usersResponse.err) {
+                    return (0, response_1.failureResponse)(usersResponse.message, res);
+                }
+                return (0, response_1.successResponse)(usersResponse.data, "Users fetched successfully", res);
+            }
+            catch (error) {
+                return (0, response_1.failureResponse)("An unexpected error occurred: " + error.message, res);
+            }
+        });
+    }
+    // Get User By ID API
+    static getUserById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             try {
                 const userId = parseInt(req.params.id, 10);
                 if (isNaN(userId)) {
                     return (0, response_1.failureResponse)("Invalid user ID provided", res);
                 }
-                const deleteResponse = yield user_1.User.deleteUser(userId);
-                if (deleteResponse.err) {
-                    return (0, response_1.failureResponse)(deleteResponse.message, res);
+                const userResponse = yield user_1.User.getUserById(userId);
+                if (userResponse.err || !userResponse.data) {
+                    return (0, response_1.failureResponse)("User not found", res);
                 }
-                return (0, response_1.successResponse)(deleteResponse.data, "User Deleted Successfully", res);
+                return (0, response_1.successResponse)(userResponse.data, "User retrieved successfully", res);
             }
             catch (error) {
-                return (0, response_1.failureResponse)("An unexpected error occurred", res);
+                return (0, response_1.failureResponse)("An unexpected error occurred: " + error.message, res);
             }
-        });
-    }
-    login(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty()) {
-                return (0, response_1.badResponse)(errors.array(), res);
-            }
-            const { username, password } = req.body;
-            const loginResponse = yield user_1.User.findUserByUsername(username);
-            if (loginResponse.err || loginResponse.data.length === 0) {
-                return (0, response_1.failureResponse)("Invalid username or password", res);
-            }
-            const isPasswordValid = yield app_1.AppFunction.passwordVerify(password, loginResponse.data[0].password);
-            if (!isPasswordValid) {
-                return (0, response_1.failureResponse)("Invalid username or password", res);
-            }
-            const { role } = loginResponse.data[0];
-            if (!Number.isInteger(role)) {
-                return (0, response_1.failureResponse)("User role is invalid", res);
-            }
-            return (0, response_1.successResponse)(helper_1.default.getToken(username, role), "Login successful", res);
-        });
-    }
-    register(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty()) {
-                return (0, response_1.badResponse)(errors.array(), res);
-            }
-            const body = {
-                role: parseInt(req.body.role, 10),
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                address: req.body.address,
-                username: req.body.username,
-                email: req.body.email,
-                password: yield app_1.AppFunction.encryptPassword(req.body.password),
-                createdOn: new Date().toISOString(),
-                updatedOn: new Date().toISOString(),
-            };
-            const registerResponse = yield user_1.User.register(body);
-            if (registerResponse.err) {
-                return (0, response_1.failureResponse)(registerResponse.message, res);
-            }
-            return (0, response_1.successResponse)(registerResponse.data, "User registered successfully", res);
         });
     }
 }

@@ -5,21 +5,21 @@ const service_1 = require("../modules/common/service");
 const app_function_1 = require("../app/app_function");
 class Verify {
     verify(req, res, next) {
-        const verifyToken = req.header('token');
-        if (!verifyToken) {
-            return (0, service_1.forbidden)('Access Denied', req.body, res);
+        const token = req.header('token');
+        if (!token) {
+            return (0, service_1.forbidden)("Access Denied: No token provided", req.body, res);
         }
         try {
-            const verified = app_function_1.AppFunction.jwtVerify(verifyToken);
+            const verified = app_function_1.AppFunction.jwtVerify(token);
             if (!verified) {
-                return (0, service_1.forbidden)('Invalid token', req.body, res);
+                return (0, service_1.forbidden)("Invalid token provided", req.body, res);
             }
             req.user = verified;
         }
         catch (error) {
-            return (0, service_1.forbidden)('Invalid token', req.body, res);
+            return (0, service_1.forbidden)("Invalid token provided", req.body, res);
         }
-        return next();
+        next();
     }
 }
 exports.Verify = Verify;

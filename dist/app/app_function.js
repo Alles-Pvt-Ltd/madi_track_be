@@ -40,8 +40,8 @@ class AppFunction {
             return bcrypt.compare(inputPassword, storedHash);
         });
     }
-    static createJwtToken(username, email) {
-        const payload = { username, email };
+    static createJwtToken(username, id, email) {
+        const payload = { username, id, email };
         const secret = process.env.JWT_SECRET || "your_jwt_secret";
         return jwt.sign(payload, secret, { expiresIn: "1h" });
     }

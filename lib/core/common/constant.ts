@@ -20,6 +20,6 @@ export interface IData {
   
 export const CONTENT_TYPE_ERROR= "Content type must be application/json"
 
-export const MEDIA_SERVER_URL = 'http://64.227.162.207:3000'
+export const MEDIA_SERVER_URL = 'http://143.110.250.220:7000'
 
-export const API_BASE_URL = 'http://64.227.162.207:3000'
+export const API_BASE_URL = 'http://143.110.250.220:7000'

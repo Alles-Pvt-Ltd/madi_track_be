@@ -9,23 +9,23 @@ class UserRoutes {
         this.userCtrl = new controller_1.UserController();
     }
     route(app, url) {
-        app.post(url + "/login", class_1.Validation.registerValidation, (req, res) => {
-            this.userCtrl.login(req, res);
+        app.post(`${url}/login`, class_1.Validation.loginValidation, (req, res) => {
+            controller_1.UserController.login(req, res);
         });
         app.post(url + "/register", class_1.Validation.registerValidation, (req, res) => {
-            this.userCtrl.register(req, res);
+            controller_1.UserController.register(req, res);
         });
         app.put(url + "/updateUser", class_1.Validation.updateValidation, jwt_1.JwtToken.verify, (req, res) => {
-            this.userCtrl.updateUser(req, res);
+            controller_1.UserController.updateUser(req, res);
         });
-        app.get(url + "/getAllUsers", jwt_1.JwtToken.verify, (req, res) => {
-            this.userCtrl.getAllUsers(req, res);
+        app.get(`${url}/getAllUsers`, jwt_1.JwtToken.verify, (req, res) => {
+            controller_1.UserController.getAllUsers(req, res);
         });
         app.get(url + "/getUserById/:id", jwt_1.JwtToken.verify, (req, res) => {
-            this.userCtrl.getUserById(req, res);
+            controller_1.UserController.getUserById(req, res);
         });
         app.get(url + "/deleteUser/:id", jwt_1.JwtToken.verify, (req, res) => {
-            this.userCtrl.deleteUser(req, res);
+            controller_1.UserController.deleteUser(req, res);
         });
     }
 }

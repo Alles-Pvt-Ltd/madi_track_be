@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const logger_1 = require("../../core/common/logger");
 var mysql = require("mysql");
 const db_config = {
-    host: "157.230.247.143",
+    host: "127.0.0.1",
     port: 3306,
-    user: "gs-app",
-    password: "Alles_gs1717",
+    user: "project",
+    password: "2002@KM*n20",
     database: "medi_track_db",
     insecureAuth: true
 };
@@ -16,13 +16,13 @@ class Mysql {
 exports.default = Mysql;
 Mysql.connect = (query, data) => {
     return new Promise((resolve, reject) => {
-        pool.getConnection((err, connect) => {
+        pool.getConnection((err, connection) => {
             if (err) {
                 logger_1.Logger.errorLogger({ place: 'Database Connection', err });
                 return resolve({ err: true, result: err, data });
             }
-            connect.query(query, (err, result) => {
-                connect.release();
+            connection.query(query, data, (err, result) => {
+                connection.release();
                 if (err) {
                     logger_1.Logger.errorLogger({ place: 'Database Connection SQL Error', err });
                     return resolve({ err: true, result: err, data });

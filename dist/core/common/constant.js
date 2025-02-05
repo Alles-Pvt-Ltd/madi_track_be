@@ -12,5 +12,5 @@ var ResponseStatusCodes;
     ResponseStatusCodes[ResponseStatusCodes["internal_server_error"] = 500] = "internal_server_error";
 })(ResponseStatusCodes = exports.ResponseStatusCodes || (exports.ResponseStatusCodes = {}));
 exports.CONTENT_TYPE_ERROR = "Content type must be application/json";
-exports.MEDIA_SERVER_URL = 'http://64.227.162.207:3000';
-exports.API_BASE_URL = 'http://64.227.162.207:3000';
+exports.MEDIA_SERVER_URL = 'http://143.110.250.220:7000';
+exports.API_BASE_URL = 'http://143.110.250.220:7000';

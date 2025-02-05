@@ -3,35 +3,38 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FileUpload = void 0;
 const multer = require("multer");
 const uuid_1 = require("uuid");
-const response_1 = require("./response");
-const jwt_1 = require("./jwt");
 const fs = require("fs");
+const path = require("path");
 class FileUpload {
 }
 exports.FileUpload = FileUpload;
-// public static fileUpload() {
 FileUpload.MIME_TYPE_MAP = {
     "image/png": "png",
     "image/jpeg": "jpeg",
     "image/jpg": "jpg",
+    "application/pdf": "pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
 };
-FileUpload.upload = multer({
-    limits: 500000000,
+// Multer upload middleware
+FileUpload.upload = (type) => multer({
+    limits: { fileSize: 10000000 },
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
-            const jwtData = jwt_1.JwtToken.get(req);
-            const filesDir = 'upload/images/' + jwtData;
-            fs.mkdirSync(filesDir, { recursive: true });
-            return cb(null, filesDir);
+            const baseDir = type === "image" ? "upload/images" : "upload/documents";
+            const dir = path.join(__dirname, baseDir);
+            fs.mkdirSync(dir, { recursive: true }); // Create directory if not exists
+            cb(null, dir); // Set the destination
         },
         filename: (req, file, cb) => {
             const ext = FileUpload.MIME_TYPE_MAP[file.mimetype];
-            return cb(null, (0, uuid_1.v4)() + "." + "jpg");
+            if (!ext) {
+                return cb(new Error("Invalid file type"), null);
+            }
+            cb(null, `${(0, uuid_1.v4)()}.${ext}`); // Unique file name
         },
     }),
-    fileFilter: (req, file, cb, res) => {
+    fileFilter: (req, file, cb) => {
         const isValid = !!FileUpload.MIME_TYPE_MAP[file.mimetype];
-        let err = isValid ? null : (0, response_1.failureResponse)("different type of file", res);
-        return cb(err, isValid);
+        cb(null, isValid); // Validate file type
     },
-}).single("image");
+}).single(type); // Use `.single()` to handle single file upload

@@ -1,12 +1,14 @@
-import { AppFunction } from "../../core/app";
-
+import * as bcrypt from 'bcryptjs';
+import { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
 export default class Helper {
-    public static getToken(username: string, role: number): { token: string } {
-        if (!Number.isInteger(role)) {
-            throw new Error("Role must be an integer");
+
+    public static async verifyPassword(inputPassword: string, storedPassword: string): Promise<boolean> {
+        try {
+            return await bcrypt.compare(inputPassword, storedPassword);
+        } catch (err) {
+            console.error('Error in verifyPassword:', err);
+            return false;
         }
-        const token = AppFunction.createJwtToken(username, role);
-        return { token };
     }
-    
 }

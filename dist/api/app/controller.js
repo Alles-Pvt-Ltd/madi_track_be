@@ -12,38 +12,220 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const app_1 = require("../../database/mysql/app");
 const response_1 = require("../../core/response");
-const fileUpload_1 = require("../../core/fileUpload");
-const constant_1 = require("../../core/common/constant");
-const notification_1 = require("../../external/notification");
+const express_validator_1 = require("express-validator");
+const { exec } = require("child_process");
 class AppController {
     constructor() {
-        this.getAppInfo = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const version = req.body.version;
-            const getAppVersion = yield app_1.App.getAppVersion(parseInt(version.split('.').join("")));
-            if (getAppVersion.err) {
-                return (0, response_1.failureResponse)(getAppVersion.message, res);
+        this.add = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const errors = (0, express_validator_1.validationResult)(req);
+                if (!errors.isEmpty()) {
+                    return (0, response_1.failureResponse)("Validation failed", res);
+                }
+                const { title, description, img_url } = req.body;
+                const imgUrl = req.file ? `/upload/images/${req.file.filename}` : img_url;
+                const addResponse = yield app_1.App.addIntro(title, description, imgUrl);
+                if (addResponse.err) {
+                    return (0, response_1.failureResponse)(addResponse.message, res);
+                }
+                return (0, response_1.successResponse)(addResponse.data, "Intro Screen Added Successfully", res);
             }
-            const response = {
-                isAppUpdate: getAppVersion.data.length > 0,
-                mediaBaseUrl: constant_1.MEDIA_SERVER_URL,
-                baseUrl: constant_1.API_BASE_URL
-            };
-            return (0, response_1.successResponse)(response, "Success", res);
+            catch (error) {
+                return (0, response_1.failureResponse)("Error adding intro: " + error.message, res);
+            }
+        });
+        this.getById = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            try {
+                const sid = parseInt(req.params.sid, 10);
+                if (isNaN(sid)) {
+                    return (0, response_1.failureResponse)("Invalid userId provided", res);
+                }
+                const introResponse = yield app_1.App.getIntroById(sid);
+                if (introResponse.err) {
+                    return (0, response_1.failureResponse)(introResponse.message, res);
+                }
+                if (!introResponse.data || !introResponse.data[0]) {
+                    res.status(404).json({
+                        code: 404,
+                        status: false,
+                        message: 'Intro does not exist',
+                    });
+                }
+                const userMessage = (_a = introResponse.data[0]) === null || _a === void 0 ? void 0 : _a.message;
+                if (userMessage) {
+                    const messageLowerCase = userMessage.toLowerCase();
+                    if (messageLowerCase === "Intro does not exist") {
+                        res.status(404).json({
+                            code: 404,
+                            status: false,
+                            message: 'Intro does not exist',
+                        });
+                    }
+                    if (messageLowerCase === "Intro is deleted") {
+                        res.status(200).json({
+                            code: 200,
+                            status: false,
+                            message: 'Intro is deleted',
+                        });
+                    }
+                }
+                if (introResponse.data[0]) {
+                    res.status(200).json({
+                        code: 200,
+                        status: true,
+                        message: 'Intro Retrieved Successfully',
+                        data: introResponse.data[0],
+                    });
+                }
+                res.status(404).json({
+                    code: 404,
+                    status: false,
+                    message: 'No data available for the user.',
+                });
+            }
+            catch (error) {
+                return (0, response_1.failureResponse)("An unexpected error occurred", res);
+            }
+        });
+        this.update = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            var _b, _c, _d, _e, _f, _g;
+            try {
+                const errors = (0, express_validator_1.validationResult)(req);
+                if (!errors.isEmpty()) {
+                    res.status(400).json({
+                        code: 400,
+                        status: false,
+                        message: 'Validation errors'
+                    });
+                }
+                const sid = parseInt(req.params.sid, 10);
+                if (isNaN(sid)) {
+                    res.status(400).json({
+                        code: 400,
+                        status: false,
+                        message: 'Invalid sid provided',
+                    });
+                }
+                const { title, description, img_url, updatedBy } = req.body;
+                const updatedByValue = updatedBy === "admin" ? 0 : updatedBy === "user" ? 1 : null;
+                if (updatedByValue === null) {
+                    res.status(400).json({
+                        code: 400,
+                        status: false,
+                        message: "Invalid 'updatedBy' value. Use 'admin' or 'user'.",
+                    });
+                }
+                const imgUrl = req.file ? `/upload/images/${req.file.filename}` : img_url;
+                const updateResponse = yield app_1.App.updateIntro(sid, title, description, imgUrl, updatedByValue);
+                if (((_c = (_b = updateResponse.data) === null || _b === void 0 ? void 0 : _b[0]) === null || _c === void 0 ? void 0 : _c.message) === "Intro does not exist") {
+                    res.status(404).json({
+                        code: 404,
+                        status: false,
+                        message: 'Intro does not exist',
+                    });
+                }
+                if (((_e = (_d = updateResponse.data) === null || _d === void 0 ? void 0 : _d[0]) === null || _e === void 0 ? void 0 : _e.message) === "record is deleted") {
+                    res.status(400).json({
+                        code: 400,
+                        status: false,
+                        message: 'Cannot update a record that is marked as deleted',
+                    });
+                }
+                if (((_g = (_f = updateResponse.data) === null || _f === void 0 ? void 0 : _f[0]) === null || _g === void 0 ? void 0 : _g.message) === "Intro updated successfully") {
+                    res.status(200).json({
+                        code: 200,
+                        status: true,
+                        message: 'Intro updated successfully',
+                    });
+                }
+                res.status(500).json({
+                    code: 500,
+                    status: false,
+                    message: 'An unexpected error occurred',
+                });
+            }
+            catch (error) {
+                res.status(500).json({
+                    code: 500,
+                    status: false,
+                    message: 'An unexpected error occurred',
+                });
+            }
+        });
+        this.delete = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const sid = parseInt(req.params.sid, 10);
+                if (isNaN(sid)) {
+                    res.status(400).json({
+                        code: 400,
+                        status: false,
+                        message: 'Invalid userId provided',
+                    });
+                }
+                const userResponse = yield app_1.App.getIntroById(sid);
+                if (userResponse.err) {
+                    res.status(500).json({
+                        code: 500,
+                        status: false,
+                        message: userResponse.message,
+                    });
+                }
+                const user = userResponse.data[0];
+                if (!user || user.message === "Intro does not exist") {
+                    res.status(404).json({
+                        code: 404,
+                        status: false,
+                        message: 'Intro does not exist',
+                    });
+                }
+                if (user.message === "Intro is deleted") {
+                    res.status(200).json({
+                        code: 200,
+                        status: false,
+                        message: 'Intro is already deleted',
+                    });
+                }
+                const deleteResponse = yield app_1.App.deleteIntro(sid);
+                if (deleteResponse.err) {
+                    res.status(500).json({
+                        code: 500,
+                        status: false,
+                        message: deleteResponse.message,
+                    });
+                }
+                res.status(200).json({
+                    code: 200,
+                    status: true,
+                    message: 'User deleted successfully',
+                });
+            }
+            catch (error) {
+                res.status(500).json({
+                    code: 500,
+                    status: false,
+                    message: 'An unexpected error occurred',
+                });
+            }
+        });
+        this.getAll = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const getAllResponse = yield app_1.App.getAllIntro();
+            if (getAllResponse.err) {
+                return (0, response_1.failureResponse)(getAllResponse.message, res);
+            }
+            return (0, response_1.successResponse)(getAllResponse.data, "All Intro Screens Retrieved Successfully", res);
         });
         this.uploadImage = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            fileUpload_1.FileUpload.upload(req, res, (err) => {
-                if (err) {
-                    return (0, response_1.failureResponse)(err.message, res);
-                }
+            try {
                 const documentFile = req.file;
-                //  return successResponse({imageUrl: '/'+documentFile.path },"Success", res);
-                return (0, response_1.successResponse)({ imageUrl: '/' + documentFile.destination + '/' + documentFile.filename }, "Success", res);
-            });
-        });
-        this.sendMessage = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            yield (0, notification_1.sendMessage)("0777355075", `gs Division id : ${req.body.gsDivisionId} village id: ${req.body.villageId}, and message: ${req.body.message}`);
-            yield (0, notification_1.sendMessage)("0775014901", `gs Division id : ${req.body.gsDivisionId} village id: ${req.body.villageId}, and message: ${req.body.message}`);
-            return (0, response_1.successResponse)("Success", "Success", res);
+                if (!documentFile) {
+                    return (0, response_1.failureResponse)("No file provided.", res);
+                }
+                return (0, response_1.successResponse)({ imageUrl: "/" + documentFile.path }, "Image uploaded successfully", res);
+            }
+            catch (error) {
+                return (0, response_1.failureResponse)("Unexpected server error during file upload.", res);
+            }
         });
     }
 }

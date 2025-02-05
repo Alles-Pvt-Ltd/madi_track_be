@@ -16,11 +16,43 @@ class App {
 }
 exports.App = App;
 _a = App;
-App.getAppVersion = (version) => __awaiter(void 0, void 0, void 0, function* () {
-    const sqlQueryString = `SELECT * FROM t_appVersion WHERE version > ${version}`;
+App.addIntro = (title, description, img_url) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_addIntro('${title}', '${description}', '${img_url}')`;
+    const result = yield connection_1.default.connect(sqlQueryString, null);
+    if (result.err) {
+        return { err: true, message: result.result };
+    }
+    return { err: false, data: result.result[0] };
+});
+App.getIntroById = (sid) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQuery = `CALL sp_getById('${sid}')`;
+    const sqlData = yield connection_1.default.connect(sqlQuery, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
+    }
+    return { err: false, data: sqlData.result[0] };
+});
+App.updateIntro = (sid, title, description, img_url, updatedBy) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQueryString = `CALL sp_updateIntro(${sid}, '${title}', '${description}', '${img_url}', ${updatedBy})`;
     const sqlData = yield connection_1.default.connect(sqlQueryString, null);
     if (sqlData.err) {
-        return { err: true, message: "Version not found" };
+        return { err: true, message: sqlData.result };
     }
-    return { err: false, data: sqlData.result };
+    return { err: false, data: sqlData.result[0] };
+});
+App.deleteIntro = (sid) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQuery = `CALL sp_deleteIntro(${sid})`;
+    const sqlData = yield connection_1.default.connect(sqlQuery, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
+    }
+    return { err: false, data: sqlData.result[0] };
+});
+App.getAllIntro = () => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQuery = `CALL sp_getAllIntro()`;
+    const sqlData = yield connection_1.default.connect(sqlQuery, null);
+    if (sqlData.err) {
+        return { err: true, message: sqlData.result };
+    }
+    return { err: false, data: sqlData.result[0] };
 });

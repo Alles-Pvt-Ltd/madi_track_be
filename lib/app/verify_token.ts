@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { forbidden } from "../modules/common/service";  
 import { AppFunction } from "../app/app_function";
 
-
 declare global {
   namespace Express {
     interface Request {
@@ -13,29 +12,22 @@ declare global {
 
 export class Verify {
   public verify(req: Request, res: Response, next: NextFunction) {
-    
-    const verifyToken = req.header('token');
+    const token = req.header('token'); 
 
-    if (!verifyToken) {
-    
-      return forbidden('Access Denied', req.body, res);
+    if (!token) {
+        return forbidden("Access Denied: No token provided", req.body, res);
     }
 
     try {
-    
-      const verified = AppFunction.jwtVerify(verifyToken);
-
-      if (!verified) {
-        return forbidden('Invalid token', req.body, res);
-      }
-
-      req.user = verified;  
+        const verified = AppFunction.jwtVerify(token); 
+        if (!verified) {
+            return forbidden("Invalid token provided", req.body, res);
+        }
+        req.user = verified; 
     } catch (error) {
-      return forbidden('Invalid token', req.body, res);
+        return forbidden("Invalid token provided", req.body, res);
     }
 
-    return next();
+    next();
   }
-
 }
-
